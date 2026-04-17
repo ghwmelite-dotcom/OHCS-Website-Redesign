@@ -10,7 +10,7 @@ describe('Footer', () => {
 
   it('renders contact section heading', () => {
     render(<Footer />);
-    expect(screen.getByRole('heading', { name: /Contact/i })).toBeDefined();
+    expect(screen.getByRole('heading', { name: /Get in Touch/i })).toBeDefined();
   });
 
   it('renders quick links section heading', () => {

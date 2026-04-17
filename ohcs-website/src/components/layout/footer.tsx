@@ -1,20 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { KenteAccent } from '@/components/kente/kente-accent';
 
 const currentYear = new Date().getFullYear();
-
-const quickLinks = [
-  { label: 'About OHCS', href: '/about' },
-  { label: 'Services', href: '/services' },
-  { label: 'News', href: '/news' },
-  { label: 'Events', href: '/events' },
-  { label: 'Publications', href: '/publications' },
-  { label: 'Right to Information', href: '/right-to-information' },
-  { label: 'Contact', href: '/contact' },
-];
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -40,58 +29,101 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
+function YouTubeIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}
+
 const socialLinks = [
-  {
-    label: 'Facebook',
-    href: 'https://facebook.com/OHCSGhana',
-    Icon: FacebookIcon,
-  },
-  {
-    label: 'X (Twitter)',
-    href: 'https://x.com/OHCSGhana',
-    Icon: XIcon,
-  },
-  {
-    label: 'Instagram',
-    href: 'https://instagram.com/OHCSGhana',
-    Icon: InstagramIcon,
-  },
+  { label: 'Facebook', href: 'https://facebook.com/OHCSGhana', Icon: FacebookIcon },
+  { label: 'X (Twitter)', href: 'https://x.com/OHCSGhana', Icon: XIcon },
+  { label: 'Instagram', href: 'https://instagram.com/OHCSGhana', Icon: InstagramIcon },
+  { label: 'YouTube', href: 'https://youtube.com/@OHCSGhana', Icon: YouTubeIcon },
+];
+
+const quickLinks = [
+  { label: 'About OHCS', href: '/about' },
+  { label: 'Directorates', href: '/directorates' },
+  { label: 'Departments', href: '/departments' },
+  { label: 'Publications', href: '/publications' },
+  { label: 'Right to Information', href: '/right-to-information' },
+  { label: 'Contact Us', href: '/contact' },
+];
+
+const serviceLinks = [
+  { label: 'Recruitment', href: '/services/recruitment' },
+  { label: 'Submit RTI Request', href: '/services/rti' },
+  { label: 'Complaints & Feedback', href: '/services/complaints' },
+  { label: 'Track Submission', href: '/track' },
+  { label: 'E-Library', href: 'https://ohcselibrary.xyz', external: true },
 ];
 
 export function Footer({ className }: { className?: string }) {
   return (
     <footer className={cn('w-full', className)}>
-      {/* Kente band at top */}
-      <KenteAccent variant="header-band" />
+      {/* ── Thick Kente band at top ── */}
+      <div aria-hidden="true" style={{ height: 10 }}>
+        <div
+          className="h-full"
+          style={{
+            background:
+              'repeating-linear-gradient(90deg, #1B5E20 0px, #1B5E20 80px, #D4A017 80px, #D4A017 160px, #B71C1C 160px, #B71C1C 240px, #212121 240px, #212121 320px)',
+          }}
+        />
+      </div>
 
-      {/* Main footer content */}
-      <div className="bg-[var(--color-primary-dark,#0a2a1a)] text-white/90">
-        <div className="max-w-[var(--max-w-content,1280px)] mx-auto px-6 py-12 lg:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
+      {/* ── Main footer ── */}
+      <div className="relative bg-primary-dark overflow-hidden">
+        {/* Subtle Kente mesh background */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: [
+              'repeating-linear-gradient(0deg, #D4A017 0px, #D4A017 1px, transparent 1px, transparent 48px)',
+              'repeating-linear-gradient(90deg, #D4A017 0px, #D4A017 1px, transparent 1px, transparent 48px)',
+            ].join(', '),
+          }}
+        />
 
-            {/* Column 1 — About */}
-            <div className="space-y-5">
+        <div className="relative max-w-content mx-auto px-6 sm:px-8 pt-16 pb-12 lg:pt-20 lg:pb-16">
+
+          {/* ── Top section: Logo + description + social ── */}
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 mb-14">
+            <div className="max-w-md">
               {/* Logo + name */}
-              <div className="flex items-center gap-3">
-                <Image
-                  src="/images/ohcs-logo.png"
-                  alt="OHCS logo"
-                  width={40}
-                  height={40}
-                  className="brightness-0 invert"
-                  onError={() => {/* fallback handled by alt text */}}
-                />
-                <span className="font-semibold text-lg tracking-wide">OHCS</span>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                  <Image
+                    src="/images/ohcs-logo.png"
+                    alt="OHCS logo"
+                    width={32}
+                    height={32}
+                    className="brightness-0 invert"
+                  />
+                </div>
+                <div>
+                  <span className="font-display text-xl font-bold text-white block leading-tight">
+                    OHCS
+                  </span>
+                  <span className="text-xs text-accent font-medium tracking-wider uppercase">
+                    Republic of Ghana
+                  </span>
+                </div>
               </div>
 
               {/* Description */}
-              <p className="text-white/70 text-sm leading-relaxed">
-                The Office of the Head of Civil Service leads and transforms Ghana's
-                Civil Service to deliver excellence in public service.
+              <p className="text-white/60 text-base leading-relaxed mb-6">
+                The Office of the Head of Civil Service leads and transforms Ghana&apos;s
+                Civil Service to deliver excellence, accountability, and innovation in
+                public service delivery.
               </p>
 
-              {/* Social links */}
-              <div className="flex items-center gap-4 pt-1">
+              {/* Social links — larger, with hover glow */}
+              <div className="flex items-center gap-3">
                 {socialLinks.map(({ label, href, Icon }) => (
                   <a
                     key={label}
@@ -99,25 +131,53 @@ export function Footer({ className }: { className?: string }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="text-white/60 hover:text-[var(--color-accent,#D4A017)] transition-colors duration-200"
+                    className={cn(
+                      'w-10 h-10 rounded-lg bg-white/5 border border-white/10',
+                      'flex items-center justify-center',
+                      'text-white/50 hover:text-accent hover:bg-accent/10 hover:border-accent/30',
+                      'transition-all duration-200',
+                    )}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-[18px] w-[18px]" />
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* Column 2 — Quick Links */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-base uppercase tracking-wider text-white">
+            {/* Office hours badge */}
+            <div className="lg:text-right">
+              <div className="inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-5 py-4">
+                <Clock className="h-5 w-5 text-accent" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Office Hours</p>
+                  <p className="text-sm text-white/50">Mon – Fri, 8:00 AM – 5:00 PM</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Gold divider ── */}
+          <div
+            aria-hidden="true"
+            className="h-px mb-14"
+            style={{
+              background: 'linear-gradient(90deg, rgba(212,160,23,0.3), rgba(212,160,23,0.1) 50%, rgba(212,160,23,0.3))',
+            }}
+          />
+
+          {/* ── Links grid ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-14">
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-accent mb-5">
                 Quick Links
               </h3>
-              <ul className="space-y-2.5">
+              <ul className="space-y-3">
                 {quickLinks.map(({ label, href }) => (
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-white/60 hover:text-[var(--color-accent,#D4A017)] transition-colors duration-200"
+                      className="text-base text-white/55 hover:text-white hover:translate-x-1 inline-block transition-all duration-200"
                     >
                       {label}
                     </Link>
@@ -126,76 +186,108 @@ export function Footer({ className }: { className?: string }) {
               </ul>
             </div>
 
-            {/* Column 3 — Contact */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-base uppercase tracking-wider text-white">
-                Contact
+            {/* Services */}
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-accent mb-5">
+                Services
               </h3>
-              <ul className="space-y-4">
-                {/* Address */}
-                <li className="flex items-start gap-3">
-                  <MapPin
-                    className="h-4 w-4 mt-0.5 shrink-0 text-[var(--color-accent,#D4A017)]"
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm text-white/70 leading-relaxed">
-                    Office of the Head of Civil Service,{' '}
-                    P.O. Box M.49, Accra, Ghana
-                  </span>
-                </li>
+              <ul className="space-y-3">
+                {serviceLinks.map((link) => (
+                  <li key={link.label}>
+                    {'external' in link && link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-base text-white/55 hover:text-white inline-flex items-center gap-1.5 transition-all duration-200"
+                      >
+                        {link.label}
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-base text-white/55 hover:text-white hover:translate-x-1 inline-block transition-all duration-200"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-                {/* Phone */}
-                <li className="flex items-center gap-3">
-                  <Phone
-                    className="h-4 w-4 shrink-0 text-[var(--color-accent,#D4A017)]"
-                    aria-hidden="true"
-                  />
-                  <a
-                    href="tel:+233302665421"
-                    className="text-sm text-white/70 hover:text-[var(--color-accent,#D4A017)] transition-colors duration-200"
-                  >
-                    +233 (0)30 266 5421
-                  </a>
+            {/* Contact */}
+            <div className="sm:col-span-2 lg:col-span-2">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-accent mb-5">
+                Get in Touch
+              </h3>
+              <ul className="space-y-5">
+                <li className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <MapPin className="h-5 w-5 text-accent" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/80 mb-0.5">Address</p>
+                    <p className="text-base text-white/55 leading-relaxed">
+                      Office of the Head of Civil Service,<br />
+                      P.O. Box M.49, Accra, Ghana
+                    </p>
+                  </div>
                 </li>
-
-                {/* Email */}
-                <li className="flex items-center gap-3">
-                  <Mail
-                    className="h-4 w-4 shrink-0 text-[var(--color-accent,#D4A017)]"
-                    aria-hidden="true"
-                  />
-                  <a
-                    href="mailto:info@ohcs.gov.gh"
-                    className="text-sm text-white/70 hover:text-[var(--color-accent,#D4A017)] transition-colors duration-200"
-                  >
-                    info@ohcs.gov.gh
-                  </a>
+                <li className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Phone className="h-5 w-5 text-accent" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/80 mb-0.5">Phone</p>
+                    <a
+                      href="tel:+233302665421"
+                      className="text-base text-white/55 hover:text-accent transition-colors duration-200"
+                    >
+                      +233 (0)30 266 5421
+                    </a>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Mail className="h-5 w-5 text-accent" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/80 mb-0.5">Email</p>
+                    <a
+                      href="mailto:info@ohcs.gov.gh"
+                      className="text-base text-white/55 hover:text-accent transition-colors duration-200"
+                    >
+                      info@ohcs.gov.gh
+                    </a>
+                  </div>
                 </li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/10">
-          <div className="max-w-[var(--max-w-content,1280px)] mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* ── Bottom bar ── */}
+        <div className="relative border-t border-white/10 bg-black/20">
+          <div className="max-w-content mx-auto px-6 sm:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             {/* Coat of arms + copyright */}
             <div className="flex items-center gap-3">
               <Image
                 src="/images/coat-of-arms.png"
                 alt="Ghana Coat of Arms"
-                width={24}
-                height={24}
-                className="brightness-0 invert"
+                width={28}
+                height={28}
+                className="brightness-0 invert opacity-60"
               />
-              <p className="text-xs text-white/50">
+              <p className="text-sm text-white/40">
                 &copy; {currentYear} Office of the Head of Civil Service. All rights reserved.
               </p>
             </div>
 
             {/* Policy links */}
             <nav aria-label="Policy links">
-              <ul className="flex items-center gap-5">
+              <ul className="flex items-center gap-6">
                 {[
                   { label: 'Privacy Policy', href: '/privacy' },
                   { label: 'Accessibility', href: '/accessibility' },
@@ -204,7 +296,7 @@ export function Footer({ className }: { className?: string }) {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-xs text-white/40 hover:text-white/70 transition-colors duration-200"
+                      className="text-sm text-white/30 hover:text-white/60 transition-colors duration-200"
                     >
                       {label}
                     </Link>
