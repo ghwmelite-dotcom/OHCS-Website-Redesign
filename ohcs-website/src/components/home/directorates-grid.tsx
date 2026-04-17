@@ -36,7 +36,7 @@ export function DirectoratesGrid() {
     <section
       ref={ref}
       aria-labelledby="directorates-heading"
-      className="py-20 lg:py-28 bg-surface-card"
+      className="py-24 lg:py-32 bg-white relative overflow-hidden"
     >
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-12">

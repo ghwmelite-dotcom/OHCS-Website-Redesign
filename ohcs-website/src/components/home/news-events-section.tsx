@@ -90,13 +90,21 @@ export function NewsEventsSection() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} className="py-20 lg:py-28 bg-surface-card relative">
-      {/* Subtle radial gradient for depth */}
+    <section ref={ref} className="py-24 lg:py-32 bg-surface relative overflow-hidden">
+      {/* Decorative background elements */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(27,94,32,0.03) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse at 80% 20%, rgba(212,160,23,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(27,94,32,0.04) 0%, transparent 50%)',
+        }}
+      />
+      {/* Left accent bar */}
+      <div
+        aria-hidden="true"
+        className="absolute left-0 top-24 bottom-24 w-1 hidden lg:block"
+        style={{
+          background: 'linear-gradient(to bottom, transparent, #D4A017 30%, #1B5E20 70%, transparent)',
         }}
       />
       <div className="relative max-w-content mx-auto px-4 sm:px-6 lg:px-8">
