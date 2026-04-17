@@ -48,43 +48,43 @@ export function DirectoratesGrid() {
           </h2>
           <Link
             href="/directorates"
-            className="text-sm text-primary font-medium flex items-center gap-1 hover:gap-2 transition-all"
+            className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all"
           >
-            View all directorates <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            View all directorates <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {DIRECTORATES.map((dir, index) => {
             const Icon = ICON_MAP[dir.icon];
             return (
               <Link
                 key={dir.slug}
                 href={`/directorates/${dir.slug}`}
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
               >
                 <Card
                   hoverable
                   kenteAccent
                   className={cn(
-                    'h-full p-6',
+                    'h-full p-7',
                     isVisible && 'animate-[reveal_0.6s_cubic-bezier(0.16,1,0.3,1)_forwards]',
                     !isVisible && 'opacity-0',
                   )}
                   style={isVisible ? { animationDelay: `${index * 60}ms` } : undefined}
                 >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      {Icon && <Icon className="h-5 w-5 text-primary" aria-hidden="true" />}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      {Icon && <Icon className="h-6 w-6 text-primary" aria-hidden="true" />}
                     </div>
-                    <span className="text-xs font-semibold text-accent uppercase tracking-wider">
+                    <span className="text-sm font-semibold text-accent uppercase tracking-wider">
                       {dir.shortName}
                     </span>
                   </div>
-                  <h3 className="font-semibold text-sm leading-snug mb-2">
+                  <h3 className="font-semibold text-base leading-snug mb-2">
                     {dir.name}
                   </h3>
-                  <p className="text-xs text-text-muted line-clamp-2">
+                  <p className="text-sm text-text-muted line-clamp-2 leading-relaxed">
                     {dir.description}
                   </p>
                 </Card>

@@ -94,7 +94,7 @@ export function NewsEventsSection() {
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={cn(
-            'grid grid-cols-1 lg:grid-cols-5 gap-12',
+            'grid grid-cols-1 lg:grid-cols-5 gap-14',
             isVisible && 'animate-[reveal_0.6s_cubic-bezier(0.16,1,0.3,1)_forwards]',
             !isVisible && 'opacity-0',
           )}
@@ -102,17 +102,17 @@ export function NewsEventsSection() {
           {/* News — 3 columns */}
           <div className="lg:col-span-3">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="font-display text-2xl font-bold text-primary-dark">
+              <h2 className="font-display text-2xl lg:text-3xl font-bold text-primary-dark">
                 Latest News
               </h2>
               <Link
                 href="/news"
-                className="text-sm text-primary font-medium flex items-center gap-1 hover:gap-2 transition-all"
+                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all"
               >
-                View all <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                View all <ArrowRight className="h-5 w-5" aria-hidden="true" />
               </Link>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-5">
               {SAMPLE_NEWS.map((article) => (
                 <NewsCard key={article.id} article={article} />
               ))}
@@ -122,17 +122,17 @@ export function NewsEventsSection() {
           {/* Events — 2 columns */}
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="font-display text-2xl font-bold text-primary-dark">
+              <h2 className="font-display text-2xl lg:text-3xl font-bold text-primary-dark">
                 Upcoming Events
               </h2>
               <Link
                 href="/events"
-                className="text-sm text-primary font-medium flex items-center gap-1 hover:gap-2 transition-all"
+                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all"
               >
-                View all <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                View all <ArrowRight className="h-5 w-5" aria-hidden="true" />
               </Link>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-5">
               {SAMPLE_EVENTS.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
