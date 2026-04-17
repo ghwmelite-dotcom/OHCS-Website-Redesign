@@ -31,18 +31,23 @@ export function LeadershipSpotlight() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} aria-labelledby="leadership-heading" className="py-16 lg:py-24">
+    <section ref={ref} aria-labelledby="leadership-heading" className="py-20 lg:py-28">
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-12">
-          <h2
-            id="leadership-heading"
-            className="font-display text-2xl lg:text-3xl font-bold text-primary-dark"
-          >
-            Our Leadership
-          </h2>
+        <div className="flex items-center justify-between mb-14">
+          <div>
+            <span className="text-xs font-semibold text-accent uppercase tracking-[0.2em] block mb-1">
+              Meet the Team
+            </span>
+            <h2
+              id="leadership-heading"
+              className="font-display text-3xl lg:text-4xl font-bold text-primary-dark"
+            >
+              Our Leadership
+            </h2>
+          </div>
           <Link
             href="/about/leadership"
-            className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all"
+            className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all group/viewall"
           >
             View all leadership <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </Link>

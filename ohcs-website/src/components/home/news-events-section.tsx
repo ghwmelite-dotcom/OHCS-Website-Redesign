@@ -90,8 +90,16 @@ export function NewsEventsSection() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} className="py-16 lg:py-24 bg-surface-card">
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={ref} className="py-20 lg:py-28 bg-surface-card relative">
+      {/* Subtle radial gradient for depth */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 30% 50%, rgba(27,94,32,0.03) 0%, transparent 60%)',
+        }}
+      />
+      <div className="relative max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={cn(
             'grid grid-cols-1 lg:grid-cols-5 gap-14',
@@ -101,15 +109,18 @@ export function NewsEventsSection() {
         >
           {/* News — 3 columns */}
           <div className="lg:col-span-3">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-display text-2xl lg:text-3xl font-bold text-primary-dark">
-                Latest News
-              </h2>
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <span className="text-xs font-semibold text-accent uppercase tracking-[0.2em] block mb-1">Stay Updated</span>
+                <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-dark">
+                  Latest News
+                </h2>
+              </div>
               <Link
                 href="/news"
-                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all"
+                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all group/viewall"
               >
-                View all <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                View all <ArrowRight className="h-5 w-5 group-hover/viewall:translate-x-0.5 transition-transform" aria-hidden="true" />
               </Link>
             </div>
             <div className="space-y-5">
@@ -121,15 +132,18 @@ export function NewsEventsSection() {
 
           {/* Events — 2 columns */}
           <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-display text-2xl lg:text-3xl font-bold text-primary-dark">
-                Upcoming Events
-              </h2>
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <span className="text-xs font-semibold text-accent uppercase tracking-[0.2em] block mb-1">Mark Your Calendar</span>
+                <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-dark">
+                  Upcoming Events
+                </h2>
+              </div>
               <Link
                 href="/events"
-                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all"
+                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all group/viewall"
               >
-                View all <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                View all <ArrowRight className="h-5 w-5 group-hover/viewall:translate-x-0.5 transition-transform" aria-hidden="true" />
               </Link>
             </div>
             <div className="space-y-5">

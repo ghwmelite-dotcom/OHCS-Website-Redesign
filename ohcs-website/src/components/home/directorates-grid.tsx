@@ -36,16 +36,21 @@ export function DirectoratesGrid() {
     <section
       ref={ref}
       aria-labelledby="directorates-heading"
-      className="py-16 lg:py-24 bg-surface-card"
+      className="py-20 lg:py-28 bg-surface-card"
     >
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-10">
-          <h2
-            id="directorates-heading"
-            className="font-display text-2xl lg:text-3xl font-bold text-primary-dark"
-          >
-            Our Directorates
-          </h2>
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <span className="text-xs font-semibold text-accent uppercase tracking-[0.2em] block mb-1">
+              Our Structure
+            </span>
+            <h2
+              id="directorates-heading"
+              className="font-display text-3xl lg:text-4xl font-bold text-primary-dark"
+            >
+              Directorates
+            </h2>
+          </div>
           <Link
             href="/directorates"
             className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all"

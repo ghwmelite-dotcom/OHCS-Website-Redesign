@@ -12,13 +12,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          // Base
-          'relative bg-surface-card rounded-lg border border-border shadow-card p-6',
+          // Base — refined surface with layered depth
+          'relative bg-surface-card rounded-xl border border-border/60 shadow-card p-6',
           // Overflow hidden needed for the kente accent bar
           kenteAccent && 'group overflow-hidden',
-          // Hoverable
+          // Hoverable — smooth lift with gold-tinted shadow
           hoverable &&
-            'hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-200 cursor-pointer',
+            'hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 ease-out cursor-pointer',
           className,
         )}
         {...props}
@@ -28,8 +28,8 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
             aria-hidden="true"
             className={cn(
               'absolute left-0 top-0 bottom-0 w-[3px]',
-              'bg-gradient-to-b from-[var(--color-kente-green,#006B3F)] via-[var(--color-accent,#FCD116)] to-[var(--color-kente-red,#CE1126)]',
-              'opacity-0 group-hover:opacity-100 transition-opacity duration-200',
+              'bg-gradient-to-b from-primary via-accent to-kente-red',
+              'opacity-0 group-hover:opacity-100 transition-opacity duration-300',
             )}
           />
         )}

@@ -15,7 +15,7 @@ vi.mock('@/hooks/use-scroll-reveal', () => ({
 describe('DirectoratesGrid', () => {
   it('renders the section heading', () => {
     render(<DirectoratesGrid />);
-    expect(screen.getByRole('heading', { name: /Our Directorates/i })).toBeDefined();
+    expect(screen.getByRole('heading', { name: /Directorates/i })).toBeDefined();
   });
 
   it('renders all 8 directorates', () => {
