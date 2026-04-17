@@ -16,6 +16,7 @@ import {
 import { DIRECTORATES } from '@/lib/constants';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import { cn } from '@/lib/utils';
+import { FloatingShapes } from '@/components/home/floating-shapes';
 import type { LucideIcon } from 'lucide-react';
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -58,23 +59,30 @@ export function DirectoratesGrid() {
     <section
       ref={ref}
       aria-labelledby="directorates-heading"
-      className="py-24 lg:py-32 bg-white relative overflow-hidden"
+      className="py-24 lg:py-32 relative overflow-hidden"
+      style={{ backgroundColor: '#FFF8F0' }}
     >
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+      <FloatingShapes />
+      <div className="relative max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header — centered */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-5">
-            <span className="w-10 h-px bg-accent" aria-hidden="true" />
-            <span className="text-sm font-semibold text-accent uppercase tracking-[0.2em]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/15 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
+            <span className="text-sm font-semibold text-accent tracking-wide">
               Our Structure
             </span>
-            <span className="w-10 h-px bg-accent" aria-hidden="true" />
           </div>
           <h2
             id="directorates-heading"
             className="font-display text-4xl lg:text-5xl font-bold text-primary-dark mb-5"
           >
-            Directorates
+            <span className="relative inline-block">
+              Directorates
+              <span
+                aria-hidden="true"
+                className="absolute -bottom-1 left-0 right-0 h-3 bg-accent/20 rounded-sm -z-10"
+              />
+            </span>
           </h2>
           <p className="text-lg text-text-muted max-w-2xl mx-auto leading-relaxed">
             Eight specialized directorates driving Ghana&apos;s civil service forward.

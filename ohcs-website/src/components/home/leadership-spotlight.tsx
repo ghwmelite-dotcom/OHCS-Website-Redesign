@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import { cn } from '@/lib/utils';
+import { FloatingShapes } from '@/components/home/floating-shapes';
 
 const LEADERS = [
   {
@@ -31,25 +32,38 @@ export function LeadershipSpotlight() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} aria-labelledby="leadership-heading" className="py-20 lg:py-28">
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-14">
-          <div>
-            <span className="text-xs font-semibold text-accent uppercase tracking-[0.2em] block mb-1">
+    <section ref={ref} aria-labelledby="leadership-heading" className="py-24 lg:py-32 relative overflow-hidden" style={{ backgroundColor: '#F0F7F1' }}>
+      <FloatingShapes />
+      <div className="relative max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section header — centered */}
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
+            <span className="text-sm font-semibold text-primary tracking-wide">
               Meet the Team
             </span>
-            <h2
-              id="leadership-heading"
-              className="font-display text-3xl lg:text-4xl font-bold text-primary-dark"
-            >
-              Our Leadership
-            </h2>
           </div>
+          <h2
+            id="leadership-heading"
+            className="font-display text-4xl lg:text-5xl font-bold text-primary-dark mb-5"
+          >
+            Our{' '}
+            <span className="relative inline-block">
+              Leadership
+              <span
+                aria-hidden="true"
+                className="absolute -bottom-1 left-0 right-0 h-3 bg-primary/15 rounded-sm -z-10"
+              />
+            </span>
+          </h2>
+        </div>
+
+        <div className="flex justify-center mb-14">
           <Link
             href="/about/leadership"
-            className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all group/viewall"
+            className="text-sm font-medium text-primary flex items-center gap-1.5 hover:gap-2.5 transition-all px-4 py-2 rounded-full bg-primary/5 border border-primary/10 hover:border-primary/30"
           >
-            View all leadership <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            View all leadership <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
 

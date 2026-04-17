@@ -6,6 +6,7 @@ import { NewsCard } from '@/components/news/news-card';
 import { EventCard } from '@/components/events/event-card';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import { cn } from '@/lib/utils';
+import { FloatingShapes } from '@/components/home/floating-shapes';
 import type { NewsArticle, Event } from '@/types';
 
 const SAMPLE_NEWS: NewsArticle[] = [
@@ -93,29 +94,27 @@ export function NewsEventsSection() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} className="py-24 lg:py-32 bg-surface relative overflow-hidden">
-      {/* Decorative gradient washes */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse at 80% 20%, rgba(212,160,23,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(27,94,32,0.04) 0%, transparent 50%)',
-        }}
-      />
+    <section ref={ref} className="py-24 lg:py-32 relative overflow-hidden" style={{ backgroundColor: '#FFF8F0' }}>
+      <FloatingShapes />
 
       <div className="relative max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section header */}
+        {/* Section header — centered */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-5">
-            <span className="w-10 h-px bg-accent" aria-hidden="true" />
-            <span className="text-sm font-semibold text-accent uppercase tracking-[0.2em]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/15 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
+            <span className="text-sm font-semibold text-accent tracking-wide">
               Stay Informed
             </span>
-            <span className="w-10 h-px bg-accent" aria-hidden="true" />
           </div>
           <h2 className="font-display text-4xl lg:text-5xl font-bold text-primary-dark">
-            News & Events
+            News &{' '}
+            <span className="relative inline-block">
+              Events
+              <span
+                aria-hidden="true"
+                className="absolute -bottom-1 left-0 right-0 h-3 bg-accent/20 rounded-sm -z-10"
+              />
+            </span>
           </h2>
         </div>
 
@@ -140,7 +139,7 @@ export function NewsEventsSection() {
               </div>
               <Link
                 href="/news"
-                className="text-sm font-medium text-primary flex items-center gap-1.5 hover:gap-2.5 transition-all px-4 py-2 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-sm"
+                className="text-sm font-medium text-primary flex items-center gap-1.5 hover:gap-2.5 transition-all px-4 py-2 rounded-full bg-primary/5 border border-primary/10 hover:border-primary/30"
               >
                 View all <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
@@ -165,7 +164,7 @@ export function NewsEventsSection() {
               </div>
               <Link
                 href="/events"
-                className="text-sm font-medium text-primary flex items-center gap-1.5 hover:gap-2.5 transition-all px-4 py-2 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-sm"
+                className="text-sm font-medium text-primary flex items-center gap-1.5 hover:gap-2.5 transition-all px-4 py-2 rounded-full bg-primary/5 border border-primary/10 hover:border-primary/30"
               >
                 View all <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
