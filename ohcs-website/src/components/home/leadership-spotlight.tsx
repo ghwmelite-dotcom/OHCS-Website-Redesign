@@ -52,29 +52,37 @@ export function LeadershipSpotlight() {
           {LEADERS.map((leader) => (
             <div
               key={leader.name}
-              className="bg-primary-dark rounded-xl overflow-hidden"
+              className="relative rounded-xl overflow-hidden min-h-[320px] sm:min-h-[360px]"
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
-                {/* Photo */}
-                <div className="relative h-64 sm:h-auto sm:min-h-[280px]">
-                  <Image
-                    src={leader.photoUrl}
-                    alt={leader.name}
-                    fill
-                    className="object-cover object-[center_20%]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                </div>
+              {/* Full-bleed background image */}
+              <Image
+                src={leader.photoUrl}
+                alt={leader.name}
+                fill
+                className="object-cover object-[center_20%]"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
 
-                {/* Bio */}
-                <div className="p-6 lg:p-8 flex flex-col justify-center">
-                  <p className="text-accent text-xs font-medium uppercase tracking-wider mb-2">
+              {/* Gradient overlay for text readability */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(to right, transparent 0%, transparent 30%, rgba(13,59,19,0.5) 50%, rgba(13,59,19,0.75) 65%, rgba(13,59,19,0.88) 80%, rgba(13,59,19,0.92) 100%)',
+                }}
+              />
+
+              {/* Bio panel — positioned on the right */}
+              <div className="absolute inset-0 flex items-center justify-end">
+                <div className="w-full sm:w-[55%] p-6 lg:p-8 flex flex-col justify-center">
+                  <p className="text-accent text-sm font-semibold uppercase tracking-wider mb-2 drop-shadow-sm">
                     {leader.title}
                   </p>
-                  <h3 className="font-display text-xl lg:text-2xl font-bold text-white mb-3">
+                  <h3 className="font-display text-xl lg:text-2xl font-bold text-white mb-3 drop-shadow-sm">
                     {leader.name}
                   </h3>
-                  <p className="text-white/70 text-sm leading-relaxed line-clamp-4">
+                  <p className="text-white/80 text-base leading-relaxed line-clamp-4 drop-shadow-sm">
                     {leader.bio}
                   </p>
                 </div>
