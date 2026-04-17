@@ -173,7 +173,7 @@ export function Hero() {
       <GoldParticles className="z-[4]" />
 
       {/* Content */}
-      <div className="relative z-15 h-full flex flex-col justify-center px-6 sm:px-10 lg:px-16 max-w-[680px]">
+      <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-10 lg:px-16 max-w-[680px]">
         <div
           className="flex items-center gap-3.5 mb-5 opacity-0"
           style={{
