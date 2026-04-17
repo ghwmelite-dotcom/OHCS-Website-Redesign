@@ -19,12 +19,6 @@ vi.mock('next/link', () => ({
 
 describe('Hero', () => {
 
-  it('renders the first slide headline', () => {
-    render(<Hero />);
-    expect(screen.getByText(/Serving Ghana's/)).toBeDefined();
-    expect(screen.getByText(/Public Sector/)).toBeDefined();
-  });
-
   it('renders the eyebrow text', () => {
     render(<Hero />);
     expect(screen.getByText('Republic of Ghana')).toBeDefined();

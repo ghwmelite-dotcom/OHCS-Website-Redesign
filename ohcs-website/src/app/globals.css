@@ -1,6 +1,6 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
 
 @theme inline {
   /* Colors */
@@ -117,6 +117,16 @@
     opacity: 0;
     transform: scale(1.05);
   }
+}
+
+@keyframes kente-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes corner-glow {
+  0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 4px rgba(212,160,23,0.2)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(212,160,23,0.4)); }
 }
 
 @layer base {
