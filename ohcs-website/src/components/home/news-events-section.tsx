@@ -13,7 +13,8 @@ const SAMPLE_NEWS: NewsArticle[] = [
     id: 1,
     title: "Nigeria's Federal Civil Service Pays Courtesy Call on Ghana's Head of Civil Service",
     slug: 'nigeria-courtesy-call',
-    excerpt: 'A delegation from Nigeria visited OHCS to discuss cross-border collaboration on civil service reforms and best practices.',
+    excerpt:
+      'A delegation from Nigeria visited OHCS to discuss cross-border collaboration on civil service reforms and best practices.',
     content: '',
     thumbnailUrl: null,
     publishedAt: '2026-04-15T10:00:00Z',
@@ -25,7 +26,8 @@ const SAMPLE_NEWS: NewsArticle[] = [
     id: 2,
     title: 'OHCS Launches 2026 Civil Service Training Programme for Senior Officers',
     slug: 'training-programme-2026',
-    excerpt: 'The programme aims to equip 500 senior officers with modern leadership and digital governance skills.',
+    excerpt:
+      'The programme aims to equip 500 senior officers with modern leadership and digital governance skills.',
     content: '',
     thumbnailUrl: null,
     publishedAt: '2026-04-10T09:00:00Z',
@@ -37,7 +39,8 @@ const SAMPLE_NEWS: NewsArticle[] = [
     id: 3,
     title: 'Head of Civil Service Addresses Staff on Public Sector Reforms Agenda',
     slug: 'reforms-address',
-    excerpt: 'Dr. Evans Aggrey-Darkoh outlined key priorities for the civil service transformation roadmap.',
+    excerpt:
+      'Dr. Evans Aggrey-Darkoh outlined key priorities for the civil service transformation roadmap.',
     content: '',
     thumbnailUrl: null,
     publishedAt: '2026-04-05T14:00:00Z',
@@ -91,23 +94,31 @@ export function NewsEventsSection() {
 
   return (
     <section ref={ref} className="py-24 lg:py-32 bg-surface relative overflow-hidden">
-      {/* Decorative background elements */}
+      {/* Decorative gradient washes */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 80% 20%, rgba(212,160,23,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(27,94,32,0.04) 0%, transparent 50%)',
+          background:
+            'radial-gradient(ellipse at 80% 20%, rgba(212,160,23,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(27,94,32,0.04) 0%, transparent 50%)',
         }}
       />
-      {/* Left accent bar */}
-      <div
-        aria-hidden="true"
-        className="absolute left-0 top-24 bottom-24 w-1 hidden lg:block"
-        style={{
-          background: 'linear-gradient(to bottom, transparent, #D4A017 30%, #1B5E20 70%, transparent)',
-        }}
-      />
+
       <div className="relative max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-3 mb-5">
+            <span className="w-10 h-px bg-accent" aria-hidden="true" />
+            <span className="text-sm font-semibold text-accent uppercase tracking-[0.2em]">
+              Stay Informed
+            </span>
+            <span className="w-10 h-px bg-accent" aria-hidden="true" />
+          </div>
+          <h2 className="font-display text-4xl lg:text-5xl font-bold text-primary-dark">
+            News & Events
+          </h2>
+        </div>
+
         <div
           className={cn(
             'grid grid-cols-1 lg:grid-cols-5 gap-14',
@@ -117,18 +128,21 @@ export function NewsEventsSection() {
         >
           {/* News — 3 columns */}
           <div className="lg:col-span-3">
-            <div className="flex items-center justify-between mb-10">
-              <div>
-                <span className="text-xs font-semibold text-accent uppercase tracking-[0.2em] block mb-1">Stay Updated</span>
-                <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-dark">
-                  Latest News
-                </h2>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-sm">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2" />
+                    <line x1="10" y1="6" x2="18" y2="6" /><line x1="10" y1="10" x2="18" y2="10" /><line x1="10" y1="14" x2="14" y2="14" />
+                  </svg>
+                </div>
+                <h3 className="font-display text-2xl font-bold text-primary-dark">Latest News</h3>
               </div>
               <Link
                 href="/news"
-                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all group/viewall"
+                className="text-sm font-medium text-primary flex items-center gap-1.5 hover:gap-2.5 transition-all px-4 py-2 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-sm"
               >
-                View all <ArrowRight className="h-5 w-5 group-hover/viewall:translate-x-0.5 transition-transform" aria-hidden="true" />
+                View all <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
             <div className="space-y-5">
@@ -140,18 +154,20 @@ export function NewsEventsSection() {
 
           {/* Events — 2 columns */}
           <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-10">
-              <div>
-                <span className="text-xs font-semibold text-accent uppercase tracking-[0.2em] block mb-1">Mark Your Calendar</span>
-                <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-dark">
-                  Upcoming Events
-                </h2>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-sm">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </div>
+                <h3 className="font-display text-2xl font-bold text-primary-dark">Upcoming Events</h3>
               </div>
               <Link
                 href="/events"
-                className="text-base text-primary font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all group/viewall"
+                className="text-sm font-medium text-primary flex items-center gap-1.5 hover:gap-2.5 transition-all px-4 py-2 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-sm"
               >
-                View all <ArrowRight className="h-5 w-5 group-hover/viewall:translate-x-0.5 transition-transform" aria-hidden="true" />
+                View all <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
             <div className="space-y-5">
