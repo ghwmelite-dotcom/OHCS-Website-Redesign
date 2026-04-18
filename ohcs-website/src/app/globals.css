@@ -166,6 +166,17 @@
   to { width: 100%; opacity: 1; }
 }
 
+/* ── Coat of Arms animations ── */
+@keyframes coa-shimmer {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes coa-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
 /* ── Kente thread animations for page heroes ── */
 @keyframes kente-thread-h {
   0% { transform: translateX(-30px); opacity: 0; }

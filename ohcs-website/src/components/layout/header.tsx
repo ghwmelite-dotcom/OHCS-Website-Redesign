@@ -38,15 +38,35 @@ export function Header() {
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-9">
             {/* Ghana identity */}
-            <div className="flex items-center gap-2.5">
-              <Image
-                src="/images/coat-of-arms.png"
-                alt="Ghana Coat of Arms"
-                width={20}
-                height={20}
-                className="object-contain"
-                style={{ width: 'auto', height: 'auto' }}
-              />
+            <div className="flex items-center gap-2.5 group/coa">
+              <div className="relative">
+                {/* Gold shimmer ring */}
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-1 rounded-full opacity-0 group-hover/coa:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: 'conic-gradient(from 0deg, transparent, rgba(212,160,23,0.4), transparent, rgba(212,160,23,0.2), transparent)',
+                    animation: 'coa-shimmer 3s linear infinite',
+                  }}
+                />
+                {/* Subtle glow pulse */}
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-0.5 rounded-full"
+                  style={{
+                    background: 'radial-gradient(circle, rgba(212,160,23,0.15) 0%, transparent 70%)',
+                    animation: 'coa-glow 2.5s ease-in-out infinite',
+                  }}
+                />
+                <Image
+                  src="/images/coat-of-arms.png"
+                  alt="Ghana Coat of Arms"
+                  width={22}
+                  height={22}
+                  className="object-contain relative z-10 group-hover/coa:scale-110 transition-transform duration-500"
+                  style={{ width: 'auto', height: 'auto' }}
+                />
+              </div>
               <span className="text-xs font-medium text-white/80 hidden sm:inline tracking-wide">
                 Republic of Ghana
               </span>
