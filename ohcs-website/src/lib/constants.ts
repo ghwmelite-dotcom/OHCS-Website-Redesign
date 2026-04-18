@@ -2,6 +2,7 @@ import type {
   NavItem,
   Directorate,
   Department,
+  Unit,
   TrainingInstitution,
   SubmissionStatus,
 } from '@/types';
@@ -32,8 +33,8 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Structure',
     href: '/directorates',
     children: [
-      { label: 'Directorates', href: '/directorates', icon: 'LayoutGrid', description: 'Eight specialised directorates driving reform' },
-      { label: 'Departments', href: '/departments', icon: 'Landmark', description: 'Support departments including Audit, PRAAD, and more' },
+      { label: 'Directorates', href: '/directorates', icon: 'LayoutGrid', description: 'Five line directorates driving the Civil Service' },
+      { label: 'Units', href: '/units', icon: 'Landmark', description: 'Support units including Reform, Audit, Secretariat, and more' },
       { label: 'Training Institutions', href: '/training', icon: 'GraduationCap', description: 'Civil Service Training Centre, GIMPA, and regional institutes' },
     ],
   },
@@ -63,105 +64,97 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const DIRECTORATES: Directorate[] = [
   {
-    slug: 'career-management',
-    name: 'Career Management Directorate',
-    shortName: 'CMD',
+    slug: 'research-statistics',
+    name: 'Research, Statistics & Information Management Directorate',
+    shortName: 'RSIMD',
     description:
-      'Responsible for the effective management of civil servants\' careers, including recruitment, promotion, transfers, and succession planning across the Civil Service.',
-    icon: 'Briefcase',
+      'Collects, analyses, and disseminates data on Civil Service workforce trends to support evidence-based policy decisions, strategic planning, and information management.',
+    icon: 'BarChart3',
   },
   {
     slug: 'finance-administration',
-    name: 'Finance and Administration Directorate',
-    shortName: 'FAD',
+    name: 'Finance & Administration Directorate',
+    shortName: 'F&A',
     description:
       'Oversees the financial management, budgeting, procurement, and administrative operations that sustain the smooth functioning of the Office of the Head of the Civil Service.',
     icon: 'Wallet',
   },
   {
-    slug: 'reforms',
-    name: 'Reforms Directorate',
-    shortName: 'RD',
+    slug: 'planning-budgeting',
+    name: 'Planning, Budgeting, Monitoring & Evaluation Directorate',
+    shortName: 'PBMED',
     description:
-      'Drives the design and implementation of Civil Service reforms to improve public sector performance, accountability, and service delivery outcomes.',
-    icon: 'RefreshCw',
-  },
-  {
-    slug: 'human-resource-management',
-    name: 'Human Resource Management Directorate',
-    shortName: 'HRMD',
-    description:
-      'Develops and coordinates human resource policies, workforce planning, performance management frameworks, and staff welfare programmes across the Civil Service.',
-    icon: 'Users',
-  },
-  {
-    slug: 'research-statistics',
-    name: 'Research, Statistics, and Information Directorate',
-    shortName: 'RSID',
-    description:
-      'Collects, analyses, and disseminates data on Civil Service workforce trends to support evidence-based policy decisions and strategic planning.',
-    icon: 'BarChart3',
-  },
-  {
-    slug: 'policy-planning',
-    name: 'Policy, Planning, Monitoring and Evaluation Directorate',
-    shortName: 'PPMED',
-    description:
-      'Coordinates the formulation of Civil Service policies, strategic plans, and monitoring frameworks to ensure alignment with national development goals.',
+      'Coordinates the formulation of Civil Service policies, strategic plans, budgeting processes, and monitoring frameworks to ensure alignment with national development goals.',
     icon: 'ClipboardCheck',
   },
   {
-    slug: 'legal',
-    name: 'Legal Directorate',
-    shortName: 'LD',
+    slug: 'career-management',
+    name: 'Career Management Directorate',
+    shortName: 'CMD',
     description:
-      'Provides legal advisory services, ensures regulatory compliance, and manages litigation and contractual matters on behalf of the Civil Service.',
-    icon: 'Scale',
+      'Responsible for the effective management of civil servants\' careers, including promotions, transfers, postings, and succession planning across the Civil Service.',
+    icon: 'Briefcase',
   },
   {
-    slug: 'ict',
-    name: 'ICT Directorate',
-    shortName: 'ICTD',
+    slug: 'recruitment-training',
+    name: 'Recruitment, Training & Development Directorate',
+    shortName: 'RTDD',
     description:
-      'Leads the digitalisation agenda of the Civil Service by deploying and maintaining information and communication technology systems that enhance operational efficiency.',
-    icon: 'Monitor',
+      'Manages the recruitment of qualified personnel into the Civil Service and coordinates training and professional development programmes to build workforce capacity.',
+    icon: 'GraduationCap',
   },
 ];
 
-// ─── Departments ──────────────────────────────────────────────────────────────
+// ─── Units ───────────────────────────────────────────────────────────────────
 
-export const DEPARTMENTS: Department[] = [
+export const UNITS: Unit[] = [
+  {
+    slug: 'reform-coordinating',
+    name: 'Reform Coordinating Unit',
+    shortName: 'RCU',
+    description:
+      'Drives the design and implementation of Civil Service reforms to improve public sector performance, accountability, and service delivery outcomes.',
+  },
   {
     slug: 'internal-audit',
-    name: 'Internal Audit Department',
-    shortName: 'IAD',
+    name: 'Internal Audit Unit',
+    shortName: 'IAU',
     description:
       'Provides independent and objective assurance on governance, risk management, and internal control systems within the Civil Service to promote accountability.',
   },
   {
-    slug: 'management-services',
-    name: 'Management Services Department',
-    shortName: 'MSD',
+    slug: 'civil-service-secretariat',
+    name: 'Civil Service Secretariat',
+    shortName: 'CSS',
     description:
-      'Conducts organisational reviews, job evaluations, workload analysis, and management consulting services to improve public sector efficiency and effectiveness.',
+      'Provides secretarial and administrative support services to the Civil Service Council and coordinates inter-agency governance activities.',
   },
   {
-    slug: 'praad',
-    name: 'Public Records and Archives Administration Department',
-    shortName: 'PRAAD',
+    slug: 'estate',
+    name: 'Estate Unit',
+    shortName: 'Estate',
     description:
-      'Manages the creation, storage, retrieval, and preservation of public records and archival materials to safeguard Ghana\'s institutional memory.',
-    logoUrl: '/images/departments/praad-logo.png',
+      'Manages and maintains the physical infrastructure, facilities, and property assets of the Office of the Head of the Civil Service.',
   },
   {
-    slug: 'pscmd',
-    name: 'Public Services Commission Management Department',
-    shortName: 'PSCMD',
+    slug: 'accounts',
+    name: 'Accounts Unit',
+    shortName: 'Accounts',
     description:
-      'Coordinates the implementation of Public Services Commission directives and ensures compliance with staffing standards across public service institutions.',
-    logoUrl: '/images/departments/pscmd-logo.png',
+      'Handles financial accounting, payments processing, payroll management, and financial reporting for the Office.',
+  },
+  {
+    slug: 'stores',
+    name: 'Stores Unit',
+    shortName: 'Stores',
+    description:
+      'Manages procurement, storage, and distribution of supplies, materials, and equipment for the Office.',
   },
 ];
+
+// ─── Departments (legacy — kept for backward compatibility) ──────────────────
+
+export const DEPARTMENTS: Department[] = [];
 
 // ─── Training Institutions ────────────────────────────────────────────────────
 

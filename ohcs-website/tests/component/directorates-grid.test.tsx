@@ -18,22 +18,19 @@ describe('DirectoratesGrid', () => {
     expect(screen.getByRole('heading', { name: /Directorates/i })).toBeDefined();
   });
 
-  it('renders all 8 directorates', () => {
+  it('renders all 5 directorates', () => {
     render(<DirectoratesGrid />);
     expect(screen.getByText('Career Management Directorate')).toBeDefined();
-    expect(screen.getByText('Finance and Administration Directorate')).toBeDefined();
-    expect(screen.getByText('Reforms Directorate')).toBeDefined();
-    expect(screen.getByText('Human Resource Management Directorate')).toBeDefined();
+    expect(screen.getByText(/Finance & Administration/)).toBeDefined();
     expect(screen.getByText(/Research, Statistics/)).toBeDefined();
-    expect(screen.getByText(/Policy, Planning/)).toBeDefined();
-    expect(screen.getByText('Legal Directorate')).toBeDefined();
-    expect(screen.getByText('ICT Directorate')).toBeDefined();
+    expect(screen.getByText(/Planning, Budgeting/)).toBeDefined();
+    expect(screen.getByText(/Recruitment, Training/)).toBeDefined();
   });
 
   it('renders short names', () => {
     render(<DirectoratesGrid />);
     expect(screen.getByText('CMD')).toBeDefined();
-    expect(screen.getByText('ICTD')).toBeDefined();
+    expect(screen.getByText('RTDD')).toBeDefined();
   });
 
   it('links each card to the directorate page', () => {
@@ -41,7 +38,7 @@ describe('DirectoratesGrid', () => {
     const links = screen.getAllByRole('link');
     const hrefs = links.map((l) => l.getAttribute('href'));
     expect(hrefs).toContain('/directorates/career-management');
-    expect(hrefs).toContain('/directorates/ict');
+    expect(hrefs).toContain('/directorates/recruitment-training');
   });
 
   it('renders the View all link', () => {

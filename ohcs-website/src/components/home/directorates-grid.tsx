@@ -6,12 +6,9 @@ import {
   ChevronRight,
   Briefcase,
   Wallet,
-  RefreshCw,
-  Users,
   BarChart3,
   ClipboardCheck,
-  Scale,
-  Monitor,
+  GraduationCap,
 } from 'lucide-react';
 import { DIRECTORATES } from '@/lib/constants';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
@@ -22,34 +19,25 @@ import type { LucideIcon } from 'lucide-react';
 const ICON_MAP: Record<string, LucideIcon> = {
   Briefcase,
   Wallet,
-  RefreshCw,
-  Users,
   BarChart3,
   ClipboardCheck,
-  Scale,
-  Monitor,
+  GraduationCap,
 };
 
 const GRADIENT_MAP: Record<string, string> = {
   Briefcase: 'from-green-500 to-emerald-600',
   Wallet: 'from-blue-500 to-indigo-600',
-  RefreshCw: 'from-purple-500 to-violet-600',
-  Users: 'from-teal-500 to-cyan-600',
   BarChart3: 'from-amber-500 to-orange-600',
   ClipboardCheck: 'from-rose-500 to-pink-600',
-  Scale: 'from-slate-500 to-gray-700',
-  Monitor: 'from-sky-500 to-blue-600',
+  GraduationCap: 'from-purple-500 to-violet-600',
 };
 
 const BORDER_MAP: Record<string, string> = {
   Briefcase: 'border-green-200 hover:border-green-400',
   Wallet: 'border-blue-200 hover:border-blue-400',
-  RefreshCw: 'border-purple-200 hover:border-purple-400',
-  Users: 'border-teal-200 hover:border-teal-400',
   BarChart3: 'border-amber-200 hover:border-amber-400',
   ClipboardCheck: 'border-rose-200 hover:border-rose-400',
-  Scale: 'border-slate-200 hover:border-slate-400',
-  Monitor: 'border-sky-200 hover:border-sky-400',
+  GraduationCap: 'border-purple-200 hover:border-purple-400',
 };
 
 export function DirectoratesGrid() {
@@ -85,7 +73,7 @@ export function DirectoratesGrid() {
             </span>
           </h2>
           <p className="text-lg text-text-muted max-w-2xl mx-auto leading-relaxed">
-            Eight specialized directorates driving Ghana&apos;s civil service forward.
+            Five line directorates driving Ghana&apos;s civil service forward.
           </p>
         </div>
 

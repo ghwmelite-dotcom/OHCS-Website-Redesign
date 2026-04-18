@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { Sidebar } from '@/components/layout/sidebar';
 import Link from 'next/link';
-import { DIRECTORATES, DEPARTMENTS } from '@/lib/constants';
+import { DIRECTORATES, UNITS } from '@/lib/constants';
 
 const ABOUT_SIDEBAR = [
   {
@@ -28,12 +28,12 @@ export default function StructurePage() {
           </h1>
 
           <p className="text-lg text-text-muted leading-relaxed mb-10">
-            OHCS comprises eight specialised directorates and four support departments,
+            OHCS comprises five line directorates and six support units,
             each responsible for specific aspects of civil service management and reform.
           </p>
 
           <h2 className="font-display text-2xl font-bold text-primary-dark mb-6">
-            Directorates
+            Line Directorates
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
             {DIRECTORATES.map((dir) => (
@@ -51,19 +51,19 @@ export default function StructurePage() {
           </div>
 
           <h2 className="font-display text-2xl font-bold text-primary-dark mb-6">
-            Departments
+            Units
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {DEPARTMENTS.map((dept) => (
+            {UNITS.map((unit) => (
               <Link
-                key={dept.slug}
-                href={`/departments/${dept.slug}`}
+                key={unit.slug}
+                href={`/units/${unit.slug}`}
                 className="block bg-accent/5 rounded-xl p-5 hover:bg-accent/10 transition-colors border border-accent/10"
               >
                 <span className="text-xs font-bold text-accent uppercase tracking-wider block mb-1">
-                  {dept.shortName}
+                  {unit.shortName}
                 </span>
-                <span className="font-semibold text-base text-primary-dark">{dept.name}</span>
+                <span className="font-semibold text-base text-primary-dark">{unit.name}</span>
               </Link>
             ))}
           </div>

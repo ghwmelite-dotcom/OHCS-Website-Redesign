@@ -121,6 +121,13 @@ export interface Department {
   logoUrl?: string;
 }
 
+export interface Unit {
+  slug: string;
+  name: string;
+  shortName: string;
+  description: string;
+}
+
 export interface TrainingInstitution {
   slug: string;
   name: string;
