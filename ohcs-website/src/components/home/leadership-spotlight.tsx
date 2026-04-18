@@ -88,36 +88,35 @@ export function LeadershipSpotlight() {
                 }}
               />
 
-              <div className="grid grid-cols-1 sm:grid-cols-5 min-h-[360px]">
-                {/* Portrait — 2 columns, cropped to the person */}
-                <div className="relative sm:col-span-2 h-72 sm:h-auto overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
+                {/* Portrait — cropped to the person */}
+                <div className="relative h-56 sm:h-64 overflow-hidden">
                   <Image
                     src={leader.photoUrl}
                     alt={leader.name}
                     fill
                     className={cn('object-cover', leader.imageScale)}
                     style={{ objectPosition: leader.imagePosition }}
-                    sizes="(max-width: 640px) 100vw, 280px"
+                    sizes="(max-width: 640px) 100vw, 300px"
                   />
-                  {/* Subtle bottom/right fade into the dark panel */}
                   <div
                     aria-hidden="true"
                     className="absolute inset-0 hidden sm:block"
                     style={{
-                      background: 'linear-gradient(to right, transparent 60%, rgba(13,59,19,1) 100%)',
+                      background: 'linear-gradient(to right, transparent 50%, rgba(13,59,19,1) 100%)',
                     }}
                   />
                   <div
                     aria-hidden="true"
                     className="absolute inset-0 sm:hidden"
                     style={{
-                      background: 'linear-gradient(to bottom, transparent 50%, rgba(13,59,19,1) 100%)',
+                      background: 'linear-gradient(to bottom, transparent 40%, rgba(13,59,19,1) 100%)',
                     }}
                   />
                 </div>
 
-                {/* Text panel — 3 columns */}
-                <div className="sm:col-span-3 p-8 lg:p-10 flex flex-col justify-center relative">
+                {/* Text panel */}
+                <div className="p-6 lg:p-8 flex flex-col justify-center relative">
                   {/* Subtle Kente pattern in the background */}
                   <div
                     aria-hidden="true"
@@ -140,12 +139,12 @@ export function LeadershipSpotlight() {
                   />
 
                   {/* Title label */}
-                  <p className="text-accent text-sm font-semibold uppercase tracking-[0.15em] mb-3">
+                  <p className="text-accent text-xs font-semibold uppercase tracking-[0.15em] mb-2">
                     {leader.title}
                   </p>
 
                   {/* Name */}
-                  <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight">
+                  <h3 className="font-display text-xl lg:text-2xl font-bold text-white mb-3 leading-tight">
                     {leader.name}
                   </h3>
 
