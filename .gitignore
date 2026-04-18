@@ -1,0 +1,18 @@
+.superpowers/
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+.next/
+out/
+
+# Wrangler local state
+.wrangler/
+
+# Environment files
+.env
+.env.local
+.env*.local
