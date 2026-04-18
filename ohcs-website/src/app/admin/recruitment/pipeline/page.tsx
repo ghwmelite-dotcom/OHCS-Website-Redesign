@@ -57,7 +57,7 @@ interface Applicant {
   id: string;
   ref: string;
   name: string;
-  position: string;
+  qualification: string;
   date: string;
   stage: string;
 }
@@ -72,40 +72,40 @@ const STAGE_CONFIG = [
 ];
 
 const POSITIONS = [
-  'Administrative Officer',
-  'Procurement Officer',
-  'IT Specialist',
-  'Policy Analyst',
-  'Finance Officer',
-  'HR Officer',
+  'BSc Administration',
+  'BSc Supply Chain',
+  'BSc Computer Science',
+  'MA Development Studies',
+  'BSc Accounting',
+  'BSc HRM',
 ];
 
 const INITIAL_APPLICANTS: Applicant[] = [
   // Received
-  { id: 'a01', ref: 'OHCS-REC-20260418-A7F3', name: 'Kwaku Asante', position: 'Administrative Officer', date: '18 Apr 2026', stage: 'received' },
-  { id: 'a02', ref: 'OHCS-REC-20260418-B2K1', name: 'Akosua Mensah', position: 'Procurement Officer', date: '18 Apr 2026', stage: 'received' },
-  { id: 'a03', ref: 'OHCS-REC-20260417-C9D2', name: 'Yaw Boateng', position: 'IT Specialist', date: '17 Apr 2026', stage: 'received' },
-  { id: 'a04', ref: 'OHCS-REC-20260417-D1E5', name: 'Adwoa Amponsah', position: 'Finance Officer', date: '17 Apr 2026', stage: 'received' },
+  { id: 'a01', ref: 'OHCS-REC-20260418-A7F3', name: 'Kwaku Asante', qualification: 'BSc Administration', date: '18 Apr 2026', stage: 'received' },
+  { id: 'a02', ref: 'OHCS-REC-20260418-B2K1', name: 'Akosua Mensah', qualification: 'BSc Supply Chain', date: '18 Apr 2026', stage: 'received' },
+  { id: 'a03', ref: 'OHCS-REC-20260417-C9D2', name: 'Yaw Boateng', qualification: 'BSc Computer Science', date: '17 Apr 2026', stage: 'received' },
+  { id: 'a04', ref: 'OHCS-REC-20260417-D1E5', name: 'Adwoa Amponsah', qualification: 'BSc Accounting', date: '17 Apr 2026', stage: 'received' },
   // Screening
-  { id: 'a05', ref: 'OHCS-REC-20260416-E4F7', name: 'Ama Serwaa', position: 'Policy Analyst', date: '16 Apr 2026', stage: 'screening' },
-  { id: 'a06', ref: 'OHCS-REC-20260415-G1H8', name: 'Kofi Owusu', position: 'Finance Officer', date: '15 Apr 2026', stage: 'screening' },
-  { id: 'a07', ref: 'OHCS-REC-20260414-H3J2', name: 'Efua Darko', position: 'HR Officer', date: '14 Apr 2026', stage: 'screening' },
+  { id: 'a05', ref: 'OHCS-REC-20260416-E4F7', name: 'Ama Serwaa', qualification: 'MA Development Studies', date: '16 Apr 2026', stage: 'screening' },
+  { id: 'a06', ref: 'OHCS-REC-20260415-G1H8', name: 'Kofi Owusu', qualification: 'BSc Accounting', date: '15 Apr 2026', stage: 'screening' },
+  { id: 'a07', ref: 'OHCS-REC-20260414-H3J2', name: 'Efua Darko', qualification: 'BSc HRM', date: '14 Apr 2026', stage: 'screening' },
   // Examination
-  { id: 'a08', ref: 'OHCS-REC-20260413-K5L9', name: 'Kwabena Osei', position: 'Administrative Officer', date: '13 Apr 2026', stage: 'examination' },
-  { id: 'a09', ref: 'OHCS-REC-20260412-M2N4', name: 'Abena Frimpong', position: 'IT Specialist', date: '12 Apr 2026', stage: 'examination' },
-  { id: 'a10', ref: 'OHCS-REC-20260411-P7Q1', name: 'Nana Agyemang', position: 'Procurement Officer', date: '11 Apr 2026', stage: 'examination' },
+  { id: 'a08', ref: 'OHCS-REC-20260413-K5L9', name: 'Kwabena Osei', qualification: 'BSc Administration', date: '13 Apr 2026', stage: 'examination' },
+  { id: 'a09', ref: 'OHCS-REC-20260412-M2N4', name: 'Abena Frimpong', qualification: 'BSc Computer Science', date: '12 Apr 2026', stage: 'examination' },
+  { id: 'a10', ref: 'OHCS-REC-20260411-P7Q1', name: 'Nana Agyemang', qualification: 'BSc Supply Chain', date: '11 Apr 2026', stage: 'examination' },
   // Interview
-  { id: 'a11', ref: 'OHCS-REC-20260410-R3S6', name: 'Akua Boakye', position: 'Policy Analyst', date: '10 Apr 2026', stage: 'interview' },
-  { id: 'a12', ref: 'OHCS-REC-20260409-T8U2', name: 'Kwesi Antwi', position: 'Finance Officer', date: '9 Apr 2026', stage: 'interview' },
-  { id: 'a13', ref: 'OHCS-REC-20260408-V4W7', name: 'Afia Mensah', position: 'HR Officer', date: '8 Apr 2026', stage: 'interview' },
+  { id: 'a11', ref: 'OHCS-REC-20260410-R3S6', name: 'Akua Boakye', qualification: 'MA Development Studies', date: '10 Apr 2026', stage: 'interview' },
+  { id: 'a12', ref: 'OHCS-REC-20260409-T8U2', name: 'Kwesi Antwi', qualification: 'BSc Accounting', date: '9 Apr 2026', stage: 'interview' },
+  { id: 'a13', ref: 'OHCS-REC-20260408-V4W7', name: 'Afia Mensah', qualification: 'BSc HRM', date: '8 Apr 2026', stage: 'interview' },
   // Shortlisted
-  { id: 'a14', ref: 'OHCS-REC-20260407-X1Y3', name: 'Yaw Amoako', position: 'Administrative Officer', date: '7 Apr 2026', stage: 'shortlisted' },
-  { id: 'a15', ref: 'OHCS-REC-20260406-Z5A8', name: 'Esi Appiah', position: 'IT Specialist', date: '6 Apr 2026', stage: 'shortlisted' },
-  { id: 'a16', ref: 'OHCS-REC-20260405-B9C2', name: 'Kojo Mensah', position: 'Procurement Officer', date: '5 Apr 2026', stage: 'shortlisted' },
+  { id: 'a14', ref: 'OHCS-REC-20260407-X1Y3', name: 'Yaw Amoako', qualification: 'BSc Administration', date: '7 Apr 2026', stage: 'shortlisted' },
+  { id: 'a15', ref: 'OHCS-REC-20260406-Z5A8', name: 'Esi Appiah', qualification: 'BSc Computer Science', date: '6 Apr 2026', stage: 'shortlisted' },
+  { id: 'a16', ref: 'OHCS-REC-20260405-B9C2', name: 'Kojo Mensah', qualification: 'BSc Supply Chain', date: '5 Apr 2026', stage: 'shortlisted' },
   // Appointed
-  { id: 'a17', ref: 'OHCS-REC-20260404-D6E1', name: 'Adjoa Nyarko', position: 'Policy Analyst', date: '4 Apr 2026', stage: 'appointed' },
-  { id: 'a18', ref: 'OHCS-REC-20260403-F3G7', name: 'Kwame Tetteh', position: 'Finance Officer', date: '3 Apr 2026', stage: 'appointed' },
-  { id: 'a19', ref: 'OHCS-REC-20260402-H8J4', name: 'Akosua Dufie', position: 'HR Officer', date: '2 Apr 2026', stage: 'appointed' },
+  { id: 'a17', ref: 'OHCS-REC-20260404-D6E1', name: 'Adjoa Nyarko', qualification: 'MA Development Studies', date: '4 Apr 2026', stage: 'appointed' },
+  { id: 'a18', ref: 'OHCS-REC-20260403-F3G7', name: 'Kwame Tetteh', qualification: 'BSc Accounting', date: '3 Apr 2026', stage: 'appointed' },
+  { id: 'a19', ref: 'OHCS-REC-20260402-H8J4', name: 'Akosua Dufie', qualification: 'BSc HRM', date: '2 Apr 2026', stage: 'appointed' },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -114,7 +114,7 @@ const INITIAL_APPLICANTS: Applicant[] = [
 export default function PipelinePage() {
   const [applicants, setApplicants] = useState<Applicant[]>(INITIAL_APPLICANTS);
   const [search, setSearch] = useState('');
-  const [positionFilter, setPositionFilter] = useState('');
+  const [positionFilter, setQualificationFilter] = useState('');
   const [selectedApp, setSelectedApp] = useState<Applicant | null>(null);
 
   const filtered = applicants.filter((a) => {
@@ -122,8 +122,8 @@ export default function PipelinePage() {
       !search ||
       a.name.toLowerCase().includes(search.toLowerCase()) ||
       a.ref.toLowerCase().includes(search.toLowerCase());
-    const matchesPosition = !positionFilter || a.position === positionFilter;
-    return matchesSearch && matchesPosition;
+    const matchesQualification = !positionFilter || a.qualification === positionFilter;
+    return matchesSearch && matchesQualification;
   });
 
   function moveToNextStage(id: string) {
@@ -181,10 +181,10 @@ export default function PipelinePage() {
           </div>
           <select
             value={positionFilter}
-            onChange={(e) => setPositionFilter(e.target.value)}
+            onChange={(e) => setQualificationFilter(e.target.value)}
             className="px-4 py-2.5 rounded-xl border-2 border-border/60 bg-white text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none"
           >
-            <option value="">All Positions</option>
+            <option value="">All Qualifications</option>
             {POSITIONS.map((p) => (
               <option key={p} value={p}>
                 {p}
@@ -217,7 +217,7 @@ export default function PipelinePage() {
                     className="bg-white rounded-xl border-2 border-border/30 p-3 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer"
                   >
                     <p className="font-semibold text-sm text-primary-dark">{card.name}</p>
-                    <p className="text-xs text-text-muted mt-0.5">{card.position}</p>
+                    <p className="text-xs text-text-muted mt-0.5">{card.qualification}</p>
                     <p className="text-[10px] text-text-muted/50 font-mono mt-1">{card.ref}</p>
                     {getNextStageName(card.stage) && (
                       <button
@@ -270,7 +270,7 @@ export default function PipelinePage() {
                 [
                   ['Reference', selectedApp.ref],
                   ['Applicant Name', selectedApp.name],
-                  ['Position Applied', selectedApp.position],
+                  ['Qualification Applied', selectedApp.qualification],
                   ['Date Submitted', selectedApp.date],
                   ['Current Stage', STAGE_CONFIG.find((s) => s.id === selectedApp.stage)?.name ?? selectedApp.stage],
                 ] as [string, string][]

@@ -58,11 +58,11 @@ const PIPELINE_STAGES = [
 ];
 
 const RECENT_APPS = [
-  { ref: 'OHCS-REC-20260418-A7F3', name: 'Kwaku Asante', position: 'Administrative Officer', date: '2 hours ago', status: 'Received' },
-  { ref: 'OHCS-REC-20260418-B2K1', name: 'Akosua Mensah', position: 'Procurement Officer', date: '5 hours ago', status: 'Screening' },
-  { ref: 'OHCS-REC-20260417-C9D2', name: 'Yaw Boateng', position: 'IT Specialist', date: '1 day ago', status: 'Examination' },
-  { ref: 'OHCS-REC-20260416-E4F7', name: 'Ama Serwaa', position: 'Policy Analyst', date: '2 days ago', status: 'Shortlisted' },
-  { ref: 'OHCS-REC-20260415-G1H8', name: 'Kofi Owusu', position: 'Finance Officer', date: '3 days ago', status: 'Interview' },
+  { ref: 'OHCS-REC-20260418-A7F3', name: 'Kwaku Asante', qualification: 'BSc Administration', date: '2 hours ago', status: 'Received' },
+  { ref: 'OHCS-REC-20260418-B2K1', name: 'Akosua Mensah', qualification: 'MSc Public Policy', date: '5 hours ago', status: 'Screening' },
+  { ref: 'OHCS-REC-20260417-C9D2', name: 'Yaw Boateng', qualification: 'BSc Computer Science', date: '1 day ago', status: 'Examination' },
+  { ref: 'OHCS-REC-20260416-E4F7', name: 'Ama Serwaa', qualification: 'MA Development Studies', date: '2 days ago', status: 'Shortlisted' },
+  { ref: 'OHCS-REC-20260415-G1H8', name: 'Kofi Owusu', qualification: 'BSc Accounting', date: '3 days ago', status: 'Interview' },
 ];
 
 const STATUS_COLORS: Record<string, string> = {
@@ -99,7 +99,7 @@ export default function RecruitmentDashboardPage() {
               </span>
               <span className="text-white/40 text-xs">Started 15 Mar 2026</span>
             </div>
-            <h2 className="font-display text-2xl font-bold mb-1">
+            <h2 className="font-display text-2xl font-bold mb-1 text-white drop-shadow-sm">
               2026 Graduate Entrance Examination
             </h2>
             <p className="text-white/50 text-sm">
@@ -175,7 +175,7 @@ export default function RecruitmentDashboardPage() {
                 Applicant
               </th>
               <th className="px-6 py-3 text-left text-xs font-bold text-text-muted uppercase tracking-wider">
-                Position
+                Qualification
               </th>
               <th className="px-6 py-3 text-left text-xs font-bold text-text-muted uppercase tracking-wider">
                 Status
@@ -190,7 +190,7 @@ export default function RecruitmentDashboardPage() {
               <tr key={app.ref} className="hover:bg-gray-50/50 transition-colors">
                 <td className="px-6 py-4 text-sm font-mono text-primary-dark">{app.ref}</td>
                 <td className="px-6 py-4 text-sm font-semibold text-primary-dark">{app.name}</td>
-                <td className="px-6 py-4 text-sm text-text-muted">{app.position}</td>
+                <td className="px-6 py-4 text-sm text-text-muted">{app.qualification}</td>
                 <td className="px-6 py-4">
                   <span
                     className={cn(

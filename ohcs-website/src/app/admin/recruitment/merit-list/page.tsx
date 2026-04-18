@@ -62,7 +62,7 @@ interface MeritCandidate {
   rank: number;
   name: string;
   ref: string;
-  position: string;
+  qualification: string;
   examScore: number;
   qualScore: number;
   total: number;
@@ -70,16 +70,16 @@ interface MeritCandidate {
 }
 
 const MERIT_DATA: MeritCandidate[] = [
-  { rank: 1, name: 'Nana Agyemang', ref: 'OHCS-REC-20260411-P7Q1', position: 'Procurement Officer', examScore: 91, qualScore: 95, total: 93, status: 'recommended' },
-  { rank: 2, name: 'Esi Appiah', ref: 'OHCS-REC-20260406-Z5A8', position: 'IT Specialist', examScore: 88, qualScore: 92, total: 90, status: 'recommended' },
-  { rank: 3, name: 'Kwabena Osei', ref: 'OHCS-REC-20260413-K5L9', position: 'Administrative Officer', examScore: 82, qualScore: 90, total: 86, status: 'recommended' },
-  { rank: 4, name: 'Abena Frimpong', ref: 'OHCS-REC-20260412-M2N4', position: 'IT Specialist', examScore: 74, qualScore: 88, total: 81, status: 'recommended' },
-  { rank: 5, name: 'Kwesi Antwi', ref: 'OHCS-REC-20260409-T8U2', position: 'Finance Officer', examScore: 67, qualScore: 85, total: 76, status: 'recommended' },
-  { rank: 6, name: 'Akua Boakye', ref: 'OHCS-REC-20260410-R3S6', position: 'Policy Analyst', examScore: 72, qualScore: 78, total: 75, status: 'reserve' },
-  { rank: 7, name: 'Yaw Amoako', ref: 'OHCS-REC-20260407-X1Y3', position: 'Administrative Officer', examScore: 55, qualScore: 82, total: 68.5, status: 'reserve' },
-  { rank: 8, name: 'Adjoa Nyarko', ref: 'OHCS-REC-20260404-D6E1', position: 'Policy Analyst', examScore: 60, qualScore: 75, total: 67.5, status: 'reserve' },
-  { rank: 9, name: 'Afia Mensah', ref: 'OHCS-REC-20260408-V4W7', position: 'HR Officer', examScore: 38, qualScore: 80, total: 59, status: 'not-recommended' },
-  { rank: 10, name: 'Kofi Adu', ref: 'OHCS-REC-20260408-Y7Z2', position: 'Finance Officer', examScore: 42, qualScore: 70, total: 56, status: 'not-recommended' },
+  { rank: 1, name: 'Nana Agyemang', ref: 'OHCS-REC-20260411-P7Q1', qualification: 'BSc Supply Chain', examScore: 91, qualScore: 95, total: 93, status: 'recommended' },
+  { rank: 2, name: 'Esi Appiah', ref: 'OHCS-REC-20260406-Z5A8', qualification: 'BSc Computer Science', examScore: 88, qualScore: 92, total: 90, status: 'recommended' },
+  { rank: 3, name: 'Kwabena Osei', ref: 'OHCS-REC-20260413-K5L9', qualification: 'BSc Administration', examScore: 82, qualScore: 90, total: 86, status: 'recommended' },
+  { rank: 4, name: 'Abena Frimpong', ref: 'OHCS-REC-20260412-M2N4', qualification: 'BSc Computer Science', examScore: 74, qualScore: 88, total: 81, status: 'recommended' },
+  { rank: 5, name: 'Kwesi Antwi', ref: 'OHCS-REC-20260409-T8U2', qualification: 'BSc Accounting', examScore: 67, qualScore: 85, total: 76, status: 'recommended' },
+  { rank: 6, name: 'Akua Boakye', ref: 'OHCS-REC-20260410-R3S6', qualification: 'MA Development Studies', examScore: 72, qualScore: 78, total: 75, status: 'reserve' },
+  { rank: 7, name: 'Yaw Amoako', ref: 'OHCS-REC-20260407-X1Y3', qualification: 'BSc Administration', examScore: 55, qualScore: 82, total: 68.5, status: 'reserve' },
+  { rank: 8, name: 'Adjoa Nyarko', ref: 'OHCS-REC-20260404-D6E1', qualification: 'MA Development Studies', examScore: 60, qualScore: 75, total: 67.5, status: 'reserve' },
+  { rank: 9, name: 'Afia Mensah', ref: 'OHCS-REC-20260408-V4W7', qualification: 'BSc HRM', examScore: 38, qualScore: 80, total: 59, status: 'not-recommended' },
+  { rank: 10, name: 'Kofi Adu', ref: 'OHCS-REC-20260408-Y7Z2', qualification: 'BSc Accounting', examScore: 42, qualScore: 70, total: 56, status: 'not-recommended' },
 ];
 
 const STATUS_COLORS: Record<string, string> = {
@@ -226,7 +226,7 @@ export default function MeritListPage() {
               <th className="px-6 py-3 text-left text-xs font-bold text-text-muted uppercase tracking-wider">Rank</th>
               <th className="px-6 py-3 text-left text-xs font-bold text-text-muted uppercase tracking-wider">Candidate</th>
               <th className="px-6 py-3 text-left text-xs font-bold text-text-muted uppercase tracking-wider">Reference</th>
-              <th className="px-6 py-3 text-left text-xs font-bold text-text-muted uppercase tracking-wider">Position</th>
+              <th className="px-6 py-3 text-left text-xs font-bold text-text-muted uppercase tracking-wider">Qualification</th>
               <th className="px-6 py-3 text-center text-xs font-bold text-text-muted uppercase tracking-wider">Exam Score</th>
               <th className="px-6 py-3 text-center text-xs font-bold text-text-muted uppercase tracking-wider">Qual. Score</th>
               <th className="px-6 py-3 text-center text-xs font-bold text-text-muted uppercase tracking-wider">Total</th>
@@ -248,7 +248,7 @@ export default function MeritListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm font-semibold text-primary-dark">{c.name}</td>
                 <td className="px-6 py-4 text-sm font-mono text-text-muted">{c.ref}</td>
-                <td className="px-6 py-4 text-sm text-text-muted">{c.position}</td>
+                <td className="px-6 py-4 text-sm text-text-muted">{c.qualification}</td>
                 <td className="px-6 py-4 text-center">
                   <span className="text-sm font-bold text-primary-dark">{c.examScore}%</span>
                 </td>

@@ -74,14 +74,14 @@ const TEMPLATES: Template[] = [
     id: 'tpl-001',
     name: 'Application Received',
     subject: 'Your application has been received',
-    preview: 'Dear [Name], we acknowledge receipt of your application for the position of [Position]. Your reference number is [Ref]. We will review your application and get back to you shortly.',
+    preview: 'Dear [Name], we acknowledge receipt of your application for the position of [Qualification]. Your reference number is [Ref]. We will review your application and get back to you shortly.',
     stage: 'Received',
   },
   {
     id: 'tpl-002',
     name: 'Shortlisted Notification',
     subject: 'Congratulations! You have been shortlisted',
-    preview: 'Dear [Name], we are pleased to inform you that you have been shortlisted for the position of [Position]. Please proceed to the next stage as outlined below.',
+    preview: 'Dear [Name], we are pleased to inform you that you have been shortlisted for the position of [Qualification]. Please proceed to the next stage as outlined below.',
     stage: 'Shortlisted',
   },
   {
@@ -95,7 +95,7 @@ const TEMPLATES: Template[] = [
     id: 'tpl-004',
     name: 'Appointment Letter',
     subject: 'Offer of appointment to the Civil Service',
-    preview: 'Dear [Name], on behalf of the Office of the Head of Civil Service, we are delighted to offer you the position of [Position]. Please report to [Location] on [Date].',
+    preview: 'Dear [Name], on behalf of the Office of the Head of Civil Service, we are delighted to offer you the position of [Qualification]. Please report to [Location] on [Date].',
     stage: 'Appointed',
   },
 ];
