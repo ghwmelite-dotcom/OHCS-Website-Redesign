@@ -150,6 +150,15 @@ export default function ExercisesPage() {
           completed: 'completed',
         };
         const next = transitions[ex.status];
+
+        // Sync to localStorage so the public recruitment page can detect it
+        if (next === 'active') {
+          localStorage.setItem('ohcs_recruitment_open', 'true');
+          localStorage.setItem('ohcs_recruitment_deadline', ex.endDate);
+        } else if (next === 'closed' || next === 'completed') {
+          localStorage.setItem('ohcs_recruitment_open', 'false');
+        }
+
         setToast(`Exercise ${next === 'active' ? 'activated' : next === 'closed' ? 'closed' : 'completed'}.`);
         return { ...ex, status: next };
       }),

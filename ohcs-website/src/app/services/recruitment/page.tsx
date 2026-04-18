@@ -59,6 +59,16 @@ export default function RecruitmentPage() {
   const [subscribed, setSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
 
+  // Check if recruitment window is open (synced from admin portal via localStorage)
+  const [isOpen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('ohcs_recruitment_open') === 'true';
+  });
+  const [deadline] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return localStorage.getItem('ohcs_recruitment_deadline') ?? '30 April 2026';
+  });
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
@@ -79,6 +89,29 @@ export default function RecruitmentPage() {
       />
 
       {/* ── Status Banner ── */}
+      {isOpen ? (
+        <section className="bg-green-50 border-b-2 border-green-200">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                <CheckCircle className="h-5 w-5 text-green-600" aria-hidden="true" />
+              </div>
+              <div className="flex-1">
+                <h2 className="font-semibold text-lg text-green-900">Recruitment Window is Open!</h2>
+                <p className="text-base text-green-700 mt-1">
+                  Applications are now being accepted. Deadline: <strong>{deadline}</strong>
+                </p>
+              </div>
+              <a
+                href="#apply"
+                className="shrink-0 px-6 py-2.5 bg-green-600 text-white font-semibold text-sm rounded-xl hover:bg-green-700 transition-colors"
+              >
+                Apply Now
+              </a>
+            </div>
+          </div>
+        </section>
+      ) : (
       <section className="bg-amber-50 border-b-2 border-amber-200">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-start gap-4">
@@ -94,8 +127,10 @@ export default function RecruitmentPage() {
           </div>
         </div>
       </section>
+      )}
 
-      {/* ── Subscribe Section ── */}
+      {/* ── Subscribe Section (hidden when open) ── */}
+      {!isOpen && (
       <section className="py-20 lg:py-24 bg-white relative overflow-hidden">
         <FloatingShapes />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -151,6 +186,38 @@ export default function RecruitmentPage() {
           )}
         </div>
       </section>
+      )}
+
+      {/* ── Application Form (only when open) ── */}
+      {isOpen && (
+        <>
+          <KenteSectionDivider />
+          <section id="apply" className="py-20 lg:py-24 bg-white relative overflow-hidden">
+            <FloatingShapes />
+            <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
+                  <span className="text-sm font-semibold text-primary tracking-wide">Apply Now</span>
+                </div>
+                <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-dark mb-4">
+                  Submit Your Application
+                </h2>
+                <p className="text-lg text-text-muted max-w-xl mx-auto">
+                  Complete the form below to apply. You will receive a reference number to track your application.
+                </p>
+              </div>
+              <div className="bg-white rounded-2xl border-2 border-border/40 p-8 shadow-sm">
+                <p className="text-center text-text-muted py-8">
+                  Application form will load here when connected to the backend.
+                  <br />
+                  <span className="text-sm text-text-muted/50 mt-2 block">Deadline: {deadline}</span>
+                </p>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
 
       <KenteSectionDivider />
 
