@@ -33,13 +33,35 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 function getBotResponse(message: string): string {
-  const lower = message.toLowerCase();
+  const lower = message.toLowerCase().trim();
 
-  if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey') || lower.includes('good morning') || lower.includes('good afternoon') || lower.includes('good evening')) {
-    return `${getGreeting()}! Welcome to the Office of the Head of the Civil Service. 😊\n\nI'm here to help you with anything related to Ghana's Civil Service — from recruitment and RTI requests to understanding our structure and services.\n\nPlease, how can I assist you today?`;
+  // ── Name introductions — "hi im osborn", "my name is ama", "i am kwame" ──
+  const nameMatch = lower.match(/(?:i'?m|my name is|i am|this is|call me)\s+([a-z]+)/i);
+  if (nameMatch) {
+    const name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
+    return `Lovely to meet you, ${name}! 😊 Welcome to the Office of the Head of the Civil Service.\n\nI'm **Ama** — your dedicated assistant for all things Ghana Civil Service. How can I help you today, ${name}?`;
   }
 
-  if (lower.includes('what does ohcs do') || lower.includes('what is ohcs') || lower.includes('about ohcs') || lower.includes('tell me about')) {
+  // ── Bot's identity — "what's your name", "who are you", "what are you" ──
+  if (lower.match(/your name|who are you|what are you|what is your name|what's your name|whats your name|introduce yourself/)) {
+    return `My name is **Ama** — I'm the AI assistant for the Office of the Head of the Civil Service! 😊\n\nI was created to help citizens and civil servants access information about Ghana's Civil Service quickly and easily. Think of me as your friendly digital colleague who never sleeps!\n\nI can help with recruitment information, RTI requests, understanding our organisational structure, filing complaints, tracking submissions, and much more.\n\nWhat would you like to know?`;
+  }
+
+  // ── How are you / casual conversation ──
+  if (lower.match(/how are you|how do you do|how's it going|how you dey|how be/)) {
+    return `I'm doing great, thank you for asking! 😊 I'm always ready and happy to help.\n\nHow about you — is there something I can assist you with today regarding the Civil Service?`;
+  }
+
+  if (lower.match(/what can you do|what do you do|how can you help|what are your capabilities|help me/)) {
+    return `I'm glad you asked! Here's what I can do for you:\n\n🏛️ **About OHCS** — explain our mission, structure, directorates, and leadership\n👥 **Recruitment** — guide you through the Civil Service entrance process\n📋 **Right to Information** — help you understand and submit RTI requests\n📝 **Complaints & Feedback** — guide you through filing processes\n📄 **Publications** — help you find official documents and forms\n🔍 **Track Submissions** — explain how to check your application status\n📞 **Contact & Office Hours** — provide our contact details\n🇬🇭 **General Knowledge** — answer questions about Ghana's Civil Service\n\nJust ask me anything in plain language — I'll do my best to help! 😊`;
+  }
+
+  // ── Pure greetings (only if the message is JUST a greeting, not "hi im john") ──
+  if (lower.match(/^(hello|hi|hey|greetings|good morning|good afternoon|good evening|yo|hiya)[\s!.?]*$/)) {
+    return `${getGreeting()}! 😊 Welcome! I'm **Ama**, your assistant for the Ghana Civil Service.\n\nHow can I help you today?`;
+  }
+
+  if (lower.includes('what does ohcs do') || lower.includes('what is ohcs') || lower.includes('about ohcs') || lower.includes('tell me about') || lower.includes('what is the office')) {
     return `Great question! The **Office of the Head of the Civil Service (OHCS)** is the apex administrative body responsible for managing, developing, and reforming Ghana's Civil Service.\n\nOur key functions include:\n• **Recruitment** — Managing the Civil Service Graduate Entrance Examination\n• **Training & Development** — Building capacity across 20,000+ civil servants\n• **Policy & Reform** — Driving modernisation of public service delivery\n• **Career Management** — Overseeing promotions, transfers, and postings\n• **Performance Management** — Ensuring accountability and excellence\n\nWe operate through **5 Line Directorates** and **6 Support Units** across all 16 regions of Ghana.\n\nWould you like to know more about any specific area?`;
   }
 
@@ -83,7 +105,23 @@ function getBotResponse(message: string): string {
     return `Thank you for visiting! Take care, and have a blessed day. 🇬🇭\n\nRemember, the Office of the Head of the Civil Service is always here to serve you. Come back anytime you need help!\n\n*Loyalty • Excellence • Service*`;
   }
 
-  return `Thank you for your question! I want to make sure I give you the most accurate information.\n\nHere are some areas I can help you with:\n\n• **About OHCS** — our mission, structure, and leadership\n• **Recruitment** — how to join the Civil Service\n• **RTI Requests** — your right to information\n• **Complaints & Feedback** — report issues or share feedback\n• **Publications** — download official documents\n• **Track Submissions** — check your application status\n• **Office Hours & Contact** — how to reach us\n\nCould you please rephrase your question, or select one of the topics above? I'm here to help! 😊`;
+  // ── Ghana / general knowledge ──
+  if (lower.match(/ghana|country|capital|population|president/)) {
+    return `Ghana 🇬🇭 is a beautiful West African nation!\n\n• **Capital:** Accra\n• **Population:** ~34 million\n• **Government:** Constitutional democracy\n• **Independence:** 6 March 1957 (first sub-Saharan African country)\n\nThe **Civil Service** is the administrative backbone of Ghana's government, employing over 20,000 professionals who deliver public services to citizens across all 16 regions.\n\nIs there something specific about the Civil Service I can help you with?`;
+  }
+
+  // ── Training ──
+  if (lower.match(/training|learn|course|capacity|development|gimpa/)) {
+    return `OHCS oversees civil servant training through **3 Training Institutions**:\n\n1. 🎓 **Civil Service Training Centre** — Accra\n   Core public administration, leadership development, and professional skills\n\n2. 🏛️ **GIMPA Collaboration Programme** — Accra\n   Executive education and postgraduate programmes\n\n3. 📚 **Regional Training Institute** — Kumasi\n   Regional capacity building and decentralised training\n\nThe **Recruitment, Training & Development Directorate (RTDD)** coordinates all training programmes.\n\nWould you like to know more about specific training opportunities?`;
+  }
+
+  // ── Polite / conversational ──
+  if (lower.match(/please|okay|ok|alright|sure|great|nice|wonderful|awesome|cool/)) {
+    return `You're welcome! 😊 I'm here whenever you need me.\n\nIs there anything specific about the Ghana Civil Service you'd like to know? Just ask — no question is too simple or too complex!`;
+  }
+
+  // ── Fallback — friendly and helpful ──
+  return `That's an interesting question! While I'm still learning, I want to make sure I give you accurate information. 😊\n\nHere's what I can definitely help you with:\n\n• **"Tell me about OHCS"** — our mission and what we do\n• **"How do I join the Civil Service?"** — recruitment process\n• **"I want to submit an RTI request"** — right to information\n• **"Who leads the Civil Service?"** — our leadership team\n• **"I have a complaint"** — how to file complaints\n• **"What are your office hours?"** — contact information\n• **"What's your name?"** — get to know me!\n\nOr you can simply chat with me — I love a good conversation! 🇬🇭`;
 }
 
 // Hide public header/footer
