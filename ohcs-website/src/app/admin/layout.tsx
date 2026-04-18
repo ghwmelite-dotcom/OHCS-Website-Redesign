@@ -129,6 +129,8 @@ function getPageTitle(pathname: string): string {
     '/admin/recruitment': 'Recruitment',
     '/admin/submissions': 'Submissions',
     '/admin/users': 'User Management',
+    '/admin/audit-log': 'Audit Log',
+    '/admin/settings': 'System Settings',
   };
   return map[pathname] ?? pathname.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) ?? 'Admin';
 }
@@ -143,6 +145,8 @@ function getPageSubtitle(pathname: string): string {
     '/admin/recruitment': 'Control recruitment windows and applications',
     '/admin/submissions': 'Review and manage citizen submissions',
     '/admin/users': 'Manage admin user accounts and roles',
+    '/admin/audit-log': 'Track all admin actions and changes',
+    '/admin/settings': 'Control system modes and service configurations',
   };
   return map[pathname] ?? '';
 }

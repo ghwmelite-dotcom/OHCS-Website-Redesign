@@ -11,7 +11,12 @@ interface Message {
   timestamp: string;
 }
 
-const DEMO_MODE = true; // Set false when Workers AI is deployed
+// Reads from localStorage — controlled by Super Admin in Settings page
+function isDemoMode(): boolean {
+  if (typeof window === 'undefined') return true;
+  const stored = localStorage.getItem('ohcs_ai_demo_mode');
+  return stored === null ? true : stored === 'true';
+}
 
 // Smart demo responses based on keywords
 function getDemoResponse(message: string): string {
@@ -93,7 +98,7 @@ export function AiChatPanel() {
     await new Promise((r) => setTimeout(r, 1200 + Math.random() * 800));
 
     let responseText: string;
-    if (DEMO_MODE) {
+    if (isDemoMode()) {
       responseText = getDemoResponse(userMsg.content);
     } else {
       try {

@@ -17,6 +17,7 @@ import {
   LogOut,
   Shield,
   ScrollText,
+  Settings,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
@@ -57,6 +58,7 @@ const NAV_SECTIONS = [
     items: [
       { label: 'Users & Roles', href: '/admin/users', icon: Shield, roles: ['super_admin'] },
       { label: 'Audit Log', href: '/admin/audit-log', icon: ScrollText, roles: ['super_admin'] },
+      { label: 'Settings', href: '/admin/settings', icon: Settings, roles: ['super_admin'] },
     ],
   },
 ] as const;

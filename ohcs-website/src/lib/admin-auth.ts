@@ -5,8 +5,12 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8787';
 const TOKEN_KEY = 'ohcs_admin_token';
 const USER_KEY = 'ohcs_admin_user';
 
-// Demo mode — when the Worker API is not running, use local demo credentials
-const DEMO_MODE = true; // Set to false when Worker is deployed
+// Reads from localStorage — controlled by Super Admin in Settings page
+function isDemoMode(): boolean {
+  if (typeof window === 'undefined') return true;
+  const stored = localStorage.getItem('ohcs_auth_demo_mode');
+  return stored === null ? true : stored === 'true';
+}
 
 const DEMO_USERS: Record<string, { password: string; user: AdminUser }> = {
   'admin@ohcs.gov.gh': {
@@ -36,7 +40,7 @@ export async function adminLogin(
     throw new Error('Only @ohcs.gov.gh email addresses are permitted.');
   }
 
-  if (DEMO_MODE) {
+  if (isDemoMode()) {
     const demoUser = DEMO_USERS[email.toLowerCase()];
     if (!demoUser || demoUser.password !== password) {
       throw new Error('Invalid email or password.');
@@ -78,7 +82,7 @@ export async function adminLogout(): Promise<void> {
   const token = getToken();
   audit('logout', 'session', '', '', 'Logged out');
 
-  if (!DEMO_MODE && token) {
+  if (!isDemoMode() && token) {
     await fetch(`${API_BASE}/api/v1/admin/auth/logout`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
@@ -93,7 +97,7 @@ export async function getAdminUser(): Promise<AdminUser | null> {
   const token = getToken();
   if (!token) return null;
 
-  if (DEMO_MODE) {
+  if (isDemoMode()) {
     const stored = localStorage.getItem(USER_KEY);
     if (!stored) return null;
     try {
