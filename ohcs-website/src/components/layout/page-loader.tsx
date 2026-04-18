@@ -12,15 +12,15 @@ export function PageLoader() {
     setLoading(true);
     setPhase(1);
 
-    // Phase 1: Kente blocks build (0-500ms)
-    // Phase 2: Crest burst (500-1100ms)
-    // Phase 3: Kente stripe + text (1100-1500ms)
-    // Phase 4: Dissolve out (1500-2000ms)
-    const t1 = setTimeout(() => setPhase(2), 500);
-    const t2 = setTimeout(() => setPhase(3), 1100);
-    const t3 = setTimeout(() => setPhase(4), 1500);
-    const t4 = setTimeout(() => setPhase(0), 2000);
-    const t5 = setTimeout(() => setLoading(false), 2200);
+    // Phase 1: Kente blocks build (0-900ms)
+    // Phase 2: Crest burst (900-2000ms)
+    // Phase 3: Kente stripe + text (2000-2800ms)
+    // Phase 4: Dissolve out (2800-3500ms)
+    const t1 = setTimeout(() => setPhase(2), 900);
+    const t2 = setTimeout(() => setPhase(3), 2000);
+    const t3 = setTimeout(() => setPhase(4), 2800);
+    const t4 = setTimeout(() => setPhase(0), 3500);
+    const t5 = setTimeout(() => setLoading(false), 3800);
 
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [pathname]);
@@ -38,7 +38,7 @@ export function PageLoader() {
       aria-hidden="true"
       style={{
         opacity: fadeOut ? 0 : 1,
-        transition: 'opacity 0.4s cubic-bezier(0.4,0,0.2,1)',
+        transition: 'opacity 0.6s cubic-bezier(0.4,0,0.2,1)',
         pointerEvents: fadeOut ? 'none' : 'auto',
       }}
     >
@@ -63,7 +63,7 @@ export function PageLoader() {
             const row = Math.floor(i / 16);
             const col = i % 16;
             const colorIndex = (row + col) % 4;
-            const delay = (row * 25) + (col * 12);
+            const delay = (row * 40) + (col * 20);
             return (
               <div
                 key={i}
@@ -71,7 +71,7 @@ export function PageLoader() {
                   backgroundColor: colors[colorIndex],
                   opacity: active ? 1 : 0,
                   transform: active ? 'scale(1)' : 'scale(0)',
-                  transition: `all 0.3s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+                  transition: `all 0.4s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
                   borderRadius: 2,
                 }}
               />
@@ -151,7 +151,7 @@ export function PageLoader() {
                 zIndex: 10,
                 opacity: burst ? 1 : 0,
                 transform: burst ? 'scale(1) rotate(0deg)' : 'scale(0.3) rotate(-20deg)',
-                transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
+                transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1)',
               }}
             />
           </div>
