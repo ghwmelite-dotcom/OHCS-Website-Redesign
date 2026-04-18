@@ -65,11 +65,13 @@ export default function PublicationsPage() {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filtered = SAMPLE_DOCS.filter((doc) => {
-    const matchesCategory = activeCategory === 'all' || doc.category === activeCategory;
-    const matchesSearch = !searchQuery || doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || doc.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filtered = SAMPLE_DOCS
+    .filter((doc) => {
+      const matchesCategory = activeCategory === 'all' || doc.category === activeCategory;
+      const matchesSearch = !searchQuery || doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || doc.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <>
