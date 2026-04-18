@@ -5,6 +5,7 @@ import { StatsBanner } from '@/components/home/stats-banner';
 import { NewsEventsSection } from '@/components/home/news-events-section';
 import { LeadershipSpotlight } from '@/components/home/leadership-spotlight';
 import { DirectoratesGrid } from '@/components/home/directorates-grid';
+import { AssistantCta } from '@/components/home/assistant-cta';
 import { CtaSection } from '@/components/home/cta-section';
 
 export default function HomePage() {
@@ -21,6 +22,8 @@ export default function HomePage() {
       <LeadershipSpotlight />
       <KenteSectionDivider />
       <DirectoratesGrid />
+      <KenteSectionDivider />
+      <AssistantCta />
       <KenteSectionDivider />
       <CtaSection />
       <KenteSectionDivider />

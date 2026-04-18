@@ -21,6 +21,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Bot,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -56,6 +57,7 @@ const NAV_SECTIONS = [
   {
     title: 'System',
     items: [
+      { label: 'AI Training', href: '/admin/ai-training', icon: Bot, roles: ['super_admin'] },
       { label: 'Users & Roles', href: '/admin/users', icon: Shield, roles: ['super_admin'] },
       { label: 'Audit Log', href: '/admin/audit-log', icon: ScrollText, roles: ['super_admin'] },
       { label: 'Settings', href: '/admin/settings', icon: Settings, roles: ['super_admin'] },
