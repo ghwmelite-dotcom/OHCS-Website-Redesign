@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { Users, Landmark, Building2, GraduationCap, Globe, Award } from 'lucide-react';
 
 const STATS = [
-  { icon: Users, number: '30,000+', label: 'Civil Servants', gradient: 'from-green-500 to-emerald-600' },
+  { icon: Users, number: '20,000+', label: 'Civil Servants', gradient: 'from-green-500 to-emerald-600' },
   { icon: Landmark, number: '11', label: 'Directorates & Units', gradient: 'from-blue-500 to-indigo-600' },
   { icon: GraduationCap, number: '3+', label: 'Training Centres', gradient: 'from-purple-500 to-violet-600' },
   { icon: Globe, number: '16', label: 'Regions Served', gradient: 'from-teal-500 to-cyan-600' },
