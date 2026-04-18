@@ -43,7 +43,7 @@ describe('DirectoratesGrid', () => {
 
   it('renders the View all link', () => {
     render(<DirectoratesGrid />);
-    const link = screen.getByRole('link', { name: /View all directorates/i });
+    const link = screen.getByRole('link', { name: /View all/i });
     expect(link.getAttribute('href')).toBe('/directorates');
   });
 

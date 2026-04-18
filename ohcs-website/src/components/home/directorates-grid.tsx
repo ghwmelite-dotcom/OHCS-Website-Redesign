@@ -73,7 +73,7 @@ export function DirectoratesGrid() {
             </span>
           </h2>
           <p className="text-lg text-text-muted max-w-2xl mx-auto leading-relaxed">
-            Five line directorates driving Ghana&apos;s civil service forward.
+            Five line directorates and six support units driving Ghana&apos;s civil service forward.
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export function DirectoratesGrid() {
             href="/directorates"
             className="inline-flex items-center gap-2 text-base font-medium text-primary px-6 py-3 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-sm transition-all"
           >
-            View all directorates <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            View all <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </Link>
         </div>
       </div>
