@@ -48,7 +48,7 @@ function getBotResponse(message: string): string {
 
   // ── Bot's identity — "what's your name", "who are you", "what are you" ──
   if (lower.match(/your name|who are you|what are you|what is your name|what's your name|whats your name|introduce yourself/)) {
-    return `I'm **Lexi** — which stands for **OHCS Live Engagement & eXpert Intelligence**! 😊\n\nI'm the AI assistant for the Office of the Head of the Civil Service. I was created to help citizens and civil servants access information about Ghana's Civil Service quickly and easily. Think of me as your friendly digital colleague who never sleeps!\n\nI can help with recruitment, RTI requests, organisational structure, complaints, tracking submissions, and much more.\n\nWhat would you like to know?`;
+    return `I'm **Lexi** — which stands for **OHCS Live Engagement & eXpert Intelligence AI Bot**! 😊\n\nI'm the AI assistant for the Office of the Head of the Civil Service. I was created to help citizens and civil servants access information about Ghana's Civil Service quickly and easily. Think of me as your friendly digital colleague who never sleeps!\n\nI can help with recruitment, RTI requests, organisational structure, complaints, tracking submissions, and much more.\n\nWhat would you like to know?`;
   }
 
   // ── How are you / casual conversation ──
@@ -392,7 +392,7 @@ export default function AssistantPage() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `${getGreeting()}! 😊 I'm **Lexi** — the OHCS Live Engagement & eXpert Intelligence.\n\nI'm your dedicated assistant for all things Ghana Civil Service. Whether you need information about recruitment, want to submit an RTI request, or simply have a question — I'm here to help.\n\nPlease, what can I assist you with today?`,
+      content: `${getGreeting()}! 😊 I'm **Lexi** — the OHCS Live Engagement & eXpert Intelligence AI Bot.\n\nI'm your dedicated assistant for all things Ghana Civil Service. Whether you need information about recruitment, want to submit an RTI request, or simply have a question — I'm here to help.\n\nPlease, what can I assist you with today?`,
       timestamp: new Date().toISOString(),
     },
   ]);
