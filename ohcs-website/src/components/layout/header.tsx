@@ -102,28 +102,44 @@ export function Header() {
           <Link
             href="/"
             className={cn(
-              'flex items-center gap-3.5 shrink-0',
+              'flex items-center gap-0 shrink-0',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg p-1 -ml-1',
             )}
             aria-label={`${SITE_NAME} — Home`}
           >
-            <div className="w-11 h-11 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center">
-              <Image
-                src="/images/logo.png"
-                alt="OHCS Logo"
-                width={32}
-                height={32}
-                className="object-contain"
-                style={{ width: 'auto', height: 'auto' }}
-              />
-            </div>
+            {/* Crest */}
+            <Image
+              src="/images/ohcs-crest.png"
+              alt="Ghana Civil Service Crest"
+              width={52}
+              height={52}
+              className="object-contain shrink-0"
+              style={{ width: 'auto', height: 52 }}
+            />
+
+            {/* Gold divider */}
+            <div
+              aria-hidden="true"
+              className="w-[2px] h-10 mx-3.5 rounded-full shrink-0"
+              style={{ background: 'linear-gradient(to bottom, transparent, #D4A017, transparent)' }}
+            />
+
+            {/* Text block with Kente underline */}
             <div className="flex flex-col leading-tight">
-              <span className="text-lg font-bold text-primary tracking-tight">
+              <span className="font-display text-xl font-extrabold text-primary-dark tracking-[3px]">
                 {SITE_SHORT_NAME}
               </span>
-              <span className="text-[11px] font-medium text-text-muted leading-tight hidden sm:block max-w-[200px]">
+              <span className="text-[10px] font-medium text-text-muted leading-tight hidden sm:block tracking-wide">
                 {SITE_NAME}
               </span>
+              {/* Kente stripe */}
+              <div
+                aria-hidden="true"
+                className="h-[3px] mt-1 rounded-full hidden sm:block"
+                style={{
+                  background: 'linear-gradient(90deg, #1B5E20 25%, #D4A017 25%, #D4A017 50%, #B71C1C 50%, #B71C1C 75%, #212121 75%)',
+                }}
+              />
             </div>
           </Link>
 
