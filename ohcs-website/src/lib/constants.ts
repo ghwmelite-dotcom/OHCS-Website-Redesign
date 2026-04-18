@@ -34,6 +34,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/directorates',
     children: [
       { label: 'Directorates', href: '/directorates', icon: 'LayoutGrid', description: 'Five line directorates driving the Civil Service' },
+      { label: 'Departments', href: '/departments', icon: 'Building2', description: 'Key departments supporting civil service operations' },
       { label: 'Units', href: '/units', icon: 'Landmark', description: 'Support units including Reform, Audit, Secretariat, and more' },
       { label: 'Training Institutions', href: '/training', icon: 'GraduationCap', description: 'Civil Service Training Centre, GIMPA, and regional institutes' },
     ],
