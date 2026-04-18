@@ -23,7 +23,7 @@
 
   /* Typography */
   --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-body: 'Bookman Old Style', 'URW Bookman', 'Bookman', Georgia, serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Font sizes (Major Third 1.25x scale) */
