@@ -13,85 +13,35 @@ import {
   ClipboardList,
   Clock,
   ArrowRight,
+  TrendingUp,
+  Activity,
+  ChevronRight,
+  Plus,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const STATS = [
-  {
-    label: 'Total News',
-    value: '12',
-    icon: Newspaper,
-    href: '/admin/news',
-    gradient: 'from-green-500 to-emerald-600',
-    roles: ['super_admin', 'content_manager'],
-  },
-  {
-    label: 'Events',
-    value: '5',
-    icon: Calendar,
-    href: '/admin/events',
-    gradient: 'from-blue-500 to-indigo-600',
-    roles: ['super_admin', 'content_manager'],
-  },
-  {
-    label: 'Publications',
-    value: '25',
-    icon: FileText,
-    href: '/admin/publications',
-    gradient: 'from-amber-500 to-yellow-600',
-    roles: ['super_admin', 'content_manager'],
-  },
-  {
-    label: 'Submissions',
-    value: '48',
-    icon: ClipboardList,
-    href: '/admin/submissions',
-    gradient: 'from-purple-500 to-violet-600',
-    roles: ['super_admin', 'recruitment_admin', 'viewer'],
-  },
-  {
-    label: 'Applications',
-    value: '0',
-    icon: UserPlus,
-    href: '/admin/recruitment',
-    gradient: 'from-rose-500 to-pink-600',
-    roles: ['super_admin', 'recruitment_admin'],
-  },
-  {
-    label: 'Admin Users',
-    value: '4',
-    icon: Users,
-    href: '/admin/users',
-    gradient: 'from-teal-500 to-cyan-600',
-    roles: ['super_admin'],
-  },
+  { label: 'News Articles', value: '12', change: '+3 this month', icon: Newspaper, href: '/admin/news', gradient: 'from-green-500 to-emerald-600', bg: 'bg-green-50', border: 'border-green-200', roles: ['super_admin', 'content_manager'] },
+  { label: 'Events', value: '5', change: '2 upcoming', icon: Calendar, href: '/admin/events', gradient: 'from-blue-500 to-indigo-600', bg: 'bg-blue-50', border: 'border-blue-200', roles: ['super_admin', 'content_manager'] },
+  { label: 'Publications', value: '25', change: '+5 this quarter', icon: FileText, href: '/admin/publications', gradient: 'from-amber-500 to-yellow-600', bg: 'bg-amber-50', border: 'border-amber-200', roles: ['super_admin', 'content_manager'] },
+  { label: 'Submissions', value: '48', change: '12 pending review', icon: ClipboardList, href: '/admin/submissions', gradient: 'from-purple-500 to-violet-600', bg: 'bg-purple-50', border: 'border-purple-200', roles: ['super_admin', 'recruitment_admin', 'viewer'] },
+  { label: 'Applications', value: '0', change: 'Window closed', icon: UserPlus, href: '/admin/recruitment', gradient: 'from-rose-500 to-pink-600', bg: 'bg-rose-50', border: 'border-rose-200', roles: ['super_admin', 'recruitment_admin'] },
+  { label: 'Admin Users', value: '4', change: 'All active', icon: Users, href: '/admin/users', gradient: 'from-teal-500 to-cyan-600', bg: 'bg-teal-50', border: 'border-teal-200', roles: ['super_admin'] },
 ];
 
 const QUICK_ACTIONS = [
-  {
-    label: 'Create News Article',
-    href: '/admin/news/new',
-    icon: Newspaper,
-    roles: ['super_admin', 'content_manager'],
-  },
-  {
-    label: 'Add Event',
-    href: '/admin/events/new',
-    icon: Calendar,
-    roles: ['super_admin', 'content_manager'],
-  },
-  {
-    label: 'Upload Publication',
-    href: '/admin/publications/new',
-    icon: FileText,
-    roles: ['super_admin', 'content_manager'],
-  },
-  {
-    label: 'View Submissions',
-    href: '/admin/submissions',
-    icon: ClipboardList,
-    roles: ['super_admin', 'recruitment_admin', 'viewer'],
-  },
+  { label: 'New Article', href: '/admin/news/new', icon: Newspaper, gradient: 'from-green-500 to-emerald-600', roles: ['super_admin', 'content_manager'] },
+  { label: 'New Event', href: '/admin/events/new', icon: Calendar, gradient: 'from-blue-500 to-indigo-600', roles: ['super_admin', 'content_manager'] },
+  { label: 'Upload Doc', href: '/admin/publications/new', icon: FileText, gradient: 'from-amber-500 to-yellow-600', roles: ['super_admin', 'content_manager'] },
+  { label: 'Submissions', href: '/admin/submissions', icon: ClipboardList, gradient: 'from-purple-500 to-violet-600', roles: ['super_admin', 'recruitment_admin', 'viewer'] },
+];
+
+const RECENT_ACTIVITY = [
+  { action: 'Published', item: 'Nigeria Courtesy Call article', time: '2 hours ago', color: 'bg-green-500' },
+  { action: 'Updated', item: 'Civil Service Training Programme event', time: '5 hours ago', color: 'bg-blue-500' },
+  { action: 'Received', item: 'New RTI submission (OHCS-RTI-20260418-K2M1)', time: '1 day ago', color: 'bg-purple-500' },
+  { action: 'Uploaded', item: 'HoD 2026 Performance Agreement', time: '2 days ago', color: 'bg-amber-500' },
+  { action: 'Resolved', item: 'Complaint OHCS-CMP-20260415-B3F2', time: '3 days ago', color: 'bg-teal-500' },
 ];
 
 export default function AdminDashboardPage() {
@@ -104,101 +54,122 @@ export default function AdminDashboardPage() {
   if (!user) return null;
 
   const visibleStats = STATS.filter((s) => s.roles.includes(user.role));
-  const visibleActions = QUICK_ACTIONS.filter((a) =>
-    a.roles.includes(user.role),
-  );
+  const visibleActions = QUICK_ACTIONS.filter((a) => a.roles.includes(user.role));
 
   return (
     <div className="space-y-8">
-      {/* Welcome */}
-      <div className="bg-gradient-to-br from-primary-dark to-primary rounded-2xl p-8 text-white relative overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: [
-              'repeating-linear-gradient(0deg, #D4A017 0px, #D4A017 1px, transparent 1px, transparent 32px)',
-              'repeating-linear-gradient(90deg, #D4A017 0px, #D4A017 1px, transparent 1px, transparent 32px)',
-            ].join(', '),
-          }}
-        />
-        <div className="relative">
-          <p className="text-white/60 text-sm mb-1">Welcome back,</p>
-          <h2 className="font-display text-2xl font-bold mb-2">{user.name}</h2>
-          <p className="text-white/50 text-sm">
-            Manage content, monitor submissions, and oversee operations from
-            your dashboard.
-          </p>
+      {/* ── Welcome Banner ── */}
+      <div className="relative bg-gradient-to-br from-primary-dark via-primary-dark to-primary rounded-2xl p-8 lg:p-10 text-white overflow-hidden">
+        {/* Kente threads */}
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-[30%] left-0 right-0 h-px opacity-[0.1]" style={{ background: 'linear-gradient(90deg, transparent, #D4A017 30%, #D4A017 70%, transparent)', animation: 'kente-thread-h 8s ease-in-out infinite' }} />
+          <div className="absolute top-[70%] left-0 right-0 h-px opacity-[0.07]" style={{ background: 'linear-gradient(90deg, transparent, #E8C547 20%, #E8C547 80%, transparent)', animation: 'kente-thread-h 12s ease-in-out 3s infinite reverse' }} />
+          <div className="absolute left-[75%] top-0 bottom-0 w-px opacity-[0.06]" style={{ background: 'linear-gradient(0deg, transparent, #2E7D32 30%, #2E7D32 70%, transparent)', animation: 'kente-thread-v 10s ease-in-out 1s infinite' }} />
+        </div>
+        <div aria-hidden="true" className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'repeating-linear-gradient(0deg, #D4A017 0px, #D4A017 1px, transparent 1px, transparent 32px), repeating-linear-gradient(90deg, #D4A017 0px, #D4A017 1px, transparent 1px, transparent 32px)' }} />
+
+        <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div>
+            <p className="text-accent text-xs font-semibold uppercase tracking-[0.2em] mb-2">Welcome back,</p>
+            <h2 className="font-display text-3xl font-bold mb-2">{user.name}</h2>
+            <p className="text-white/45 text-base max-w-md">
+              Manage content, monitor submissions, and oversee operations across Ghana&apos;s Civil Service.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {visibleActions.slice(0, 2).map((a) => (
+              <Link
+                key={a.href}
+                href={a.href}
+                className="flex items-center gap-2 px-5 py-2.5 bg-white/[0.1] hover:bg-white/[0.15] border border-white/10 hover:border-white/20 rounded-xl text-sm font-semibold text-white transition-all"
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                {a.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Kente stripe at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-[3px]" aria-hidden="true" style={{ background: 'linear-gradient(90deg, #1B5E20 25%, #D4A017 25%, #D4A017 50%, #B71C1C 50%, #B71C1C 75%, #212121 75%)' }}>
+          <div className="h-full" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 45%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.3) 55%, transparent 100%)', backgroundSize: '200% 100%', animation: 'kente-shimmer 4s ease-in-out infinite' }} />
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* ── Stats Grid ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {visibleStats.map((stat) => (
           <Link
             key={stat.label}
             href={stat.href}
-            className="group bg-white rounded-2xl border-2 border-border/40 p-6 hover:border-primary/20 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+            className={cn(
+              'group rounded-2xl border-2 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+              stat.bg, stat.border,
+            )}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div
-                className={cn(
-                  'w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-sm',
-                  stat.gradient,
-                )}
-              >
-                <stat.icon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
+            <div className="flex items-center justify-between mb-5">
+              <div className={cn('w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300', stat.gradient)}>
+                <stat.icon className="h-6 w-6 text-white" aria-hidden="true" />
               </div>
-              <ArrowRight
-                className="h-4 w-4 text-text-muted/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all"
-                aria-hidden="true"
-              />
+              <ChevronRight className="h-4 w-4 text-text-muted/20 group-hover:text-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true" />
             </div>
-            <p className="text-3xl font-bold text-primary-dark mb-1">
-              {stat.value}
+            <p className="text-3xl font-bold text-primary-dark mb-1 font-display">{stat.value}</p>
+            <p className="text-sm font-semibold text-primary-dark mb-1">{stat.label}</p>
+            <p className="text-xs text-text-muted flex items-center gap-1">
+              <TrendingUp className="h-3 w-3" aria-hidden="true" />
+              {stat.change}
             </p>
-            <p className="text-sm text-text-muted">{stat.label}</p>
           </Link>
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div>
-        <h3 className="font-semibold text-lg text-primary-dark mb-4">
-          Quick Actions
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {visibleActions.map((action) => (
-            <Link
-              key={action.href}
-              href={action.href}
-              className="flex items-center gap-3 bg-white rounded-xl border-2 border-border/40 p-4 hover:border-primary/20 hover:shadow-sm transition-all text-sm font-medium text-text-muted hover:text-primary-dark"
-            >
-              <action.icon
-                className="h-5 w-5 text-primary"
-                aria-hidden="true"
-              />
-              {action.label}
-            </Link>
-          ))}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* ── Quick Actions ── */}
+        <div className="lg:col-span-1">
+          <h3 className="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Quick Actions</h3>
+          <div className="space-y-3">
+            {visibleActions.map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                className="group flex items-center gap-4 bg-white rounded-2xl border-2 border-border/40 p-4 hover:border-primary/20 hover:shadow-sm transition-all"
+              >
+                <div className={cn('w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-sm', action.gradient)}>
+                  <action.icon className="h-5 w-5 text-white" aria-hidden="true" />
+                </div>
+                <span className="flex-1 text-sm font-semibold text-primary-dark group-hover:text-primary transition-colors">{action.label}</span>
+                <ArrowRight className="h-4 w-4 text-text-muted/20 group-hover:text-primary group-hover:translate-x-0.5 transition-all" aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Recent Activity placeholder */}
-      <div className="bg-white rounded-2xl border-2 border-border/40 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Clock className="h-5 w-5 text-text-muted" aria-hidden="true" />
-          <h3 className="font-semibold text-lg text-primary-dark">
-            Recent Activity
-          </h3>
+        {/* ── Recent Activity ── */}
+        <div className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold text-text-muted uppercase tracking-wider flex items-center gap-2">
+              <Activity className="h-4 w-4" aria-hidden="true" />
+              Recent Activity
+            </h3>
+            <span className="text-xs text-text-muted/50">Last 7 days</span>
+          </div>
+          <div className="bg-white rounded-2xl border-2 border-border/40 divide-y divide-border/30">
+            {RECENT_ACTIVITY.map((activity, i) => (
+              <div key={i} className="flex items-center gap-4 p-4 hover:bg-gray-50/50 transition-colors">
+                <div className={cn('w-2.5 h-2.5 rounded-full shrink-0', activity.color)} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-primary-dark">
+                    <span className="font-semibold">{activity.action}</span> {activity.item}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-xs text-text-muted/50 shrink-0">
+                  <Clock className="h-3 w-3" aria-hidden="true" />
+                  {activity.time}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <p className="text-sm text-text-muted">
-          Activity log will appear here once the system is connected to the live
-          database.
-        </p>
       </div>
     </div>
   );
