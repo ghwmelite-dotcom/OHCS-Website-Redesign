@@ -39,32 +39,38 @@ export function Header() {
           <div className="flex items-center justify-between h-9">
             {/* Ghana identity */}
             <div className="flex items-center gap-2.5 group/coa">
-              <div className="relative">
-                {/* Gold shimmer ring */}
+              <div className="relative w-7 h-7 flex items-center justify-center">
+                {/* Rotating gold shimmer ring — always visible */}
                 <div
                   aria-hidden="true"
-                  className="absolute -inset-1 rounded-full opacity-0 group-hover/coa:opacity-100 transition-opacity duration-500"
+                  className="absolute inset-[-4px] rounded-full"
                   style={{
-                    background: 'conic-gradient(from 0deg, transparent, rgba(212,160,23,0.4), transparent, rgba(212,160,23,0.2), transparent)',
+                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(212,160,23,0.5) 25%, transparent 50%, rgba(212,160,23,0.3) 75%, transparent 100%)',
                     animation: 'coa-shimmer 3s linear infinite',
                   }}
                 />
-                {/* Subtle glow pulse */}
+                {/* Inner dark circle to mask the ring center */}
                 <div
                   aria-hidden="true"
-                  className="absolute -inset-0.5 rounded-full"
+                  className="absolute inset-[-1px] rounded-full"
+                  style={{ background: 'var(--color-primary-dark)' }}
+                />
+                {/* Pulsing gold glow */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-[-6px] rounded-full"
                   style={{
-                    background: 'radial-gradient(circle, rgba(212,160,23,0.15) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle, rgba(212,160,23,0.25) 0%, transparent 65%)',
                     animation: 'coa-glow 2.5s ease-in-out infinite',
                   }}
                 />
                 <Image
                   src="/images/coat-of-arms.png"
                   alt="Ghana Coat of Arms"
-                  width={22}
-                  height={22}
+                  width={24}
+                  height={24}
                   className="object-contain relative z-10 group-hover/coa:scale-110 transition-transform duration-500"
-                  style={{ width: 'auto', height: 'auto' }}
+                  style={{ width: 24, height: 24 }}
                 />
               </div>
               <span className="text-xs font-medium text-white/80 hidden sm:inline tracking-wide">
