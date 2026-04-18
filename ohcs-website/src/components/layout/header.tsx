@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 // Note: SITE_SHORT_NAME no longer needed here — AnimatedLogo handles it
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/lib/constants';
@@ -154,17 +154,18 @@ export function Header() {
               <Search aria-hidden="true" className="w-5 h-5" />
             </button>
 
-            {/* Get Started CTA — desktop only */}
+            {/* Ask Lexi CTA — desktop only */}
             <Link
-              href="/services"
+              href="/assistant"
               className={cn(
                 'hidden lg:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl',
-                'bg-primary text-white text-sm font-semibold',
-                'hover:bg-primary-light hover:shadow-md transition-all duration-200',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                'bg-gradient-to-r from-accent to-accent-light text-primary-dark text-sm font-bold',
+                'hover:shadow-lg hover:scale-[1.03] transition-all duration-300',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
               )}
             >
-              Get Started
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              Ask Lexi
             </Link>
 
             {/* Mobile nav (hamburger + panel) */}
