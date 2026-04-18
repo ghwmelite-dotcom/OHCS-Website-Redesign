@@ -79,6 +79,8 @@ const FILE_TYPE_COLORS: Record<string, string> = {
 export default function PublicationsPage() {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
 
   const filtered = SAMPLE_DOCS
     .filter((doc) => {
@@ -87,6 +89,19 @@ export default function PublicationsPage() {
       return matchesCategory && matchesSearch;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  const handleCategoryChange = (key: CategoryKey) => {
+    setActiveCategory(key);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+  };
 
   return (
     <>
@@ -129,7 +144,7 @@ export default function PublicationsPage() {
               <button
                 key={cat.key}
                 type="button"
-                onClick={() => setActiveCategory(cat.key)}
+                onClick={() => handleCategoryChange(cat.key)}
                 className={cn(
                   'group flex flex-col items-center p-5 rounded-2xl border-2 transition-all duration-300 text-center',
                   activeCategory === cat.key
@@ -173,7 +188,7 @@ export default function PublicationsPage() {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Search publications by title or keyword..."
                 className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border/60 bg-white text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all"
               />
@@ -188,14 +203,15 @@ export default function PublicationsPage() {
               )}
             </div>
             <p className="text-sm text-text-muted mt-3">
-              Showing {filtered.length} document{filtered.length !== 1 ? 's' : ''}
+              Showing {Math.min((currentPage - 1) * ITEMS_PER_PAGE + 1, filtered.length)}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length} document{filtered.length !== 1 ? 's' : ''}
               {activeCategory !== 'all' && ` in ${CATEGORIES.find((c) => c.key === activeCategory)?.label}`}
+              {totalPages > 1 && ` • Page ${currentPage} of ${totalPages}`}
             </p>
           </div>
 
           {/* Document cards */}
           <div className="space-y-4">
-            {filtered.map((doc) => (
+            {paginated.map((doc) => (
               <div
                 key={doc.id}
                 className="group bg-white rounded-2xl border-2 border-border/40 p-6 flex flex-col sm:flex-row sm:items-center gap-5 hover:border-primary/20 hover:shadow-lg transition-all duration-300"
@@ -238,6 +254,63 @@ export default function PublicationsPage() {
                 </button>
               </div>
             ))}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 pt-8">
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={cn(
+                    'px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200',
+                    currentPage === 1
+                      ? 'text-text-muted/30 cursor-not-allowed'
+                      : 'text-primary hover:bg-primary/5 border-2 border-primary/10 hover:border-primary/30',
+                  )}
+                >
+                  Previous
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                  .map((page, i, arr) => {
+                    const prev = arr[i - 1];
+                    const showEllipsis = prev !== undefined && page - prev > 1;
+                    return (
+                      <span key={page} className="flex items-center gap-2">
+                        {showEllipsis && <span className="text-text-muted/30 px-1">...</span>}
+                        <button
+                          type="button"
+                          onClick={() => setCurrentPage(page)}
+                          className={cn(
+                            'w-10 h-10 rounded-xl text-sm font-semibold transition-all duration-200',
+                            page === currentPage
+                              ? 'bg-primary text-white shadow-md'
+                              : 'text-text-muted hover:bg-primary/5 border-2 border-border/40 hover:border-primary/20',
+                          )}
+                        >
+                          {page}
+                        </button>
+                      </span>
+                    );
+                  })}
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className={cn(
+                    'px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200',
+                    currentPage === totalPages
+                      ? 'text-text-muted/30 cursor-not-allowed'
+                      : 'text-primary hover:bg-primary/5 border-2 border-primary/10 hover:border-primary/30',
+                  )}
+                >
+                  Next
+                </button>
+              </div>
+            )}
 
             {filtered.length === 0 && (
               <div className="text-center py-16">
