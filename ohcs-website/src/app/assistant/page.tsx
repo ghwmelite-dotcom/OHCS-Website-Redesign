@@ -39,12 +39,12 @@ function getBotResponse(message: string): string {
   const nameMatch = lower.match(/(?:i'?m|my name is|i am|this is|call me)\s+([a-z]+)/i);
   if (nameMatch) {
     const name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
-    return `Lovely to meet you, ${name}! 😊 Welcome to the Office of the Head of the Civil Service.\n\nI'm **Ama** — your dedicated assistant for all things Ghana Civil Service. How can I help you today, ${name}?`;
+    return `Lovely to meet you, ${name}! 😊 Welcome to the Office of the Head of the Civil Service.\n\nI'm **Lexi** — your dedicated assistant for all things Ghana Civil Service. How can I help you today, ${name}?`;
   }
 
   // ── Bot's identity — "what's your name", "who are you", "what are you" ──
   if (lower.match(/your name|who are you|what are you|what is your name|what's your name|whats your name|introduce yourself/)) {
-    return `My name is **Ama** — I'm the AI assistant for the Office of the Head of the Civil Service! 😊\n\nI was created to help citizens and civil servants access information about Ghana's Civil Service quickly and easily. Think of me as your friendly digital colleague who never sleeps!\n\nI can help with recruitment information, RTI requests, understanding our organisational structure, filing complaints, tracking submissions, and much more.\n\nWhat would you like to know?`;
+    return `I'm **Lexi** — which stands for **OHCS Live Engagement & eXpert Intelligence**! 😊\n\nI'm the AI assistant for the Office of the Head of the Civil Service. I was created to help citizens and civil servants access information about Ghana's Civil Service quickly and easily. Think of me as your friendly digital colleague who never sleeps!\n\nI can help with recruitment, RTI requests, organisational structure, complaints, tracking submissions, and much more.\n\nWhat would you like to know?`;
   }
 
   // ── How are you / casual conversation ──
@@ -58,7 +58,7 @@ function getBotResponse(message: string): string {
 
   // ── Pure greetings (only if the message is JUST a greeting, not "hi im john") ──
   if (lower.match(/^(hello|hi|hey|greetings|good morning|good afternoon|good evening|yo|hiya)[\s!.?]*$/)) {
-    return `${getGreeting()}! 😊 Welcome! I'm **Ama**, your assistant for the Ghana Civil Service.\n\nHow can I help you today?`;
+    return `${getGreeting()}! 😊 Welcome! I'm **Lexi**, your assistant for the Ghana Civil Service.\n\nHow can I help you today?`;
   }
 
   if (lower.includes('what does ohcs do') || lower.includes('what is ohcs') || lower.includes('about ohcs') || lower.includes('tell me about') || lower.includes('what is the office')) {
@@ -144,7 +144,7 @@ export default function AssistantPage() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `${getGreeting()}! 😊 Welcome to the Office of the Head of the Civil Service.\n\nI'm your dedicated assistant for all things related to Ghana's Civil Service. Whether you need information about recruitment, want to submit an RTI request, or simply have a question — I'm here to help.\n\nPlease, what can I assist you with today?`,
+      content: `${getGreeting()}! 😊 I'm **Lexi** — the OHCS Live Engagement & eXpert Intelligence.\n\nI'm your dedicated assistant for all things Ghana Civil Service. Whether you need information about recruitment, want to submit an RTI request, or simply have a question — I'm here to help.\n\nPlease, what can I assist you with today?`,
       timestamp: new Date().toISOString(),
     },
   ]);
@@ -234,7 +234,8 @@ export default function AssistantPage() {
                 <Bot className="h-7 w-7 text-primary-dark" />
               </div>
               <div>
-                <h1 className="text-white font-display text-2xl font-bold">Ask Ghana<br/>Civil Service</h1>
+                <h1 className="text-white font-display text-2xl font-bold">Ask Lexi</h1>
+                <p className="text-white/30 text-[10px] uppercase tracking-wider mt-1">OHCS Live Engagement & eXpert Intelligence</p>
               </div>
             </div>
             <p className="text-white/45 text-base leading-relaxed mb-10">
@@ -281,7 +282,7 @@ export default function AssistantPage() {
             <Bot className="h-5 w-5 text-primary-dark" />
           </div>
           <div>
-            <h1 className="text-white font-bold text-sm">Ask Ghana Civil Service</h1>
+            <h1 className="text-white font-bold text-sm">Ask Lexi</h1>
             <p className="text-white/40 text-[10px]">Online — ready to help</p>
           </div>
         </div>

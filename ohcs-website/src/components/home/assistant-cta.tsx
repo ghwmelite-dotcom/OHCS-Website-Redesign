@@ -44,14 +44,14 @@ export function AssistantCta() {
                 </div>
               </div>
               <h2 className="font-display text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
-                Have a Question?{' '}
+                Meet Lexi.{' '}
                 <span className="relative inline-block">
-                  Just Ask.
+                  Your 24/7 Civil Service Assistant.
                   <span aria-hidden="true" className="absolute -bottom-1 left-0 right-0 h-3 bg-accent/30 rounded-sm -z-10" />
                 </span>
               </h2>
               <p className="text-lg text-white/50 leading-relaxed mb-8">
-                Our AI assistant knows everything about Ghana&apos;s Civil Service — recruitment, RTI requests, organisational structure, and more. Available 24/7.
+                Lexi knows everything about Ghana&apos;s Civil Service — recruitment, RTI requests, organisational structure, and more. Available 24/7.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link
@@ -59,7 +59,7 @@ export function AssistantCta() {
                   className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-primary-dark font-semibold text-base rounded-xl hover:bg-accent-light hover:shadow-lg transition-all duration-200"
                 >
                   <MessageCircle className="h-5 w-5" />
-                  Start a Conversation
+                  Ask Lexi
                 </Link>
                 <div className="flex items-center gap-2 text-white/30 text-sm">
                   <Clock className="h-4 w-4" />
