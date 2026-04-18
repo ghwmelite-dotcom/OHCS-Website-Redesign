@@ -71,7 +71,7 @@ export default function AdminDashboardPage() {
         <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
             <p className="text-accent text-xs font-semibold uppercase tracking-[0.2em] mb-2">Welcome back,</p>
-            <h2 className="font-display text-3xl font-bold mb-2">{user.name.split(' ')[0]}</h2>
+            <h2 className="font-display text-3xl font-bold mb-2">{user.name ?? 'Admin'}</h2>
             <p className="text-white/45 text-base max-w-md">
               Manage content, monitor submissions, and oversee operations across Ghana&apos;s Civil Service.
             </p>
