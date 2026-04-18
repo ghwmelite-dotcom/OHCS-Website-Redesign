@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Clock, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 const currentYear = new Date().getFullYear();
 
@@ -96,36 +97,7 @@ export function Footer({ className }: { className?: string }) {
             <div className="max-w-md">
               {/* Logo + name */}
               <div className="flex items-center gap-4 mb-5">
-                <Image
-                src="/images/ohcs-crest.png"
-                alt="Ghana Civil Service Crest"
-                width={48}
-                height={48}
-                className="object-contain shrink-0"
-                style={{ width: 'auto', height: 48 }}
-              />
-              {/* Gold divider */}
-              <div
-                aria-hidden="true"
-                className="w-[2px] h-9 rounded-full shrink-0"
-                style={{ background: 'linear-gradient(to bottom, transparent, #D4A017, transparent)' }}
-              />
-              <div>
-                <span className="font-display text-xl font-extrabold text-white block leading-tight tracking-[3px]">
-                  OHCS
-                </span>
-                <span className="text-[10px] text-white/50 font-medium tracking-wide block">
-                  Office of the Head of Civil Service
-                </span>
-                {/* Kente stripe */}
-                <div
-                  aria-hidden="true"
-                  className="h-[2px] mt-1 rounded-full"
-                  style={{
-                    background: 'linear-gradient(90deg, #1B5E20 25%, #D4A017 25%, #D4A017 50%, #B71C1C 50%, #B71C1C 75%, #212121 75%)',
-                  }}
-                />
-              </div>
+                <AnimatedLogo variant="footer" />
               </div>
 
               {/* Description */}

@@ -5,7 +5,8 @@ import { Footer } from '@/components/layout/footer';
 describe('Footer', () => {
   it('renders OHCS name', () => {
     render(<Footer />);
-    expect(screen.getByText('OHCS')).toBeDefined();
+    // OHCS is rendered letter-by-letter in AnimatedLogo
+    expect(screen.getByLabelText(/Home/i)).toBeDefined();
   });
 
   it('renders contact section heading', () => {

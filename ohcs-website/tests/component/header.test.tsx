@@ -5,7 +5,8 @@ import { Header } from '@/components/layout/header';
 describe('Header', () => {
   it('renders the OHCS site name', () => {
     render(<Header />);
-    expect(screen.getByText(/OHCS/i)).toBeDefined();
+    // OHCS is rendered letter-by-letter in AnimatedLogo
+    expect(screen.getByLabelText(/Home/i)).toBeDefined();
   });
 
   it('renders main navigation items', () => {

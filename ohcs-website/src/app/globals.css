@@ -130,6 +130,42 @@
   50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(212,160,23,0.4)); }
 }
 
+/* ── Logo animations ── */
+@keyframes logo-crest-in {
+  from { opacity: 0; transform: scale(0.6) rotate(-10deg); }
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes logo-divider-in {
+  from { opacity: 0; transform: scaleY(0); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+@keyframes logo-divider-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(212,160,23,0.1); }
+  50% { box-shadow: 0 0 12px rgba(212,160,23,0.4); }
+}
+
+@keyframes logo-text-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes logo-letter-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes logo-subtitle-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes logo-stripe-in {
+  from { width: 0; opacity: 0; }
+  to { width: 100%; opacity: 1; }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

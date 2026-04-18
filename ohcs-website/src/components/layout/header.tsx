@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
+// Note: SITE_SHORT_NAME no longer needed here — AnimatedLogo handles it
 import { cn } from '@/lib/utils';
-import { NAV_ITEMS, SITE_NAME, SITE_SHORT_NAME } from '@/lib/constants';
+import { NAV_ITEMS } from '@/lib/constants';
 import { MegaMenu } from '@/components/layout/mega-menu';
 import { MobileNav } from '@/components/layout/mobile-nav';
+import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -99,49 +101,7 @@ export function Header() {
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
           {/* Logo + Identity */}
-          <Link
-            href="/"
-            className={cn(
-              'flex items-center gap-0 shrink-0',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg p-1 -ml-1',
-            )}
-            aria-label={`${SITE_NAME} — Home`}
-          >
-            {/* Crest */}
-            <Image
-              src="/images/ohcs-crest.png"
-              alt="Ghana Civil Service Crest"
-              width={52}
-              height={52}
-              className="object-contain shrink-0"
-              style={{ width: 'auto', height: 52 }}
-            />
-
-            {/* Gold divider */}
-            <div
-              aria-hidden="true"
-              className="w-[2px] h-10 mx-3.5 rounded-full shrink-0"
-              style={{ background: 'linear-gradient(to bottom, transparent, #D4A017, transparent)' }}
-            />
-
-            {/* Text block with Kente underline */}
-            <div className="flex flex-col leading-tight">
-              <span className="font-display text-xl font-extrabold text-primary-dark tracking-[3px]">
-                {SITE_SHORT_NAME}
-              </span>
-              <span className="text-[10px] font-medium text-text-muted leading-tight hidden sm:block tracking-wide">
-                {SITE_NAME}
-              </span>
-              {/* Kente stripe */}
-              <div
-                aria-hidden="true"
-                className="h-[3px] mt-1 rounded-full hidden sm:block"
-                style={{
-                  background: 'linear-gradient(90deg, #1B5E20 25%, #D4A017 25%, #D4A017 50%, #B71C1C 50%, #B71C1C 75%, #212121 75%)',
-                }}
-              />
-            </div>
-          </Link>
+          <AnimatedLogo variant="header" />
 
           {/* Desktop navigation */}
           <nav
