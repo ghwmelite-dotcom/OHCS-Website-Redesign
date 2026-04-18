@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils';
 import { Users, Landmark, Building2, GraduationCap, Globe, Award } from 'lucide-react';
 
 const STATS = [
-  { icon: Users, number: '20,000+', label: 'Civil Servants', gradient: 'from-green-500 to-emerald-600' },
+  { icon: Users, number: '20K+', label: 'Civil Servants', gradient: 'from-green-500 to-emerald-600' },
   { icon: Landmark, number: '11', label: 'Directorates & Units', gradient: 'from-blue-500 to-indigo-600' },
-  { icon: GraduationCap, number: '3+', label: 'Training Centres', gradient: 'from-purple-500 to-violet-600' },
+  { icon: GraduationCap, number: '3+', label: 'Training & Departments', gradient: 'from-purple-500 to-violet-600' },
   { icon: Globe, number: '16', label: 'Regions Served', gradient: 'from-teal-500 to-cyan-600' },
   { icon: Award, number: '30+', label: 'Years of Reform', gradient: 'from-rose-500 to-pink-600' },
 ];
@@ -68,7 +68,7 @@ export function StatsBanner() {
               )}>
                 <stat.icon className="h-7 w-7 text-white" aria-hidden="true" />
               </div>
-              <p className="text-4xl font-bold text-white leading-none mb-2 font-display">{stat.number}</p>
+              <p className="text-3xl lg:text-4xl font-bold text-white leading-none mb-2 font-display">{stat.number}</p>
               <p className="text-[10px] text-white/50 font-bold uppercase tracking-[0.15em]">{stat.label}</p>
             </div>
           ))}
