@@ -7,6 +7,8 @@ import {
   LayoutDashboard, FolderOpen, Kanban, GraduationCap, MessageSquare,
   BarChart3, ShieldAlert, Trophy, ArrowRight,
 } from 'lucide-react';
+import { AiChatPanel } from '@/components/admin/ai-chat-panel';
+import { AiInsightCard } from '@/components/admin/ai-insight-card';
 
 const TABS = [
   { label: 'Dashboard', href: '/admin/recruitment', icon: LayoutDashboard },
@@ -154,6 +156,13 @@ export default function RecruitmentDashboardPage() {
         </div>
       </div>
 
+      {/* AI Insight */}
+      <AiInsightCard
+        insight="Screening stage has the largest backlog (89 candidates). At current processing rate, it will take approximately 12 working days to clear. Consider allocating 2 additional reviewers to maintain the 30 April deadline."
+        severity="warning"
+        className="mb-8"
+      />
+
       {/* Recent Applications */}
       <div className="bg-white rounded-2xl border-2 border-border/40 overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-border/30">
@@ -207,6 +216,8 @@ export default function RecruitmentDashboardPage() {
           </tbody>
         </table>
       </div>
+
+      <AiChatPanel />
     </div>
   );
 }

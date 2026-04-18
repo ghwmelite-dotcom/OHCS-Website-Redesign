@@ -9,3 +9,6 @@ ENVIRONMENT = "development"
 binding = "DB"
 database_name = "ohcs-db"
 database_id = "placeholder-replace-after-creation"
+
+[ai]
+binding = "AI"

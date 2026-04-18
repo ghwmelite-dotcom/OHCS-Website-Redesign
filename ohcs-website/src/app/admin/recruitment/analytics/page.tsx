@@ -6,6 +6,7 @@ import {
   LayoutDashboard, FolderOpen, Kanban, GraduationCap, MessageSquare,
   BarChart3, ShieldAlert, Trophy, Users, TrendingUp, Clock, UserCheck,
 } from 'lucide-react';
+import { AiInsightCard } from '@/components/admin/ai-insight-card';
 
 /* ------------------------------------------------------------------ */
 /*  Tab Navigation                                                     */
@@ -113,6 +114,13 @@ export default function AnalyticsPage() {
           </div>
         ))}
       </div>
+
+      {/* AI Insight */}
+      <AiInsightCard
+        insight="Northern Region applications are 40% below population proportion. Targeted outreach through regional universities and the Kumasi Training Institute could improve geographic diversity."
+        severity="info"
+        className="mb-8"
+      />
 
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* Applications by Region */}

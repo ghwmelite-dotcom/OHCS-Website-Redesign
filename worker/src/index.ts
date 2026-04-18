@@ -7,8 +7,10 @@ import { leadership } from './routes/public/leadership';
 import { submissions } from './routes/public/submissions';
 import { track } from './routes/public/track';
 import { auth } from './routes/admin/auth';
+import { aiChat } from './routes/admin/ai-chat';
 
 type Env = {
+  AI: Ai;
   DB: D1Database;
   REF_LOOKUP: KVNamespace;
   CACHE: KVNamespace;
@@ -38,6 +40,7 @@ app.route('/api/v1/track', track);
 
 // Admin API routes
 app.route('/api/v1/admin/auth', auth);
+app.route('/api/v1/admin/ai', aiChat);
 
 // Health check
 app.get('/api/health', (c) => {
