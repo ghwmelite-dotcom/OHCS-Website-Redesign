@@ -3,6 +3,7 @@ import "./globals.css";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { PageLoader } from "@/components/layout/page-loader";
 
 export const metadata: Metadata = {
   title: {
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-surface text-text font-body antialiased">
+        <PageLoader />
         <Header />
         <div className="flex-1">
           {children}
