@@ -14,6 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const isLoginPage = pathname === '/admin/login';
 
@@ -67,9 +68,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="fixed inset-0 z-50 flex bg-[#f5f6fa]">
-      <AdminSidebar user={user} onLogout={handleLogout} />
+      <AdminSidebar user={user} onLogout={handleLogout} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
 
-      <div className="flex-1 flex flex-col min-h-screen lg:ml-72 overflow-auto">
+      <div className={cn('flex-1 flex flex-col min-h-screen overflow-auto transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]', sidebarCollapsed ? 'lg:ml-[76px]' : 'lg:ml-72')}>
         {/* ── Top bar ── */}
         <header className="bg-white/80 backdrop-blur-xl border-b border-border/30 px-8 py-4 flex items-center justify-between sticky top-0 z-20">
           <div>
