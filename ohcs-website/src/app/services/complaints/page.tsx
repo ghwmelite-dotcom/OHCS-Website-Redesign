@@ -1,6 +1,6 @@
 'use client';
 
-import { Breadcrumb } from '@/components/layout/breadcrumb';
+import { PageHero } from '@/components/layout/page-hero';
 import { SubmissionForm } from '@/components/forms/submission-form';
 import { complaintFormSchema, type ComplaintFormData } from '@/lib/validations';
 import type { Path } from 'react-hook-form';
@@ -29,31 +29,32 @@ const fields: Array<{
 
 export default function ComplaintsPage() {
   return (
-    <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-      <Breadcrumb
-        items={[
+    <>
+      <PageHero
+        title="File a Complaint"
+        breadcrumbs={[
           { label: 'Services', href: '/services' },
           { label: 'Complaints' },
         ]}
+        accent="warm"
       />
 
-      <div className="max-w-2xl">
-        <h1 className="font-display text-4xl font-bold text-primary-dark mb-4">
-          File a Complaint
-        </h1>
-        <p className="text-lg text-text-muted mb-8">
-          Use this form to report any issues you have experienced with civil service
-          delivery. All complaints are reviewed and you will receive a reference
-          number to track the progress of your submission.
-        </p>
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="max-w-2xl">
+          <p className="text-lg text-text-muted mb-8">
+            Use this form to report any issues you have experienced with civil service
+            delivery. All complaints are reviewed and you will receive a reference
+            number to track the progress of your submission.
+          </p>
 
-        <SubmissionForm<ComplaintFormData>
-          schema={complaintFormSchema}
-          fields={fields}
-          submissionType="complaint"
-          submitLabel="Submit Complaint"
-        />
+          <SubmissionForm<ComplaintFormData>
+            schema={complaintFormSchema}
+            fields={fields}
+            submissionType="complaint"
+            submitLabel="Submit Complaint"
+          />
+        </div>
       </div>
-    </main>
+    </>
   );
 }

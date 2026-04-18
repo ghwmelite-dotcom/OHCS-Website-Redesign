@@ -1,6 +1,6 @@
 'use client';
 
-import { Breadcrumb } from '@/components/layout/breadcrumb';
+import { PageHero } from '@/components/layout/page-hero';
 import { SubmissionForm } from '@/components/forms/submission-form';
 import { recruitmentFormSchema, type RecruitmentFormData } from '@/lib/validations';
 import type { Path } from 'react-hook-form';
@@ -62,31 +62,32 @@ const fields: Array<{
 
 export default function RecruitmentPage() {
   return (
-    <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-      <Breadcrumb
-        items={[
+    <>
+      <PageHero
+        title="Apply for a Position"
+        breadcrumbs={[
           { label: 'Services', href: '/services' },
           { label: 'Recruitment' },
         ]}
+        accent="green"
       />
 
-      <div className="max-w-2xl">
-        <h1 className="font-display text-4xl font-bold text-primary-dark mb-4">
-          Apply for a Position
-        </h1>
-        <p className="text-lg text-text-muted mb-8">
-          Submit your application for civil service positions across Ghana. Please
-          fill in all required fields and provide detailed information about your
-          qualifications and experience.
-        </p>
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="max-w-2xl">
+          <p className="text-lg text-text-muted mb-8">
+            Submit your application for civil service positions across Ghana. Please
+            fill in all required fields and provide detailed information about your
+            qualifications and experience.
+          </p>
 
-        <SubmissionForm<RecruitmentFormData>
-          schema={recruitmentFormSchema}
-          fields={fields}
-          submissionType="recruitment"
-          submitLabel="Submit Application"
-        />
+          <SubmissionForm<RecruitmentFormData>
+            schema={recruitmentFormSchema}
+            fields={fields}
+            submissionType="recruitment"
+            submitLabel="Submit Application"
+          />
+        </div>
       </div>
-    </main>
+    </>
   );
 }

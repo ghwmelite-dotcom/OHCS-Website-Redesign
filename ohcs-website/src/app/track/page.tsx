@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Breadcrumb } from '@/components/layout/breadcrumb';
+import { PageHero } from '@/components/layout/page-hero';
 import { Button } from '@/components/ui/button';
 import { trackFormSchema, type TrackFormData } from '@/lib/validations';
 import { trackSubmission } from '@/lib/api';
@@ -69,147 +69,146 @@ export default function TrackPage() {
   };
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-      <Breadcrumb items={[{ label: 'Track Submission' }]} />
+    <>
+      <PageHero
+        title="Track Your Submission"
+        subtitle="Enter your reference number and the email or phone number you used when submitting to check the current status."
+        breadcrumbs={[{ label: 'Track Submission' }]}
+        accent="gold"
+      />
 
-      <div className="max-w-2xl">
-        <h1 className="font-display text-4xl font-bold text-primary-dark mb-4">
-          Track Your Submission
-        </h1>
-        <p className="text-lg text-text-muted mb-8">
-          Enter your reference number and the email or phone number you used when
-          submitting to check the current status.
-        </p>
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="max-w-2xl">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mb-10">
+            {trackError && (
+              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-red-700 text-sm">
+                {trackError}
+              </div>
+            )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mb-10">
-          {trackError && (
-            <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-red-700 text-sm">
-              {trackError}
+            <div>
+              <label
+                htmlFor="referenceNumber"
+                className="block text-sm font-semibold text-primary-dark mb-2"
+              >
+                Reference Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="referenceNumber"
+                type="text"
+                placeholder="OHCS-XXX-XXXXXXXX-XXXX"
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl border-2 bg-white text-base transition-colors font-mono',
+                  errors.referenceNumber
+                    ? 'border-red-300 focus:border-red-500'
+                    : 'border-border/60 focus:border-primary',
+                  'focus:outline-none',
+                )}
+                {...register('referenceNumber')}
+              />
+              {errors.referenceNumber && (
+                <p className="mt-1.5 text-sm text-red-500">{errors.referenceNumber.message}</p>
+              )}
+              <p className="mt-1 text-xs text-text-muted">
+                Format: OHCS-XXX-YYYYMMDD-XXXX
+              </p>
+            </div>
+
+            <div>
+              <label
+                htmlFor="contact"
+                className="block text-sm font-semibold text-primary-dark mb-2"
+              >
+                Email or Phone <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="contact"
+                type="text"
+                placeholder="you@example.com or +233 XX XXX XXXX"
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl border-2 bg-white text-base transition-colors',
+                  errors.contact
+                    ? 'border-red-300 focus:border-red-500'
+                    : 'border-border/60 focus:border-primary',
+                  'focus:outline-none',
+                )}
+                {...register('contact')}
+              />
+              {errors.contact && (
+                <p className="mt-1.5 text-sm text-red-500">{errors.contact.message}</p>
+              )}
+            </div>
+
+            <Button type="submit" variant="primary" size="lg" loading={isSubmitting} className="w-full sm:w-auto">
+              Track Submission
+            </Button>
+          </form>
+
+          {result && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl border-2 border-border/40 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-display text-xl font-bold text-primary-dark">
+                    Submission Details
+                  </h2>
+                  <StatusBadge status={result.status} />
+                </div>
+
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <dt className="text-text-muted font-medium">Reference</dt>
+                    <dd className="font-mono font-semibold text-primary-dark">
+                      {result.referenceNumber}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-muted font-medium">Type</dt>
+                    <dd className="capitalize text-primary-dark">{result.type}</dd>
+                  </div>
+                  {result.subject && (
+                    <div className="sm:col-span-2">
+                      <dt className="text-text-muted font-medium">Subject</dt>
+                      <dd className="text-primary-dark">{result.subject}</dd>
+                    </div>
+                  )}
+                  <div>
+                    <dt className="text-text-muted font-medium">Submitted</dt>
+                    <dd className="text-primary-dark">{formatDate(result.createdAt)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-text-muted font-medium">Last Updated</dt>
+                    <dd className="text-primary-dark">{formatDate(result.updatedAt)}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              {result.timeline.length > 0 && (
+                <div className="bg-white rounded-2xl border-2 border-border/40 p-6">
+                  <h2 className="font-display text-xl font-bold text-primary-dark mb-6">
+                    Timeline
+                  </h2>
+                  <ol className="relative border-l-2 border-primary/20 ml-3 space-y-6">
+                    {result.timeline.map((entry) => (
+                      <li key={entry.id} className="ml-6">
+                        <div className="absolute -left-[9px] w-4 h-4 rounded-full bg-primary border-2 border-white" />
+                        <div className="flex items-center gap-3 mb-1">
+                          <StatusBadge status={entry.status} />
+                          <time className="text-xs text-text-muted">
+                            {formatDate(entry.created_at)}
+                          </time>
+                        </div>
+                        {entry.note && (
+                          <p className="text-sm text-text-muted mt-1">{entry.note}</p>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
             </div>
           )}
-
-          <div>
-            <label
-              htmlFor="referenceNumber"
-              className="block text-sm font-semibold text-primary-dark mb-2"
-            >
-              Reference Number <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="referenceNumber"
-              type="text"
-              placeholder="OHCS-XXX-XXXXXXXX-XXXX"
-              className={cn(
-                'w-full px-4 py-3 rounded-xl border-2 bg-white text-base transition-colors font-mono',
-                errors.referenceNumber
-                  ? 'border-red-300 focus:border-red-500'
-                  : 'border-border/60 focus:border-primary',
-                'focus:outline-none',
-              )}
-              {...register('referenceNumber')}
-            />
-            {errors.referenceNumber && (
-              <p className="mt-1.5 text-sm text-red-500">{errors.referenceNumber.message}</p>
-            )}
-            <p className="mt-1 text-xs text-text-muted">
-              Format: OHCS-XXX-YYYYMMDD-XXXX
-            </p>
-          </div>
-
-          <div>
-            <label
-              htmlFor="contact"
-              className="block text-sm font-semibold text-primary-dark mb-2"
-            >
-              Email or Phone <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="contact"
-              type="text"
-              placeholder="you@example.com or +233 XX XXX XXXX"
-              className={cn(
-                'w-full px-4 py-3 rounded-xl border-2 bg-white text-base transition-colors',
-                errors.contact
-                  ? 'border-red-300 focus:border-red-500'
-                  : 'border-border/60 focus:border-primary',
-                'focus:outline-none',
-              )}
-              {...register('contact')}
-            />
-            {errors.contact && (
-              <p className="mt-1.5 text-sm text-red-500">{errors.contact.message}</p>
-            )}
-          </div>
-
-          <Button type="submit" variant="primary" size="lg" loading={isSubmitting} className="w-full sm:w-auto">
-            Track Submission
-          </Button>
-        </form>
-
-        {result && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl border-2 border-border/40 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-display text-xl font-bold text-primary-dark">
-                  Submission Details
-                </h2>
-                <StatusBadge status={result.status} />
-              </div>
-
-              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <dt className="text-text-muted font-medium">Reference</dt>
-                  <dd className="font-mono font-semibold text-primary-dark">
-                    {result.referenceNumber}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-text-muted font-medium">Type</dt>
-                  <dd className="capitalize text-primary-dark">{result.type}</dd>
-                </div>
-                {result.subject && (
-                  <div className="sm:col-span-2">
-                    <dt className="text-text-muted font-medium">Subject</dt>
-                    <dd className="text-primary-dark">{result.subject}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt className="text-text-muted font-medium">Submitted</dt>
-                  <dd className="text-primary-dark">{formatDate(result.createdAt)}</dd>
-                </div>
-                <div>
-                  <dt className="text-text-muted font-medium">Last Updated</dt>
-                  <dd className="text-primary-dark">{formatDate(result.updatedAt)}</dd>
-                </div>
-              </dl>
-            </div>
-
-            {result.timeline.length > 0 && (
-              <div className="bg-white rounded-2xl border-2 border-border/40 p-6">
-                <h2 className="font-display text-xl font-bold text-primary-dark mb-6">
-                  Timeline
-                </h2>
-                <ol className="relative border-l-2 border-primary/20 ml-3 space-y-6">
-                  {result.timeline.map((entry) => (
-                    <li key={entry.id} className="ml-6">
-                      <div className="absolute -left-[9px] w-4 h-4 rounded-full bg-primary border-2 border-white" />
-                      <div className="flex items-center gap-3 mb-1">
-                        <StatusBadge status={entry.status} />
-                        <time className="text-xs text-text-muted">
-                          {formatDate(entry.created_at)}
-                        </time>
-                      </div>
-                      {entry.note && (
-                        <p className="text-sm text-text-muted mt-1">{entry.note}</p>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
-          </div>
-        )}
+        </div>
       </div>
-    </main>
+    </>
   );
 }

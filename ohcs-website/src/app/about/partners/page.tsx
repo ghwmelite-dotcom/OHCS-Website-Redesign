@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@/components/layout/breadcrumb';
+import { PageHero } from '@/components/layout/page-hero';
 import { Sidebar } from '@/components/layout/sidebar';
 
 const ABOUT_SIDEBAR = [
@@ -25,34 +25,32 @@ const PARTNERS = [
 
 export default function PartnersPage() {
   return (
-    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Breadcrumb items={[{ label: 'About', href: '/about' }, { label: 'Our Partners' }]} />
+    <>
+      <PageHero
+        title="Our Partners"
+        subtitle="OHCS collaborates with national and international organisations to strengthen Ghana's Civil Service and improve public service delivery."
+        breadcrumbs={[{ label: 'About', href: '/about' }, { label: 'Our Partners' }]}
+        accent="gold"
+      />
 
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-4 gap-12">
-        <div className="lg:col-span-3">
-          <h1 className="font-display text-4xl font-bold text-primary-dark mb-6">
-            Our Partners
-          </h1>
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+          <div className="lg:col-span-3">
+            <div className="space-y-4">
+              {PARTNERS.map((partner) => (
+                <div key={partner.name} className="bg-white rounded-xl border-2 border-border/40 p-6">
+                  <h3 className="font-semibold text-lg text-primary-dark mb-1">{partner.name}</h3>
+                  <p className="text-base text-text-muted">{partner.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <p className="text-lg text-text-muted leading-relaxed mb-10">
-            OHCS collaborates with national and international organisations to strengthen
-            Ghana&apos;s Civil Service and improve public service delivery.
-          </p>
-
-          <div className="space-y-4">
-            {PARTNERS.map((partner) => (
-              <div key={partner.name} className="bg-white rounded-xl border-2 border-border/40 p-6">
-                <h3 className="font-semibold text-lg text-primary-dark mb-1">{partner.name}</h3>
-                <p className="text-base text-text-muted">{partner.description}</p>
-              </div>
-            ))}
+          <div className="lg:col-span-1">
+            <Sidebar sections={ABOUT_SIDEBAR} />
           </div>
         </div>
-
-        <div className="lg:col-span-1">
-          <Sidebar sections={ABOUT_SIDEBAR} />
-        </div>
       </div>
-    </div>
+    </>
   );
 }
