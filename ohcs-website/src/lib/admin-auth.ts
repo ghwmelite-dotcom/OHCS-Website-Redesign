@@ -10,19 +10,19 @@ const DEMO_MODE = true; // Set to false when Worker is deployed
 const DEMO_USERS: Record<string, { password: string; user: AdminUser }> = {
   'admin@ohcs.gov.gh': {
     password: 'changeme123',
-    user: { id: 'demo-001', email: 'admin@ohcs.gov.gh', name: 'System Administrator', role: 'super_admin' },
+    user: { id: 'demo-001', email: 'admin@ohcs.gov.gh', name: 'Kwame Mensah', role: 'super_admin' },
   },
   'content@ohcs.gov.gh': {
     password: 'content123',
-    user: { id: 'demo-002', email: 'content@ohcs.gov.gh', name: 'Content Manager', role: 'content_manager' },
+    user: { id: 'demo-002', email: 'content@ohcs.gov.gh', name: 'Abena Osei', role: 'content_manager' },
   },
   'recruitment@ohcs.gov.gh': {
     password: 'recruit123',
-    user: { id: 'demo-003', email: 'recruitment@ohcs.gov.gh', name: 'Recruitment Officer', role: 'recruitment_admin' },
+    user: { id: 'demo-003', email: 'recruitment@ohcs.gov.gh', name: 'Kofi Adjei', role: 'recruitment_admin' },
   },
   'viewer@ohcs.gov.gh': {
     password: 'viewer123',
-    user: { id: 'demo-004', email: 'viewer@ohcs.gov.gh', name: 'Senior Reviewer', role: 'viewer' },
+    user: { id: 'demo-004', email: 'viewer@ohcs.gov.gh', name: 'Ama Darko', role: 'viewer' },
   },
 };
 
