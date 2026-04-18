@@ -250,27 +250,50 @@ export function Footer({ className }: { className?: string }) {
         </div>
       </div>
 
-      {/* ── Bottom bar — dark ── */}
-      <div className="bg-primary-dark">
-        <div className="border-t border-white/10 bg-black/20">
-          <div className="max-w-content mx-auto px-6 sm:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* ── Kente Stripe Separator ── */}
+      <div aria-hidden="true" style={{ height: 5 }}>
+        <div className="h-full relative" style={{ background: 'repeating-linear-gradient(90deg, #1B5E20 0px, #1B5E20 80px, #D4A017 80px, #D4A017 160px, #B71C1C 160px, #B71C1C 240px, #212121 240px, #212121 320px)' }}>
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 45%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.3) 55%, transparent 100%)', backgroundSize: '200% 100%', animation: 'kente-shimmer 4s ease-in-out infinite' }} />
+        </div>
+      </div>
+
+      {/* ── Bottom bar — warm cream ── */}
+      <div style={{ backgroundColor: '#F5F0E8' }}>
+        <div className="max-w-content mx-auto px-6 sm:px-8 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
             {/* Coat of arms + copyright */}
-            <div className="flex items-center gap-3">
-              <Image
-                src="/images/coat-of-arms.png"
-                alt="Ghana Coat of Arms"
-                width={28}
-                height={28}
-                className="brightness-0 invert opacity-60"
-              />
-              <p className="text-sm text-white/40">
-                &copy; {currentYear} Office of the Head of the Civil Service. All rights reserved.
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                {/* Gold shimmer ring */}
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-1 rounded-full"
+                  style={{
+                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(212,160,23,0.3) 25%, transparent 50%, rgba(212,160,23,0.2) 75%, transparent 100%)',
+                    animation: 'coa-shimmer 3s linear infinite',
+                  }}
+                />
+                <div aria-hidden="true" className="absolute -inset-0.5 rounded-full" style={{ backgroundColor: '#F5F0E8' }} />
+                <Image
+                  src="/images/coat-of-arms.png"
+                  alt="Ghana Coat of Arms"
+                  width={32}
+                  height={32}
+                  className="object-contain relative z-10"
+                  style={{ width: 32, height: 32 }}
+                />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-primary-dark">
+                  &copy; {currentYear} Office of the Head of the Civil Service
+                </p>
+                <p className="text-xs text-text-muted/60">Republic of Ghana &bull; All rights reserved</p>
+              </div>
             </div>
 
             {/* Policy links */}
             <nav aria-label="Policy links">
-              <ul className="flex items-center gap-6">
+              <ul className="flex items-center gap-2">
                 {[
                   { label: 'Privacy Policy', href: '/privacy' },
                   { label: 'Accessibility', href: '/accessibility' },
@@ -279,7 +302,7 @@ export function Footer({ className }: { className?: string }) {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-white/30 hover:text-white/60 transition-colors duration-200"
+                      className="text-sm text-text-muted/50 hover:text-primary px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-all duration-200"
                     >
                       {label}
                     </Link>
