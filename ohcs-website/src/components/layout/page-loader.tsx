@@ -6,198 +6,217 @@ import { usePathname } from 'next/navigation';
 export function PageLoader() {
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
-  const [phase, setPhase] = useState<'weave' | 'crest' | 'fade' | 'done'>('weave');
+  const [phase, setPhase] = useState<1 | 2 | 3 | 4 | 0>(1);
 
   useEffect(() => {
     setLoading(true);
-    setPhase('weave');
+    setPhase(1);
 
-    const t1 = setTimeout(() => setPhase('crest'), 500);
-    const t2 = setTimeout(() => setPhase('fade'), 1200);
-    const t3 = setTimeout(() => setPhase('done'), 1700);
-    const t4 = setTimeout(() => setLoading(false), 1900);
+    // Phase 1: Kente blocks build (0-500ms)
+    // Phase 2: Crest burst (500-1100ms)
+    // Phase 3: Kente stripe + text (1100-1500ms)
+    // Phase 4: Dissolve out (1500-2000ms)
+    const t1 = setTimeout(() => setPhase(2), 500);
+    const t2 = setTimeout(() => setPhase(3), 1100);
+    const t3 = setTimeout(() => setPhase(4), 1500);
+    const t4 = setTimeout(() => setPhase(0), 2000);
+    const t5 = setTimeout(() => setLoading(false), 2200);
 
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [pathname]);
 
   if (!loading) return null;
 
-  const isFading = phase === 'fade' || phase === 'done';
+  const active = phase >= 2;
+  const burst = phase >= 2;
+  const textIn = phase >= 3;
+  const fadeOut = phase >= 4 || phase === 0;
 
   return (
     <div
       className="fixed inset-0 z-[9999]"
       aria-hidden="true"
       style={{
-        opacity: phase === 'done' ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
-        pointerEvents: isFading ? 'none' : 'auto',
-        backgroundColor: '#FDFAF5',
+        opacity: fadeOut ? 0 : 1,
+        transition: 'opacity 0.4s cubic-bezier(0.4,0,0.2,1)',
+        pointerEvents: fadeOut ? 'none' : 'auto',
       }}
     >
-      {/* ── Kente Threads — Horizontal ── */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Green */}
-        <div
-          className="absolute h-[3px] rounded-full"
-          style={{
-            top: '18%',
-            left: 0,
-            right: 0,
-            background: 'linear-gradient(90deg, transparent 5%, #1B5E20 25%, #1B5E20 75%, transparent 95%)',
-            opacity: 0.18,
-            transform: phase === 'weave' ? 'scaleX(0)' : 'scaleX(1)',
-            transformOrigin: 'left',
-            transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1)',
-          }}
-        />
-        {/* Gold */}
-        <div
-          className="absolute h-[3px] rounded-full"
-          style={{
-            top: '35%',
-            left: 0,
-            right: 0,
-            background: 'linear-gradient(90deg, transparent 5%, #D4A017 20%, #D4A017 80%, transparent 95%)',
-            opacity: 0.3,
-            transform: phase === 'weave' ? 'scaleX(0)' : 'scaleX(1)',
-            transformOrigin: 'right',
-            transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.1s',
-          }}
-        />
-        {/* Red */}
-        <div
-          className="absolute h-[3px] rounded-full"
-          style={{
-            top: '58%',
-            left: 0,
-            right: 0,
-            background: 'linear-gradient(90deg, transparent 10%, #B71C1C 30%, #B71C1C 70%, transparent 90%)',
-            opacity: 0.14,
-            transform: phase === 'weave' ? 'scaleX(0)' : 'scaleX(1)',
-            transformOrigin: 'left',
-            transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.2s',
-          }}
-        />
-        {/* Black */}
-        <div
-          className="absolute h-[3px] rounded-full"
-          style={{
-            top: '78%',
-            left: 0,
-            right: 0,
-            background: 'linear-gradient(90deg, transparent 8%, #212121 25%, #212121 75%, transparent 92%)',
-            opacity: 0.1,
-            transform: phase === 'weave' ? 'scaleX(0)' : 'scaleX(1)',
-            transformOrigin: 'right',
-            transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.15s',
-          }}
-        />
+      {/* Background — warm cream */}
+      <div className="absolute inset-0" style={{ backgroundColor: '#FDFAF5' }} />
 
-        {/* ── Kente Threads — Vertical ── */}
-        {/* Gold */}
+      {/* ── Kente Pattern Grid — builds block by block ── */}
+      <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className="absolute w-[3px] rounded-full"
+          className="grid gap-[2px]"
           style={{
-            left: '22%',
-            top: 0,
-            bottom: 0,
-            background: 'linear-gradient(0deg, transparent 5%, #D4A017 25%, #D4A017 75%, transparent 95%)',
-            opacity: 0.2,
-            transform: phase === 'weave' ? 'scaleY(0)' : 'scaleY(1)',
-            transformOrigin: 'top',
-            transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.08s',
+            gridTemplateColumns: 'repeat(16, 1fr)',
+            gridTemplateRows: 'repeat(10, 1fr)',
+            width: '100vw',
+            height: '100vh',
+            opacity: fadeOut ? 0 : 0.12,
+            transition: 'opacity 0.3s',
           }}
-        />
-        {/* Green */}
-        <div
-          className="absolute w-[3px] rounded-full"
-          style={{
-            left: '50%',
-            top: 0,
-            bottom: 0,
-            background: 'linear-gradient(0deg, transparent 10%, #1B5E20 30%, #1B5E20 70%, transparent 90%)',
-            opacity: 0.12,
-            transform: phase === 'weave' ? 'scaleY(0)' : 'scaleY(1)',
-            transformOrigin: 'bottom',
-            transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.18s',
-          }}
-        />
-        {/* Red */}
-        <div
-          className="absolute w-[3px] rounded-full"
-          style={{
-            left: '78%',
-            top: 0,
-            bottom: 0,
-            background: 'linear-gradient(0deg, transparent 8%, #B71C1C 28%, #B71C1C 72%, transparent 92%)',
-            opacity: 0.1,
-            transform: phase === 'weave' ? 'scaleY(0)' : 'scaleY(1)',
-            transformOrigin: 'top',
-            transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.25s',
-          }}
-        />
+        >
+          {Array.from({ length: 160 }).map((_, i) => {
+            const colors = ['#1B5E20', '#D4A017', '#B71C1C', '#212121'];
+            const row = Math.floor(i / 16);
+            const col = i % 16;
+            const colorIndex = (row + col) % 4;
+            const delay = (row * 25) + (col * 12);
+            return (
+              <div
+                key={i}
+                style={{
+                  backgroundColor: colors[colorIndex],
+                  opacity: active ? 1 : 0,
+                  transform: active ? 'scale(1)' : 'scale(0)',
+                  transition: `all 0.3s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+                  borderRadius: 2,
+                }}
+              />
+            );
+          })}
+        </div>
       </div>
 
-      {/* ── Center Crest + Text ── */}
+      {/* ── Central Spotlight ── */}
       <div
-        className="absolute top-1/2 left-1/2 flex flex-col items-center"
+        className="absolute inset-0 flex items-center justify-center"
         style={{
-          transform: `translate(-50%, -50%) scale(${phase === 'weave' ? 0.6 : 1})`,
-          opacity: phase === 'weave' ? 0 : 1,
-          transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
+          background: burst
+            ? 'radial-gradient(circle at center, #FDFAF5 0%, #FDFAF5 15%, transparent 50%)'
+            : 'none',
+          transition: 'all 0.5s',
         }}
-      >
-        {/* Gold shimmer ring */}
-        <div
-          className="absolute w-24 h-24 rounded-full"
-          style={{
-            background: 'conic-gradient(from 0deg, transparent 0%, rgba(212,160,23,0.35) 25%, transparent 50%, rgba(212,160,23,0.2) 75%, transparent 100%)',
-            animation: 'coa-shimmer 2s linear infinite',
-          }}
-        />
-        <div
-          className="absolute w-[86px] h-[86px] rounded-full"
-          style={{ backgroundColor: '#FDFAF5' }}
-        />
+      />
 
-        {/* Crest */}
-        <img
-          src="/images/ohcs-crest.png"
-          alt=""
-          className="w-14 h-14 object-contain relative z-10"
-        />
+      {/* ── Crest Assembly ── */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          {/* Outer gold ring — rotating */}
+          <div className="relative">
+            <div
+              className="absolute rounded-full"
+              style={{
+                inset: -16,
+                background: 'conic-gradient(from 0deg, transparent 0%, rgba(212,160,23,0.6) 20%, transparent 40%, rgba(212,160,23,0.4) 60%, transparent 80%, rgba(212,160,23,0.5) 95%, transparent 100%)',
+                animation: 'coa-shimmer 2s linear infinite',
+                opacity: burst ? 1 : 0,
+                transform: burst ? 'scale(1)' : 'scale(0.5)',
+                transition: 'all 0.5s cubic-bezier(0.16,1,0.3,1)',
+              }}
+            />
+            {/* Inner ring */}
+            <div
+              className="absolute rounded-full"
+              style={{
+                inset: -8,
+                border: '2px solid rgba(212,160,23,0.25)',
+                opacity: burst ? 1 : 0,
+                transition: 'opacity 0.4s 0.2s',
+              }}
+            />
+            {/* Cream mask */}
+            <div
+              className="absolute rounded-full"
+              style={{
+                inset: -6,
+                backgroundColor: '#FDFAF5',
+                opacity: burst ? 1 : 0,
+                transition: 'opacity 0.3s',
+              }}
+            />
+            {/* Gold glow pulse */}
+            <div
+              className="absolute rounded-full"
+              style={{
+                inset: -24,
+                background: 'radial-gradient(circle, rgba(212,160,23,0.2) 0%, transparent 60%)',
+                animation: 'coa-glow 1.5s ease-in-out infinite',
+                opacity: burst ? 1 : 0,
+                transition: 'opacity 0.3s',
+              }}
+            />
 
-        {/* OHCS text */}
-        <span
-          className="relative z-10 mt-3 font-display text-xl font-bold tracking-[5px]"
-          style={{
-            color: '#0D3B13',
-            opacity: phase === 'crest' || phase === 'fade' ? 1 : 0,
-            transform: phase === 'crest' || phase === 'fade' ? 'translateY(0)' : 'translateY(6px)',
-            transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1) 0.15s',
-          }}
-        >
-          OHCS
-        </span>
+            {/* CREST IMAGE — LARGE */}
+            <img
+              src="/images/ohcs-crest.png"
+              alt=""
+              style={{
+                width: 100,
+                height: 100,
+                objectFit: 'contain',
+                position: 'relative',
+                zIndex: 10,
+                opacity: burst ? 1 : 0,
+                transform: burst ? 'scale(1) rotate(0deg)' : 'scale(0.3) rotate(-20deg)',
+                transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
+              }}
+            />
+          </div>
 
-        {/* Kente stripe */}
-        <div
-          className="relative z-10 h-[4px] rounded-full mt-2 overflow-hidden"
-          style={{
-            width: phase === 'crest' || phase === 'fade' ? 72 : 0,
-            background: 'linear-gradient(90deg, #1B5E20 25%, #D4A017 25%, #D4A017 50%, #B71C1C 50%, #B71C1C 75%, #212121 75%)',
-            transition: 'width 0.5s cubic-bezier(0.16,1,0.3,1) 0.25s',
-          }}
-        >
+          {/* OHCS Text */}
           <div
-            className="h-full"
             style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 45%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.4) 55%, transparent 100%)',
-              backgroundSize: '200% 100%',
-              animation: 'kente-shimmer 2s ease-in-out infinite',
+              marginTop: 20,
+              opacity: textIn ? 1 : 0,
+              transform: textIn ? 'translateY(0)' : 'translateY(12px)',
+              transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
             }}
-          />
+          >
+            <span
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 28,
+                fontWeight: 700,
+                color: '#0D3B13',
+                letterSpacing: 8,
+                display: 'block',
+                textAlign: 'center',
+              }}
+            >
+              OHCS
+            </span>
+            <span
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                fontSize: 10,
+                color: '#5C5549',
+                letterSpacing: 3,
+                marginTop: 4,
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                opacity: textIn ? 0.6 : 0,
+                transition: 'opacity 0.3s 0.15s',
+              }}
+            >
+              Office of the Head of the Civil Service
+            </span>
+          </div>
+
+          {/* Kente Stripe */}
+          <div
+            style={{
+              height: 5,
+              borderRadius: 3,
+              marginTop: 14,
+              overflow: 'hidden',
+              width: textIn ? 120 : 0,
+              transition: 'width 0.5s cubic-bezier(0.16,1,0.3,1) 0.1s',
+              background: 'linear-gradient(90deg, #1B5E20 25%, #D4A017 25%, #D4A017 50%, #B71C1C 50%, #B71C1C 75%, #212121 75%)',
+            }}
+          >
+            <div
+              style={{
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.5) 55%, transparent 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'kente-shimmer 1.5s ease-in-out infinite',
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
