@@ -164,3 +164,24 @@ export interface ApiError {
   code?: string;
   details?: unknown;
 }
+
+// ─── Admin ───────────────────────────────────────────────────────────────────
+
+export type AdminRole =
+  | 'super_admin'
+  | 'content_manager'
+  | 'recruitment_admin'
+  | 'viewer';
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: AdminRole;
+}
+
+export interface AdminSession {
+  token: string;
+  expiresAt: string;
+  user: AdminUser;
+}

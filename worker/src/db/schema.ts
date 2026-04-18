@@ -86,3 +86,23 @@ export interface GalleryRow {
   category: string | null;
   created_at: string;
 }
+
+export interface AdminUserRow {
+  id: string;
+  email: string;
+  password_hash: string;
+  name: string;
+  role: 'super_admin' | 'content_manager' | 'recruitment_admin' | 'viewer';
+  is_active: number;
+  last_login_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminSessionRow {
+  id: string;
+  user_id: string;
+  token_hash: string;
+  expires_at: string;
+  created_at: string;
+}

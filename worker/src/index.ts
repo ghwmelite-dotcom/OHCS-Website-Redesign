@@ -6,6 +6,7 @@ import { publications } from './routes/public/publications';
 import { leadership } from './routes/public/leadership';
 import { submissions } from './routes/public/submissions';
 import { track } from './routes/public/track';
+import { auth } from './routes/admin/auth';
 
 type Env = {
   DB: D1Database;
@@ -34,6 +35,9 @@ app.route('/api/v1/publications', publications);
 app.route('/api/v1/leadership', leadership);
 app.route('/api/v1/submissions', submissions);
 app.route('/api/v1/track', track);
+
+// Admin API routes
+app.route('/api/v1/admin/auth', auth);
 
 // Health check
 app.get('/api/health', (c) => {
