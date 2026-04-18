@@ -23,11 +23,11 @@ import {
 type CategoryKey = 'all' | 'report' | 'policy' | 'form' | 'circular';
 
 const CATEGORIES: { key: CategoryKey; label: string; icon: typeof FileText; gradient: string; count: number }[] = [
-  { key: 'all', label: 'All Documents', icon: FolderOpen, gradient: 'from-primary to-emerald-600', count: 24 },
-  { key: 'report', label: 'Reports', icon: BookOpen, gradient: 'from-blue-500 to-indigo-600', count: 8 },
-  { key: 'policy', label: 'Policies & Guidelines', icon: Scale, gradient: 'from-amber-500 to-yellow-600', count: 6 },
-  { key: 'form', label: 'Forms & Templates', icon: ClipboardList, gradient: 'from-rose-500 to-pink-600', count: 5 },
-  { key: 'circular', label: 'Circulars', icon: Newspaper, gradient: 'from-purple-500 to-violet-600', count: 5 },
+  { key: 'all', label: 'All Documents', icon: FolderOpen, gradient: 'from-primary to-emerald-600', count: 25 },
+  { key: 'report', label: 'Reports & Plans', icon: BookOpen, gradient: 'from-blue-500 to-indigo-600', count: 5 },
+  { key: 'policy', label: 'Policies & Guidelines', icon: Scale, gradient: 'from-amber-500 to-yellow-600', count: 9 },
+  { key: 'form', label: 'Forms & Templates', icon: ClipboardList, gradient: 'from-rose-500 to-pink-600', count: 8 },
+  { key: 'circular', label: 'Circulars & Notices', icon: Newspaper, gradient: 'from-purple-500 to-violet-600', count: 3 },
 ];
 
 interface SampleDoc {
@@ -41,18 +41,33 @@ interface SampleDoc {
 }
 
 const SAMPLE_DOCS: SampleDoc[] = [
-  { id: 1, title: 'Civil Service Regulations 2024 (Consolidated)', category: 'policy', description: 'Comprehensive regulations governing the conduct and administration of the Civil Service.', fileType: 'PDF', fileSize: '2.4 MB', date: '15 Mar 2026' },
-  { id: 2, title: 'Annual Performance Report 2025', category: 'report', description: 'A detailed assessment of Civil Service performance metrics across all directorates.', fileType: 'PDF', fileSize: '5.1 MB', date: '10 Mar 2026' },
-  { id: 3, title: 'Leave Application Form', category: 'form', description: 'Standard form for civil servants to apply for annual, sick, or study leave.', fileType: 'DOCX', fileSize: '120 KB', date: '1 Feb 2026' },
-  { id: 4, title: 'Circular: 2026 Salary Adjustment Implementation', category: 'circular', description: 'Guidelines for implementing the 2026 salary adjustment across all ministries and agencies.', fileType: 'PDF', fileSize: '340 KB', date: '28 Feb 2026' },
-  { id: 5, title: 'Training & Development Policy Framework', category: 'policy', description: 'Policy framework for structured training and professional development of civil servants.', fileType: 'PDF', fileSize: '1.8 MB', date: '20 Jan 2026' },
-  { id: 6, title: 'Workforce Analysis Report Q4 2025', category: 'report', description: 'Quarterly analysis of Civil Service workforce demographics, trends, and recommendations.', fileType: 'PDF', fileSize: '3.2 MB', date: '15 Jan 2026' },
-  { id: 7, title: 'Performance Appraisal Template', category: 'form', description: 'Standard template for annual performance appraisal of civil servants at all grades.', fileType: 'XLSX', fileSize: '85 KB', date: '5 Jan 2026' },
-  { id: 8, title: 'Circular: Updated Code of Conduct', category: 'circular', description: 'Revised code of conduct incorporating new provisions on digital ethics and social media use.', fileType: 'PDF', fileSize: '280 KB', date: '12 Dec 2025' },
-  { id: 9, title: 'Ghana Civil Service Strategic Plan 2024-2028', category: 'report', description: 'Five-year strategic plan outlining the vision, mission, and key objectives for civil service reform.', fileType: 'PDF', fileSize: '4.7 MB', date: '1 Nov 2025' },
-  { id: 10, title: 'Recruitment Request Form', category: 'form', description: 'Form for MDAs to request approval for new recruitment into vacant civil service positions.', fileType: 'PDF', fileSize: '95 KB', date: '20 Oct 2025' },
-  { id: 11, title: 'Public Service Ethics Guidelines', category: 'policy', description: 'Comprehensive guidelines on ethical standards, conflict of interest, and whistleblower protections.', fileType: 'PDF', fileSize: '1.2 MB', date: '15 Sep 2025' },
-  { id: 12, title: 'Circular: Remote Work Policy for Civil Servants', category: 'circular', description: 'Official policy on flexible and remote working arrangements for eligible civil servants.', fileType: 'PDF', fileSize: '210 KB', date: '1 Sep 2025' },
+  // 2026 documents
+  { id: 1, title: 'HoD 2026 Performance Agreement Template', category: 'form', description: 'Performance agreement template for Heads of Departments for the 2026 fiscal year.', fileType: 'DOCX', fileSize: '145 KB', date: '31 Mar 2026' },
+  { id: 2, title: 'Coordinating Directors 2026 Performance Agreement', category: 'form', description: 'Performance agreement template for Coordinating Directors across all ministries.', fileType: 'DOCX', fileSize: '152 KB', date: '31 Mar 2026' },
+  { id: 3, title: '2026 Directors & Analogous Grades Performance Agreement Template', category: 'form', description: 'Standard performance agreement for Directors and equivalent grades in the Civil Service.', fileType: 'DOCX', fileSize: '148 KB', date: '31 Mar 2026' },
+  { id: 4, title: '2026 Chief Directors Performance Agreement Template', category: 'form', description: 'Performance agreement template for Chief Directors of ministries, departments, and agencies.', fileType: 'DOCX', fileSize: '155 KB', date: '31 Mar 2026' },
+  { id: 5, title: '2025 Civil Service Awards Nomination Criteria', category: 'circular', description: 'Official criteria for nominating outstanding civil servants for the annual Civil Service Awards.', fileType: 'PDF', fileSize: '320 KB', date: '24 Feb 2026' },
+  { id: 6, title: '2025 Civil Service Awards Nomination Form', category: 'form', description: 'Official nomination form for the 2025 Ghana Civil Service Awards programme.', fileType: 'PDF', fileSize: '280 KB', date: '24 Feb 2026' },
+  { id: 7, title: 'CSEAP Information for OHCS Website', category: 'circular', description: 'Information about the Civil Service Employee Assistance Programme (CSEAP) for all staff.', fileType: 'DOCX', fileSize: '95 KB', date: '23 Feb 2026' },
+  { id: 8, title: 'CSEAP Referral Form', category: 'form', description: 'Referral form for the Civil Service Employee Assistance Programme counselling services.', fileType: 'DOCX', fileSize: '78 KB', date: '23 Feb 2026' },
+  { id: 9, title: '2025 End-Year Training Report Template', category: 'form', description: 'Template for MDAs to compile and submit end-of-year training reports.', fileType: 'DOCX', fileSize: '110 KB', date: '8 Jan 2026' },
+  // 2025 documents
+  { id: 10, title: '2025 OHCS RTI Manual', category: 'policy', description: 'Right to Information manual for the Office of the Head of the Civil Service.', fileType: 'DOCX', fileSize: '420 KB', date: '10 Dec 2025' },
+  { id: 11, title: '2025 Annual Performance Reporting Guidelines and Templates', category: 'report', description: 'Guidelines and templates for the 2025 Civil Service annual performance reporting cycle.', fileType: 'DOCX', fileSize: '380 KB', date: '9 Dec 2025' },
+  { id: 12, title: '2025 Annual Performance Reporting Excel Appendices', category: 'form', description: 'Excel appendices for data collection as part of the annual performance reporting exercise.', fileType: 'XLSX', fileSize: '250 KB', date: '10 Dec 2025' },
+  { id: 13, title: 'Civil Service Code of Conduct', category: 'policy', description: 'The official code of conduct governing the behaviour and ethical standards of all civil servants.', fileType: 'PDF', fileSize: '1.8 MB', date: '5 Jun 2025' },
+  { id: 14, title: '2024 Civil Service Annual Performance Report', category: 'report', description: 'Comprehensive annual performance report covering all aspects of Civil Service operations in 2024.', fileType: 'PDF', fileSize: '4.2 MB', date: '12 May 2025' },
+  { id: 15, title: 'Policy on Onboarding and Orientation for the Ghana Civil Service', category: 'policy', description: 'Official policy establishing structured onboarding and orientation programmes for new civil servants.', fileType: 'PDF', fileSize: '1.5 MB', date: '29 Apr 2025' },
+  { id: 16, title: 'OHCS Strategic Medium-Term Development Plan 2022-2025', category: 'report', description: 'Strategic plan outlining key objectives, priorities, and targets for OHCS over the medium term.', fileType: 'PDF', fileSize: '5.1 MB', date: '14 Oct 2024' },
+  { id: 17, title: 'Civil Service Client Service Charter', category: 'policy', description: 'Charter setting out the standards of service delivery that citizens can expect from the Civil Service.', fileType: 'PDF', fileSize: '890 KB', date: '14 Oct 2024' },
+  { id: 18, title: 'Civil Service Administrative Instructions', category: 'policy', description: 'Official administrative instructions governing day-to-day operations in the Ghana Civil Service.', fileType: 'PDF', fileSize: '2.1 MB', date: '14 Oct 2024' },
+  { id: 19, title: 'Staff Performance Appraisal Report Template', category: 'form', description: 'Standard template for conducting and recording annual staff performance appraisals.', fileType: 'XLSX', fileSize: '95 KB', date: '14 Oct 2024' },
+  { id: 20, title: 'Ghana Civil Service Training Policy and Guidelines', category: 'policy', description: 'Comprehensive training policy and implementation guidelines for capacity building across the Civil Service.', fileType: 'PDF', fileSize: '1.4 MB', date: '14 Oct 2024' },
+  { id: 21, title: 'Civil Service Workplace Safety and Health Response Strategy', category: 'policy', description: 'Strategy document for ensuring workplace safety and health standards across civil service institutions.', fileType: 'PDF', fileSize: '1.1 MB', date: '14 Oct 2024' },
+  { id: 22, title: 'CS Sexual Harassment Policy', category: 'policy', description: 'Official policy on preventing and addressing sexual harassment in the Ghana Civil Service.', fileType: 'PDF', fileSize: '980 KB', date: '14 Oct 2024' },
+  { id: 23, title: 'Guidelines on Study Leave (2017 Review)', category: 'circular', description: 'Guidelines governing the application and approval process for study leave for civil servants.', fileType: 'PDF', fileSize: '650 KB', date: '14 Oct 2024' },
+  { id: 24, title: 'Bond Form Template', category: 'form', description: 'Standard bond form template for civil servants receiving government-sponsored training or scholarships.', fileType: 'PDF', fileSize: '180 KB', date: '14 Oct 2024' },
+  { id: 25, title: '1992 Constitution of the Republic of Ghana', category: 'report', description: 'The full text of the 1992 Constitution establishing the legal framework for the Civil Service.', fileType: 'PDF', fileSize: '3.8 MB', date: '14 Oct 2024' },
 ];
 
 const FILE_TYPE_COLORS: Record<string, string> = {
