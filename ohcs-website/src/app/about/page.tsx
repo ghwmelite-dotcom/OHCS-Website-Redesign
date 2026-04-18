@@ -17,7 +17,7 @@ const STATS = [
   { number: '30,000+', label: 'Civil Servants', icon: Users },
   { number: '5', label: 'Line Directorates', icon: Landmark },
   { number: '6', label: 'Support Units', icon: Building2 },
-  { number: '3', label: 'Training Institutions', icon: GraduationCap },
+  { number: '3+', label: 'Training & Departments', icon: GraduationCap },
 ];
 
 const CORE_VALUES = [

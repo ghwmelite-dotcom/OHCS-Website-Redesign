@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface BreadcrumbItem {
   label: string;
@@ -12,16 +12,15 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className="py-4">
-      <ol className="flex flex-wrap items-center gap-1 text-sm text-text-muted">
-        {/* Home item */}
+    <nav aria-label="Breadcrumb">
+      <ol className="flex flex-wrap items-center gap-1.5 text-sm">
+        {/* Home item — text instead of icon */}
         <li className="flex items-center">
           <Link
             href="/"
-            className="flex items-center hover:text-primary transition-colors"
-            aria-label="Home"
+            className="flex items-center gap-1 hover:opacity-100 opacity-70 transition-opacity font-medium"
           >
-            <Home className="h-3.5 w-3.5" />
+            Home
           </Link>
         </li>
 
@@ -29,18 +28,18 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
           const isLast = index === items.length - 1;
 
           return (
-            <li key={index} className="flex items-center gap-1">
-              <ChevronRight className="h-3.5 w-3.5 text-text-muted/50" aria-hidden="true" />
+            <li key={index} className="flex items-center gap-1.5">
+              <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
               {isLast ? (
-                <span className="text-text font-medium" aria-current="page">
+                <span className="font-semibold opacity-100" aria-current="page">
                   {item.label}
                 </span>
               ) : item.href ? (
-                <Link href={item.href} className="hover:text-primary transition-colors">
+                <Link href={item.href} className="hover:opacity-100 opacity-70 transition-opacity font-medium">
                   {item.label}
                 </Link>
               ) : (
-                <span>{item.label}</span>
+                <span className="opacity-70">{item.label}</span>
               )}
             </li>
           );
