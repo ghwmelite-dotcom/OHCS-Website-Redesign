@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Plus, Search, Edit, Trash2, CheckCircle, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { audit } from '@/lib/audit-logger';
 
 interface EventItem {
   id: string;
@@ -105,6 +106,7 @@ export default function AdminEventsPage() {
           item.id === editingId ? { ...item, ...form } : item,
         ),
       );
+      audit('update', 'event', editingId, form.title, 'Updated event');
       showSuccess('Event updated successfully.');
     } else {
       const newItem: EventItem = {
@@ -112,6 +114,7 @@ export default function AdminEventsPage() {
         id: Date.now().toString(),
       };
       setItems((prev) => [newItem, ...prev]);
+      audit('create', 'event', newItem.id, newItem.title, 'Created event');
       showSuccess('Event created successfully.');
     }
     setShowModal(false);
@@ -119,19 +122,24 @@ export default function AdminEventsPage() {
 
   function confirmDelete() {
     if (!deleteId) return;
-    setItems((prev) => prev.filter((item) => item.id !== deleteId));
+    const item = items.find((i) => i.id === deleteId);
+    setItems((prev) => prev.filter((i) => i.id !== deleteId));
+    if (item) audit('delete', 'event', item.id, item.title, 'Deleted event');
     setDeleteId(null);
     showSuccess('Event deleted.');
   }
 
   function toggleStatus(id: string) {
+    const item = items.find((i) => i.id === id);
+    const newStatus = item?.status === 'published' ? 'draft' : 'published';
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, status: item.status === 'published' ? 'draft' : 'published' }
-          : item,
+      prev.map((i) =>
+        i.id === id
+          ? { ...i, status: newStatus }
+          : i,
       ),
     );
+    if (item) audit('status_change', 'event', item.id, item.title, 'Changed status to ' + newStatus);
     showSuccess('Status updated.');
   }
 

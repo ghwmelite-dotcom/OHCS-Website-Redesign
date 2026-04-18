@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Plus, Search, Edit, Trash2, CheckCircle, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { audit } from '@/lib/audit-logger';
 
 interface NewsItem {
   id: string;
@@ -136,6 +137,7 @@ export default function AdminNewsPage() {
           item.id === editingId ? { ...item, ...form } : item,
         ),
       );
+      audit('update', 'news', editingId, form.title, 'Updated news article');
       showSuccess('Article updated successfully.');
     } else {
       const newItem: NewsItem = {
@@ -144,6 +146,7 @@ export default function AdminNewsPage() {
         publishedAt: form.publishedAt || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
       };
       setItems((prev) => [newItem, ...prev]);
+      audit('create', 'news', newItem.id, newItem.title, 'Created news article');
       showSuccess('Article created successfully.');
     }
     setShowModal(false);
@@ -151,19 +154,24 @@ export default function AdminNewsPage() {
 
   function confirmDelete() {
     if (!deleteId) return;
-    setItems((prev) => prev.filter((item) => item.id !== deleteId));
+    const item = items.find((i) => i.id === deleteId);
+    setItems((prev) => prev.filter((i) => i.id !== deleteId));
+    if (item) audit('delete', 'news', item.id, item.title, 'Deleted news article');
     setDeleteId(null);
     showSuccess('Article deleted.');
   }
 
   function toggleStatus(id: string) {
+    const item = items.find((i) => i.id === id);
+    const newStatus = item?.status === 'published' ? 'draft' : 'published';
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, status: item.status === 'published' ? 'draft' : 'published' }
-          : item,
+      prev.map((i) =>
+        i.id === id
+          ? { ...i, status: newStatus }
+          : i,
       ),
     );
+    if (item) audit('status_change', 'news', item.id, item.title, 'Changed status to ' + newStatus);
     showSuccess('Status updated.');
   }
 

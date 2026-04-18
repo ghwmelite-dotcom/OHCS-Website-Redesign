@@ -3,6 +3,7 @@
 import { useState, useId } from 'react';
 import { Plus, Edit, Trash2, Star, CheckCircle, X, ChevronUp, ChevronDown as ChevronDownIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { audit } from '@/lib/audit-logger';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -305,6 +306,7 @@ export default function AdminLeadershipPage() {
   function handleCreate(data: LeaderFormData) {
     const newItem: LeaderItem = { id: generateId(), ...data };
     setLeaders((prev) => [...prev, newItem]);
+    audit('create', 'leadership', newItem.id, newItem.name, 'Created leadership profile');
     setModal({ type: 'none' });
     showSuccess('Leadership profile added successfully.');
   }
@@ -314,12 +316,14 @@ export default function AdminLeadershipPage() {
     setLeaders((prev) =>
       prev.map((l) => (l.id === modal.item.id ? { ...l, ...data } : l)),
     );
+    audit('update', 'leadership', modal.item.id, data.name, 'Updated leadership profile');
     setModal({ type: 'none' });
     showSuccess('Profile updated successfully.');
   }
 
   function handleDelete() {
     if (modal.type !== 'delete') return;
+    audit('delete', 'leadership', modal.item.id, modal.item.name, 'Deleted leadership profile');
     setLeaders((prev) => prev.filter((l) => l.id !== modal.item.id));
     setModal({ type: 'none' });
     showSuccess('Profile deleted.');

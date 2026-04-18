@@ -1,4 +1,5 @@
 import type { AdminSession, AdminUser } from '@/types';
+import { audit } from '@/lib/audit-logger';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8787';
 const TOKEN_KEY = 'ohcs_admin_token';
@@ -50,6 +51,7 @@ export async function adminLogin(
 
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USER_KEY, JSON.stringify(demoUser.user));
+    audit('login', 'session', demoUser.user.id, demoUser.user.name, 'Logged in');
     return session;
   }
 
@@ -74,6 +76,7 @@ export async function adminLogin(
 
 export async function adminLogout(): Promise<void> {
   const token = getToken();
+  audit('logout', 'session', '', '', 'Logged out');
 
   if (!DEMO_MODE && token) {
     await fetch(`${API_BASE}/api/v1/admin/auth/logout`, {

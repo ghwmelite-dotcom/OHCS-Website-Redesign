@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { getAdminUser } from '@/lib/admin-auth';
+import { getAuditLog } from '@/lib/audit-logger';
+import type { AuditEntry } from '@/lib/audit-logger';
 import Link from 'next/link';
 import type { AdminUser } from '@/types';
 import {
@@ -36,19 +38,54 @@ const QUICK_ACTIONS = [
   { label: 'Submissions', href: '/admin/submissions', icon: ClipboardList, gradient: 'from-purple-500 to-violet-600', roles: ['super_admin', 'recruitment_admin', 'viewer'] },
 ];
 
-const RECENT_ACTIVITY = [
-  { action: 'Published', item: 'Nigeria Courtesy Call article', time: '2 hours ago', color: 'bg-green-500' },
-  { action: 'Updated', item: 'Civil Service Training Programme event', time: '5 hours ago', color: 'bg-blue-500' },
-  { action: 'Received', item: 'New RTI submission (OHCS-RTI-20260418-K2M1)', time: '1 day ago', color: 'bg-purple-500' },
-  { action: 'Uploaded', item: 'HoD 2026 Performance Agreement', time: '2 days ago', color: 'bg-amber-500' },
-  { action: 'Resolved', item: 'Complaint OHCS-CMP-20260415-B3F2', time: '3 days ago', color: 'bg-teal-500' },
-];
+const ACTION_COLORS: Record<string, string> = {
+  login: 'bg-gray-500',
+  logout: 'bg-gray-500',
+  create: 'bg-green-500',
+  update: 'bg-blue-500',
+  delete: 'bg-red-500',
+  status_change: 'bg-amber-500',
+  publish: 'bg-purple-500',
+  unpublish: 'bg-purple-500',
+  activate: 'bg-teal-500',
+  deactivate: 'bg-teal-500',
+  export: 'bg-indigo-500',
+  view: 'bg-slate-400',
+};
+
+const ACTION_LABELS: Record<string, string> = {
+  login: 'Login',
+  logout: 'Logout',
+  create: 'Created',
+  update: 'Updated',
+  delete: 'Deleted',
+  status_change: 'Status Changed',
+  publish: 'Published',
+  unpublish: 'Unpublished',
+  activate: 'Activated',
+  deactivate: 'Deactivated',
+  export: 'Exported',
+  view: 'Viewed',
+};
+
+function timeAgo(timestamp: string): string {
+  const diff = Date.now() - new Date(timestamp).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days > 1 ? 's' : ''} ago`;
+}
 
 export default function AdminDashboardPage() {
   const [user, setUser] = useState<AdminUser | null>(null);
+  const [recentActivity, setRecentActivity] = useState<AuditEntry[]>([]);
 
   useEffect(() => {
     getAdminUser().then(setUser);
+    setRecentActivity(getAuditLog().slice(0, 5));
   }, []);
 
   if (!user) return null;
@@ -156,20 +193,26 @@ export default function AdminDashboardPage() {
             <span className="text-xs text-text-muted/50">Last 7 days</span>
           </div>
           <div className="bg-white rounded-2xl border-2 border-border/40 divide-y divide-border/30">
-            {RECENT_ACTIVITY.map((activity, i) => (
-              <div key={i} className="flex items-center gap-4 p-4 hover:bg-gray-50/50 transition-colors">
-                <div className={cn('w-2.5 h-2.5 rounded-full shrink-0', activity.color)} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-primary-dark">
-                    <span className="font-semibold">{activity.action}</span> {activity.item}
-                  </p>
+            {recentActivity.length === 0 ? (
+              <div className="p-8 text-center text-sm text-text-muted">No recent activity.</div>
+            ) : (
+              recentActivity.map((entry) => (
+                <div key={entry.id} className="flex items-center gap-4 p-4 hover:bg-gray-50/50 transition-colors">
+                  <div className={cn('w-2.5 h-2.5 rounded-full shrink-0', ACTION_COLORS[entry.action] ?? 'bg-gray-400')} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-primary-dark">
+                      <span className="font-semibold">{ACTION_LABELS[entry.action] ?? entry.action}</span>{' '}
+                      {entry.resourceTitle || entry.details}
+                    </p>
+                    <p className="text-xs text-text-muted/60 mt-0.5">by {entry.userName}</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-text-muted/50 shrink-0">
+                    <Clock className="h-3 w-3" aria-hidden="true" />
+                    {timeAgo(entry.timestamp)}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-xs text-text-muted/50 shrink-0">
-                  <Clock className="h-3 w-3" aria-hidden="true" />
-                  {activity.time}
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

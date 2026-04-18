@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { audit } from '@/lib/audit-logger';
 import {
   LayoutDashboard, FolderOpen, Kanban, GraduationCap, MessageSquare,
   BarChart3, ShieldAlert, Trophy, Plus, X, Calendar, CheckCircle,
@@ -134,6 +135,7 @@ export default function ExercisesPage() {
       applications: 0,
     };
     setExercises((prev) => [newEx, ...prev]);
+    audit('create', 'recruitment_exercise', newEx.id, newEx.name, 'Created recruitment exercise');
     setForm({ name: '', description: '', startDate: '', endDate: '' });
     setShowModal(false);
     setToast('Exercise created successfully.');
@@ -159,6 +161,8 @@ export default function ExercisesPage() {
           localStorage.setItem('ohcs_recruitment_open', 'false');
         }
 
+        const actionType = next === 'active' ? 'activate' : next === 'closed' ? 'deactivate' : 'status_change';
+        audit(actionType, 'recruitment_exercise', ex.id, ex.name, `Exercise ${next === 'active' ? 'activated' : next === 'closed' ? 'closed' : 'completed'}`);
         setToast(`Exercise ${next === 'active' ? 'activated' : next === 'closed' ? 'closed' : 'completed'}.`);
         return { ...ex, status: next };
       }),

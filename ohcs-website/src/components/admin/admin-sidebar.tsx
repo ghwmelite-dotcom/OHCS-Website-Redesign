@@ -16,6 +16,7 @@ import {
   ClipboardList,
   LogOut,
   Shield,
+  ScrollText,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
@@ -55,6 +56,7 @@ const NAV_SECTIONS = [
     title: 'System',
     items: [
       { label: 'Users & Roles', href: '/admin/users', icon: Shield, roles: ['super_admin'] },
+      { label: 'Audit Log', href: '/admin/audit-log', icon: ScrollText, roles: ['super_admin'] },
     ],
   },
 ] as const;

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Eye, Edit, CheckCircle, X, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { audit } from '@/lib/audit-logger';
 
 type SubmissionType = 'complaint' | 'feedback' | 'rti';
 type SubmissionStatus = 'received' | 'under_review' | 'in_progress' | 'resolved' | 'closed';
@@ -177,6 +178,7 @@ export default function AdminSubmissionsPage() {
 
   function saveEdit() {
     if (!editSub) return;
+    audit('status_change', 'submission', editSub.reference, editSub.reference, 'Changed status to ' + editStatus);
     setSubmissions((prev) =>
       prev.map((s) =>
         s.id === editSub.id ? { ...s, status: editStatus, adminNotes: editNotes } : s,

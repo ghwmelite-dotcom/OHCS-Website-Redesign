@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { audit } from '@/lib/audit-logger';
 import {
   LayoutDashboard, FolderOpen, Kanban, GraduationCap, MessageSquare,
   BarChart3, ShieldAlert, Trophy, Search, X, ChevronRight, ArrowRight,
@@ -133,6 +134,8 @@ export default function PipelinePage() {
         const idx = order.indexOf(a.stage);
         const nextStage = order[idx + 1];
         if (idx < order.length - 1 && nextStage) {
+          const nextStageName = STAGE_CONFIG[idx + 1]?.name ?? nextStage;
+          audit('status_change', 'recruitment_application', a.ref, a.name, 'Advanced to ' + nextStageName);
           return { ...a, stage: nextStage };
         }
         return a;

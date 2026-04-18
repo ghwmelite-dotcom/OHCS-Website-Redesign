@@ -5,6 +5,7 @@ import { Plus, Search, Edit, Trash2, CheckCircle, X, Info, AlertTriangle } from 
 import { cn } from '@/lib/utils';
 import type { AdminRole } from '@/types';
 import { ROLE_LABELS, ROLE_COLORS } from '@/lib/admin-auth';
+import { audit } from '@/lib/audit-logger';
 
 interface AdminUserItem {
   id: string;
@@ -131,6 +132,7 @@ export default function AdminUsersPage() {
       lastLogin: 'Never',
     };
     setUsers((prev) => [...prev, newUser]);
+    audit('create', 'admin_user', newUser.id, newUser.name, `Created admin user ${newUser.name} with role ${ROLE_LABELS[newUser.role]}`);
     setShowCreate(false);
     setSuccessMsg(`User "${newUser.name}" created successfully.`);
   }
@@ -152,6 +154,7 @@ export default function AdminUsersPage() {
           : u,
       ),
     );
+    audit('update', 'admin_user', editUser.id, editName.trim() || editUser.name, 'Updated admin user');
     setEditUser(null);
     setSuccessMsg('User updated successfully.');
   }
@@ -159,11 +162,13 @@ export default function AdminUsersPage() {
   // ── Toggle active ──────────────────────────────────────────────────────────
   function toggleActive(id: string) {
     if (id === CURRENT_USER_ID) return; // cannot deactivate self
+    const user = users.find((u) => u.id === id);
     setUsers((prev) =>
       prev.map((u) => (u.id === id ? { ...u, isActive: !u.isActive } : u)),
     );
-    const user = users.find((u) => u.id === id);
     if (user) {
+      const action = user.isActive ? 'deactivate' : 'activate';
+      audit(action, 'admin_user', user.id, user.name, `${action === 'deactivate' ? 'Deactivated' : 'Activated'} admin user ${user.name}`);
       setSuccessMsg(
         `${user.name} is now ${user.isActive ? 'inactive' : 'active'}.`,
       );
@@ -173,6 +178,7 @@ export default function AdminUsersPage() {
   // ── Delete user ────────────────────────────────────────────────────────────
   function confirmDelete() {
     if (!deleteUser) return;
+    audit('delete', 'admin_user', deleteUser.id, deleteUser.name, `Deleted admin user ${deleteUser.name}`);
     setUsers((prev) => prev.filter((u) => u.id !== deleteUser.id));
     setSuccessMsg(`User "${deleteUser.name}" deleted.`);
     setDeleteUser(null);

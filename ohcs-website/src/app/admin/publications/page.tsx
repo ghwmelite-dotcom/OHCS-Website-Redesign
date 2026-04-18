@@ -3,6 +3,7 @@
 import { useState, useId } from 'react';
 import { Plus, Search, Edit, Trash2, CheckCircle, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { audit } from '@/lib/audit-logger';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -334,6 +335,7 @@ export default function AdminPublicationsPage() {
       date: todayLabel(),
     };
     setPubs((prev) => [newItem, ...prev]);
+    audit('create', 'publication', newItem.id, newItem.title, 'Created publication');
     setModal({ type: 'none' });
     showSuccess('Publication added successfully.');
   }
@@ -343,25 +345,30 @@ export default function AdminPublicationsPage() {
     setPubs((prev) =>
       prev.map((p) => (p.id === modal.item.id ? { ...p, ...data } : p)),
     );
+    audit('update', 'publication', modal.item.id, data.title, 'Updated publication');
     setModal({ type: 'none' });
     showSuccess('Publication updated successfully.');
   }
 
   function handleDelete() {
     if (modal.type !== 'delete') return;
+    audit('delete', 'publication', modal.item.id, modal.item.title, 'Deleted publication');
     setPubs((prev) => prev.filter((p) => p.id !== modal.item.id));
     setModal({ type: 'none' });
     showSuccess('Publication deleted.');
   }
 
   function toggleStatus(id: string) {
+    const pub = pubs.find((p) => p.id === id);
+    const newStatus = pub?.status === 'published' ? 'draft' : 'published';
     setPubs((prev) =>
       prev.map((p) =>
         p.id === id
-          ? { ...p, status: p.status === 'published' ? 'draft' : 'published' }
+          ? { ...p, status: newStatus }
           : p,
       ),
     );
+    if (pub) audit('status_change', 'publication', pub.id, pub.title, 'Changed status to ' + newStatus);
   }
 
   const filtered = pubs.filter((p) => {
