@@ -123,11 +123,11 @@ export const UNITS: Unit[] = [
       'Provides independent and objective assurance on governance, risk management, and internal control systems within the Civil Service to promote accountability.',
   },
   {
-    slug: 'civil-service-secretariat',
-    name: 'Civil Service Secretariat',
-    shortName: 'CSS',
+    slug: 'civil-service-council',
+    name: 'Civil Service Council',
+    shortName: 'CSC',
     description:
-      'Provides secretarial and administrative support services to the Civil Service Council and coordinates inter-agency governance activities.',
+      'Advises the President on matters relating to the Civil Service and oversees the administration, discipline, and welfare of civil servants across Ghana.',
   },
   {
     slug: 'estate',
