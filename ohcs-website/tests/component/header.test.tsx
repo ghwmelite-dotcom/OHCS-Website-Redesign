@@ -12,7 +12,7 @@ describe('Header', () => {
   it('renders main navigation items', () => {
     render(<Header />);
     expect(screen.getByText('Home')).toBeDefined();
-    expect(screen.getByText('News')).toBeDefined();
+    expect(screen.getByText('Services')).toBeDefined();
     expect(screen.getByText('Contact')).toBeDefined();
   });
 

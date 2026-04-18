@@ -22,27 +22,40 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'About',
     href: '/about',
     children: [
-      { label: 'Civil Service', href: '/about/civil-service' },
-      { label: 'Leadership', href: '/about/leadership' },
-      { label: 'Structure', href: '/about/structure' },
-      { label: 'Partners', href: '/about/partners' },
+      { label: 'The Civil Service', href: '/about/civil-service', icon: 'Building2', description: 'History, mandate, and mission of the Ghana Civil Service' },
+      { label: 'Our Leadership', href: '/about/leadership', icon: 'Users', description: 'Head of Service, Chief Director, and senior leadership' },
+      { label: 'Organisational Structure', href: '/about/structure', icon: 'GitBranch', description: 'How the Civil Service is organised' },
+      { label: 'Our Partners', href: '/about/partners', icon: 'Handshake', description: 'Collaborating organisations and development partners' },
     ],
   },
-  { label: 'Directorates', href: '/directorates' },
-  { label: 'Departments', href: '/departments' },
+  {
+    label: 'Structure',
+    href: '/directorates',
+    children: [
+      { label: 'Directorates', href: '/directorates', icon: 'LayoutGrid', description: 'Eight specialised directorates driving reform' },
+      { label: 'Departments', href: '/departments', icon: 'Landmark', description: 'Support departments including Audit, PRAAD, and more' },
+      { label: 'Training Institutions', href: '/training', icon: 'GraduationCap', description: 'Civil Service Training Centre, GIMPA, and regional institutes' },
+    ],
+  },
   {
     label: 'Services',
     href: '/services',
     children: [
-      { label: 'Recruitment', href: '/services/recruitment' },
-      { label: 'Right to Information (RTI)', href: '/services/rti' },
-      { label: 'Complaints', href: '/services/complaints' },
-      { label: 'Feedback', href: '/services/feedback' },
+      { label: 'Recruitment', href: '/services/recruitment', icon: 'UserPlus', description: 'Apply for civil service positions across Ghana' },
+      { label: 'Right to Information', href: '/services/rti', icon: 'FileText', description: 'Submit RTI requests for public records' },
+      { label: 'Complaints & Feedback', href: '/services/complaints', icon: 'MessageSquare', description: 'Report issues or share your feedback' },
+      { label: 'Track Submission', href: '/track', icon: 'Search', description: 'Check the status of your submission' },
     ],
   },
-  { label: 'News', href: '/news' },
-  { label: 'Events', href: '/events' },
-  { label: 'Publications', href: '/publications' },
+  {
+    label: 'Resources',
+    href: '/news',
+    children: [
+      { label: 'News', href: '/news', icon: 'Newspaper', description: 'Latest announcements and updates from OHCS' },
+      { label: 'Events', href: '/events', icon: 'Calendar', description: 'Upcoming conferences, workshops, and ceremonies' },
+      { label: 'Publications', href: '/publications', icon: 'BookOpen', description: 'Reports, policies, circulars, and forms' },
+    ],
+  },
   { label: 'Contact', href: '/contact' },
 ];
 

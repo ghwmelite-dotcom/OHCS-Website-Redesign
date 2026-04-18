@@ -2,9 +2,43 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
+import {
+  ChevronDown,
+  Building2,
+  Users,
+  GitBranch,
+  Handshake,
+  LayoutGrid,
+  Landmark,
+  GraduationCap,
+  UserPlus,
+  FileText,
+  MessageSquare,
+  Search,
+  Newspaper,
+  Calendar,
+  BookOpen,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types';
+import type { LucideIcon } from 'lucide-react';
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Building2,
+  Users,
+  GitBranch,
+  Handshake,
+  LayoutGrid,
+  Landmark,
+  GraduationCap,
+  UserPlus,
+  FileText,
+  MessageSquare,
+  Search,
+  Newspaper,
+  Calendar,
+  BookOpen,
+};
 
 interface MegaMenuProps {
   item: NavItem;
@@ -14,6 +48,7 @@ export function MegaMenu({ item }: MegaMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Simple link — no children
   if (!item.children || item.children.length === 0) {
     return (
       <Link
@@ -33,16 +68,12 @@ export function MegaMenu({ item }: MegaMenuProps) {
 
   function handleMouseEnter() {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setIsOpen(true), 100);
+    timeoutRef.current = setTimeout(() => setIsOpen(true), 80);
   }
 
   function handleMouseLeave() {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setIsOpen(false), 200);
-  }
-
-  function handleButtonClick() {
-    setIsOpen((prev) => !prev);
   }
 
   return (
@@ -53,7 +84,7 @@ export function MegaMenu({ item }: MegaMenuProps) {
     >
       <button
         type="button"
-        onClick={handleButtonClick}
+        onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="true"
         className={cn(
@@ -77,39 +108,81 @@ export function MegaMenu({ item }: MegaMenuProps) {
         <div
           role="menu"
           className={cn(
-            'absolute left-0 top-full mt-2 min-w-[240px]',
-            'bg-white rounded-2xl border border-border/60 shadow-elevated',
-            'z-50 py-2 px-1',
-            'animate-[reveal_0.2s_ease-out_forwards]',
+            'absolute left-1/2 -translate-x-1/2 top-full mt-3',
+            'bg-white rounded-2xl border border-border/40',
+            'z-50 p-2',
+            'opacity-0 animate-[reveal_0.25s_ease-out_forwards]',
           )}
+          style={{
+            width: Math.max(320, item.children.length > 3 ? 400 : 340),
+            boxShadow: '0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)',
+          }}
         >
           {/* Gold accent line at top */}
           <div
             aria-hidden="true"
-            className="absolute top-0 left-6 right-6 h-[2px] rounded-full"
-            style={{ background: 'linear-gradient(90deg, #D4A017, #E8C547, #D4A017)' }}
+            className="absolute top-0 left-8 right-8 h-[2px] rounded-full"
+            style={{ background: 'linear-gradient(90deg, transparent, #D4A017, transparent)' }}
           />
 
-          {item.children.map((child) => (
+          {/* Category label */}
+          <div className="px-4 pt-3 pb-2">
+            <span className="text-[10px] font-bold text-accent uppercase tracking-[0.2em]">
+              {item.label}
+            </span>
+          </div>
+
+          {/* Menu items */}
+          {item.children.map((child, i) => {
+            const Icon = child.icon ? ICON_MAP[child.icon] : null;
+            return (
+              <Link
+                key={child.href}
+                href={child.href}
+                role="menuitem"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  'group/item flex items-start gap-3.5 px-4 py-3 rounded-xl text-sm',
+                  'hover:bg-primary/5 transition-all duration-150',
+                  'focus-visible:outline-none focus-visible:bg-primary/5',
+                )}
+                style={{
+                  animationDelay: `${i * 40}ms`,
+                  animation: 'reveal 0.3s ease-out forwards',
+                  opacity: 0,
+                }}
+              >
+                {/* Icon badge */}
+                {Icon && (
+                  <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center shrink-0 mt-0.5 group-hover/item:from-primary/20 group-hover/item:to-primary/10 transition-colors duration-200">
+                    <Icon className="h-4.5 w-4.5 text-primary" aria-hidden="true" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <span className="font-semibold text-text group-hover/item:text-primary transition-colors duration-150 block">
+                    {child.label}
+                  </span>
+                  {child.description && (
+                    <span className="text-xs text-text-muted leading-relaxed mt-0.5 block">
+                      {child.description}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+
+          {/* "View all" footer link */}
+          <div className="border-t border-border/40 mt-1 pt-1 px-2 pb-1">
             <Link
-              key={child.href}
-              href={child.href}
-              role="menuitem"
+              href={item.href}
               onClick={() => setIsOpen(false)}
-              className={cn(
-                'group/item flex items-center gap-3 px-4 py-3 mx-1 rounded-xl text-sm text-text',
-                'hover:bg-primary/5 hover:text-primary transition-all duration-150',
-                'focus-visible:outline-none focus-visible:bg-primary/5 focus-visible:text-primary',
-              )}
+              className="flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-primary rounded-lg hover:bg-primary/5 transition-colors"
             >
-              {/* Dot indicator */}
-              <span
-                className="w-1.5 h-1.5 rounded-full bg-accent/40 group-hover/item:bg-primary group-hover/item:scale-125 transition-all duration-200 shrink-0"
-                aria-hidden="true"
-              />
-              {child.label}
+              View all {item.label.toLowerCase()}
+              <ChevronDown className="w-3 h-3 -rotate-90" aria-hidden="true" />
             </Link>
-          ))}
+          </div>
         </div>
       )}
     </div>
