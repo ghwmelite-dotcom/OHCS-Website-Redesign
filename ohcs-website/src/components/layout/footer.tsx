@@ -141,20 +141,16 @@ export function Footer({ className }: { className?: string }) {
             </div>
           </div>
 
-          {/* ── Gold divider ── */}
-          <div
-            aria-hidden="true"
-            className="h-px mb-14"
-            style={{
-              background: 'linear-gradient(90deg, rgba(212,160,23,0.3), rgba(212,160,23,0.1) 50%, rgba(212,160,23,0.3))',
-            }}
-          />
+        </div>
+      </div>
 
-          {/* ── Links grid ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-14">
+      {/* ── Links Section — Warm Cream Background ── */}
+      <div style={{ backgroundColor: '#FDFAF5' }}>
+        <div className="max-w-content mx-auto px-6 sm:px-8 py-14 lg:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
             {/* Quick Links */}
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-accent mb-5">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-primary-dark mb-5">
                 Quick Links
               </h3>
               <ul className="space-y-3">
@@ -162,7 +158,7 @@ export function Footer({ className }: { className?: string }) {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-base text-white/55 hover:text-white hover:translate-x-1 inline-block transition-all duration-200"
+                      className="text-base text-text-muted hover:text-primary hover:translate-x-1 inline-block transition-all duration-200"
                     >
                       {label}
                     </Link>
@@ -173,7 +169,7 @@ export function Footer({ className }: { className?: string }) {
 
             {/* Services */}
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-accent mb-5">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-primary-dark mb-5">
                 Services
               </h3>
               <ul className="space-y-3">
@@ -184,7 +180,7 @@ export function Footer({ className }: { className?: string }) {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-base text-white/55 hover:text-white inline-flex items-center gap-1.5 transition-all duration-200"
+                        className="text-base text-text-muted hover:text-primary inline-flex items-center gap-1.5 transition-all duration-200"
                       >
                         {link.label}
                         <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -192,7 +188,7 @@ export function Footer({ className }: { className?: string }) {
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-base text-white/55 hover:text-white hover:translate-x-1 inline-block transition-all duration-200"
+                        className="text-base text-text-muted hover:text-primary hover:translate-x-1 inline-block transition-all duration-200"
                       >
                         {link.label}
                       </Link>
@@ -204,45 +200,45 @@ export function Footer({ className }: { className?: string }) {
 
             {/* Contact */}
             <div className="sm:col-span-2 lg:col-span-2">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-accent mb-5">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-primary-dark mb-5">
                 Get in Touch
               </h3>
               <ul className="space-y-5">
                 <li className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <MapPin className="h-5 w-5 text-accent" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <MapPin className="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white/80 mb-0.5">Address</p>
-                    <p className="text-base text-white/55 leading-relaxed">
+                    <p className="text-sm font-semibold text-primary-dark mb-0.5">Address</p>
+                    <p className="text-base text-text-muted leading-relaxed">
                       Office of the Head of the Civil Service,<br />
                       P.O. Box M.49, Accra, Ghana
                     </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Phone className="h-5 w-5 text-accent" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Phone className="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white/80 mb-0.5">Phone</p>
+                    <p className="text-sm font-semibold text-primary-dark mb-0.5">Phone</p>
                     <a
                       href="tel:+233302665421"
-                      className="text-base text-white/55 hover:text-accent transition-colors duration-200"
+                      className="text-base text-text-muted hover:text-primary transition-colors duration-200"
                     >
                       +233 (0)30 266 5421
                     </a>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Mail className="h-5 w-5 text-accent" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Mail className="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white/80 mb-0.5">Email</p>
+                    <p className="text-sm font-semibold text-primary-dark mb-0.5">Email</p>
                     <a
                       href="mailto:info@ohcs.gov.gh"
-                      className="text-base text-white/55 hover:text-accent transition-colors duration-200"
+                      className="text-base text-text-muted hover:text-primary transition-colors duration-200"
                     >
                       info@ohcs.gov.gh
                     </a>
@@ -252,9 +248,11 @@ export function Footer({ className }: { className?: string }) {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* ── Bottom bar ── */}
-        <div className="relative border-t border-white/10 bg-black/20">
+      {/* ── Bottom bar — dark ── */}
+      <div className="bg-primary-dark">
+        <div className="border-t border-white/10 bg-black/20">
           <div className="max-w-content mx-auto px-6 sm:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             {/* Coat of arms + copyright */}
             <div className="flex items-center gap-3">
