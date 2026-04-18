@@ -1,5 +1,6 @@
 import { PageHero } from '@/components/layout/page-hero';
 import { FloatingShapes } from '@/components/home/floating-shapes';
+import { KenteSectionDivider } from '@/components/kente/kente-section-divider';
 import Link from 'next/link';
 import {
   Building2,
@@ -108,6 +109,8 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <KenteSectionDivider />
+
       {/* ── Section: Mission & Vision — full width dark ── */}
       <section className="relative py-20 lg:py-24 bg-primary-dark overflow-hidden">
         {/* Kente texture */}
@@ -169,6 +172,8 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <KenteSectionDivider />
+
       {/* ── Section: Core Values — warm cream bg ── */}
       <section className="py-20 lg:py-24 relative overflow-hidden" style={{ backgroundColor: '#FFF8F0' }}>
         <FloatingShapes />
@@ -203,6 +208,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <KenteSectionDivider />
 
       {/* ── Section: Explore More — light green bg ── */}
       <section className="py-20 lg:py-24 relative overflow-hidden" style={{ backgroundColor: '#F0F7F1' }}>
