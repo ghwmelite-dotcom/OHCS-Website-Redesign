@@ -102,7 +102,7 @@ export function Footer({ className }: { className?: string }) {
 
               {/* Description */}
               <p className="text-white/60 text-base leading-relaxed mb-6">
-                The Office of the Head of Civil Service leads and transforms Ghana&apos;s
+                The Office of the Head of the Civil Service leads and transforms Ghana&apos;s
                 Civil Service to deliver excellence, accountability, and innovation in
                 public service delivery.
               </p>
@@ -215,7 +215,7 @@ export function Footer({ className }: { className?: string }) {
                   <div>
                     <p className="text-sm font-medium text-white/80 mb-0.5">Address</p>
                     <p className="text-base text-white/55 leading-relaxed">
-                      Office of the Head of Civil Service,<br />
+                      Office of the Head of the Civil Service,<br />
                       P.O. Box M.49, Accra, Ghana
                     </p>
                   </div>
@@ -266,7 +266,7 @@ export function Footer({ className }: { className?: string }) {
                 className="brightness-0 invert opacity-60"
               />
               <p className="text-sm text-white/40">
-                &copy; {currentYear} Office of the Head of Civil Service. All rights reserved.
+                &copy; {currentYear} Office of the Head of the Civil Service. All rights reserved.
               </p>
             </div>
 

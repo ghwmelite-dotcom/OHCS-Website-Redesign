@@ -21,7 +21,7 @@ const SLIDES: Slide[] = [
     alt: 'Head of the Civil Service of Ghana',
     headline: ["Serving Ghana's", 'Public Sector'],
     subtitle:
-      'The Office of the Head of Civil Service drives excellence, accountability, and transformation across Ghana\u2019s civil service.',
+      'The Office of the Head of the Civil Service drives excellence, accountability, and transformation across Ghana\u2019s civil service.',
   },
   {
     image: '/images/hero/chief-director.jpg',

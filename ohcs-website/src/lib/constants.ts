@@ -8,11 +8,11 @@ import type {
 
 // ─── Site Metadata ────────────────────────────────────────────────────────────
 
-export const SITE_NAME = 'Office of the Head of Civil Service';
+export const SITE_NAME = 'Office of the Head of the Civil Service';
 export const SITE_SHORT_NAME = 'OHCS';
 export const SITE_URL = 'https://ohcs.gov.gh';
 export const SITE_DESCRIPTION =
-  'The Office of the Head of Civil Service leads the development, management, and reform of Ghana\'s Civil Service to deliver efficient and equitable public services for all citizens.';
+  'The Office of the Head of the Civil Service leads the development, management, and reform of Ghana\'s Civil Service to deliver efficient and equitable public services for all citizens.';
 
 // ─── Navigation ───────────────────────────────────────────────────────────────
 
@@ -75,7 +75,7 @@ export const DIRECTORATES: Directorate[] = [
     name: 'Finance and Administration Directorate',
     shortName: 'FAD',
     description:
-      'Oversees the financial management, budgeting, procurement, and administrative operations that sustain the smooth functioning of the Office of the Head of Civil Service.',
+      'Oversees the financial management, budgeting, procurement, and administrative operations that sustain the smooth functioning of the Office of the Head of the Civil Service.',
     icon: 'Wallet',
   },
   {
