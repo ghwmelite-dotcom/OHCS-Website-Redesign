@@ -6,8 +6,7 @@ import { Users, Landmark, Building2, GraduationCap, Globe, Award } from 'lucide-
 
 const STATS = [
   { icon: Users, number: '30,000+', label: 'Civil Servants', gradient: 'from-green-500 to-emerald-600' },
-  { icon: Landmark, number: '5', label: 'Line Directorates', gradient: 'from-blue-500 to-indigo-600' },
-  { icon: Building2, number: '6', label: 'Support Units', gradient: 'from-amber-500 to-yellow-600' },
+  { icon: Landmark, number: '11', label: 'Directorates & Units', gradient: 'from-blue-500 to-indigo-600' },
   { icon: GraduationCap, number: '3+', label: 'Training Centres', gradient: 'from-purple-500 to-violet-600' },
   { icon: Globe, number: '16', label: 'Regions Served', gradient: 'from-teal-500 to-cyan-600' },
   { icon: Award, number: '30+', label: 'Years of Reform', gradient: 'from-rose-500 to-pink-600' },
@@ -50,7 +49,7 @@ export function StatsBanner() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
