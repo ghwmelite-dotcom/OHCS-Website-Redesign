@@ -55,21 +55,22 @@ export function StatsBanner() {
             <div
               key={stat.label}
               className={cn(
-                'bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center',
-                'hover:bg-white/[0.1] hover:border-accent/20 transition-all duration-300',
+                'group bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl p-7 text-center',
+                'hover:bg-white/[0.1] hover:border-accent/20 hover:-translate-y-1 transition-all duration-300',
                 isVisible && 'animate-[reveal_0.6s_cubic-bezier(0.16,1,0.3,1)_forwards]',
                 !isVisible && 'opacity-0',
               )}
               style={isVisible ? { animationDelay: `${i * 80}ms` } : undefined}
             >
               <div className={cn(
-                'w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center mx-auto mb-4 shadow-lg',
+                'w-14 h-14 rounded-2xl bg-gradient-to-br flex items-center justify-center mx-auto mb-5 shadow-lg',
+                'group-hover:scale-110 transition-transform duration-300',
                 stat.gradient,
               )}>
-                <stat.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                <stat.icon className="h-7 w-7 text-white" aria-hidden="true" />
               </div>
-              <p className="text-3xl font-bold text-white leading-none mb-1">{stat.number}</p>
-              <p className="text-xs text-white/50 font-medium uppercase tracking-wider">{stat.label}</p>
+              <p className="text-4xl font-bold text-white leading-none mb-2 font-display">{stat.number}</p>
+              <p className="text-[10px] text-white/50 font-bold uppercase tracking-[0.15em]">{stat.label}</p>
             </div>
           ))}
         </div>
