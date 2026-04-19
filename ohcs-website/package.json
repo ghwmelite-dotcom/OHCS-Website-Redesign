@@ -9,9 +9,13 @@
     "lint": "eslint",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:deploy": "npx wrangler pages deploy .vercel/output/static --project-name=ohcs",
+    "pages:preview": "npx wrangler pages dev .vercel/output/static"
   },
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.99.0",
     "clsx": "^2.1.1",
@@ -41,6 +45,7 @@
     "prettier": "^3.8.3",
     "tailwindcss": "^4",
     "typescript": "^5",
+    "vercel": "^51.7.0",
     "vitest": "^4.1.4"
   }
 }
