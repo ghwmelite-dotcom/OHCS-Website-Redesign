@@ -1,0 +1,42 @@
+# Cloudflare Pages project configuration
+name = "ohcs"
+pages_build_output_dir = ".vercel/output/static"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ──────────────────────────────────────────────────────────────────────
+# Production (default) environment
+# ──────────────────────────────────────────────────────────────────────
+
+# D1 database (relational data)
+[[d1_databases]]
+binding = "DB"
+database_name = "ohcs-recruitment"
+database_id = "REPLACE_WITH_REAL_ID_IN_TASK_3"
+
+# R2 bucket (uploaded files)
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "ohcs-recruitment-uploads"
+
+# Workers AI binding (document sanity checks)
+[ai]
+binding = "AI"
+
+# Non-secret env vars
+[vars]
+APP_NAME = "OHCS Recruitment"
+APP_ENV = "production"
+EMAIL_FROM = "noreply@ohcs.gov.gh"
+EMAIL_FROM_NAME = "OHCS Recruitment"
+
+# ──────────────────────────────────────────────────────────────────────
+# Preview environment (Cloudflare Pages preview deployments)
+# ──────────────────────────────────────────────────────────────────────
+[env.preview]
+
+[env.preview.vars]
+APP_NAME = "OHCS Recruitment (Preview)"
+APP_ENV = "preview"
+EMAIL_FROM = "noreply@ohcs.gov.gh"
+EMAIL_FROM_NAME = "OHCS Recruitment (Preview)"
