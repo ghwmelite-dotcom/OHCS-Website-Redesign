@@ -21,6 +21,7 @@ import {
   BarChart3, ShieldAlert, Trophy, Plus, X, Save, Eye, GripVertical,
   Loader2, AlertTriangle, ArrowLeft, AlertCircle, CheckCircle, FileText,
 } from 'lucide-react';
+import { PreviewApplicantModal } from '@/components/admin/preview-applicant-modal';
 
 /* ------------------------------------------------------------------ */
 /*  Tab Navigation (local copy to avoid cross-page client import)     */
@@ -185,6 +186,7 @@ function ConfigureRequirements({ exerciseId }: { exerciseId: string }) {
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [missingFromStore, setMissingFromStore] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const addMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -367,8 +369,7 @@ function ConfigureRequirements({ exerciseId }: { exerciseId: string }) {
   }
 
   function handlePreview() {
-    // TODO(Task 13): wire the real "Preview as Applicant" modal.
-    console.log('preview', { exerciseId, requirements });
+    setPreviewOpen(true);
   }
 
   /* ── Render ─────────────────────────────────────────────────────── */
@@ -681,6 +682,13 @@ function ConfigureRequirements({ exerciseId }: { exerciseId: string }) {
           )}
         </>
       )}
+
+      <PreviewApplicantModal
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        documentTypes={docTypes}
+        requirements={requirements}
+      />
     </div>
   );
 }
