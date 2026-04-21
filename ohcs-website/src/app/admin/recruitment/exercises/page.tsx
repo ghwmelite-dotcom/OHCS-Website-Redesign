@@ -239,6 +239,13 @@ export default function ExercisesPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  <Link
+                    href={`/admin/recruitment/exercise-documents?exerciseId=${encodeURIComponent(ex.id)}`}
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl border-2 border-border/60 text-text-muted hover:border-primary hover:text-primary transition-colors"
+                  >
+                    <FileText className="h-4 w-4" aria-hidden="true" />
+                    Configure Documents
+                  </Link>
                   {ex.status !== 'completed' && (
                     <button
                       onClick={() => toggleStatus(ex.id)}
