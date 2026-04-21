@@ -102,3 +102,91 @@ describe('POST /api/admin/document-types', () => {
     expect(res.status).toBe(400);
   });
 });
+
+import {
+  onRequestGet as onRequestGetOne,
+  onRequestPatch,
+  onRequestDelete,
+} from '../../../functions/api/admin/document-types/[id]';
+
+describe('GET /api/admin/document-types/[id]', () => {
+  it('returns one row', async () => {
+    const db = makeD1([
+      {
+        sql: 'SELECT * FROM document_types WHERE id = ?',
+        binds: ['national_id'],
+        first: {
+          id: 'national_id',
+          label: 'National ID (Ghana Card)',
+          description: null,
+          default_max_mb: 5,
+          accepted_mimes: '["application/pdf"]',
+          ai_check_type: 'identity',
+          is_active: 1,
+          created_at: 1,
+          updated_at: 1,
+        },
+      },
+    ]);
+    const req = new Request('https://x/api/admin/document-types/national_id', { headers: ADMIN_HEADERS });
+    const res = await onRequestGetOne({ ...ctx(req, db), params: { id: 'national_id' } });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { data: { id: string } };
+    expect(body.data.id).toBe('national_id');
+  });
+
+  it('404 when not found', async () => {
+    const db = makeD1([
+      { sql: 'SELECT * FROM document_types WHERE id = ?', binds: ['missing'] },
+    ]);
+    const req = new Request('https://x/api/admin/document-types/missing', { headers: ADMIN_HEADERS });
+    const res = await onRequestGetOne({ ...ctx(req, db), params: { id: 'missing' } });
+    expect(res.status).toBe(404);
+  });
+});
+
+describe('PATCH /api/admin/document-types/[id]', () => {
+  it('updates label and bumps updated_at', async () => {
+    const db = makeD1([
+      {
+        // binds omitted = wildcard (impl uses Date.now())
+        sql: 'UPDATE document_types SET label = ?, updated_at = ? WHERE id = ?',
+        run: { meta: { changes: 1 } },
+      },
+    ]);
+    const req = new Request('https://x/api/admin/document-types/national_id', {
+      method: 'PATCH',
+      headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
+      body: JSON.stringify({ label: 'National ID (Ghana Card) — Updated' }),
+    });
+    const res = await onRequestPatch({ ...ctx(req, db), params: { id: 'national_id' } });
+    expect(res.status).toBe(200);
+  });
+
+  it('400 on empty body', async () => {
+    const req = new Request('https://x/api/admin/document-types/national_id', {
+      method: 'PATCH',
+      headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    const res = await onRequestPatch({ ...ctx(req), params: { id: 'national_id' } });
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('DELETE /api/admin/document-types/[id]', () => {
+  it('soft-deletes by setting is_active = 0', async () => {
+    const db = makeD1([
+      {
+        sql: 'UPDATE document_types SET is_active = 0, updated_at = ? WHERE id = ?',
+        run: { meta: { changes: 1 } },
+      },
+    ]);
+    const req = new Request('https://x/api/admin/document-types/national_id', {
+      method: 'DELETE',
+      headers: ADMIN_HEADERS,
+    });
+    const res = await onRequestDelete({ ...ctx(req, db), params: { id: 'national_id' } });
+    expect(res.status).toBe(204);
+  });
+});
