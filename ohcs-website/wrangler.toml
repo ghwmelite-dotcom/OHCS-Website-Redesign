@@ -32,8 +32,24 @@ EMAIL_FROM_NAME = "OHCS Recruitment"
 
 # ──────────────────────────────────────────────────────────────────────
 # Preview environment (Cloudflare Pages preview deployments)
+#
+# Preview shares the same D1/R2/AI resources as production in v1 —
+# simpler and sufficient for now. Split into separate preview resources
+# later if real-world preview usage starts generating conflicting data.
 # ──────────────────────────────────────────────────────────────────────
 [env.preview]
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "ohcs-recruitment"
+database_id = "f2683715-2426-43d9-bb7c-885d9e64648d"
+
+[[env.preview.r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "ohcs-recruitment-uploads"
+
+[env.preview.ai]
+binding = "AI"
 
 [env.preview.vars]
 APP_NAME = "OHCS Recruitment (Preview)"
