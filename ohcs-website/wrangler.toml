@@ -12,7 +12,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "ohcs-recruitment"
-database_id = "REPLACE_WITH_REAL_ID_IN_TASK_3"
+database_id = "f2683715-2426-43d9-bb7c-885d9e64648d"
 
 # R2 bucket (uploaded files)
 [[r2_buckets]]
