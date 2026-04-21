@@ -115,7 +115,7 @@ export function AiChatPanel() {
             },
           }),
         });
-        const data = await res.json();
+        const data = (await res.json()) as { data?: { message?: string } };
         responseText =
           data.data?.message ?? 'I apologise, I could not process that request.';
       } catch {

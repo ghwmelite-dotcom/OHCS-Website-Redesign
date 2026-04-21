@@ -16,9 +16,9 @@ async function request<T>(path: string, options?: RequestInit): Promise<ApiSucce
   });
 
   if (!res.ok) {
-    const err: ApiError = await res.json().catch(() => ({
+    const err = (await res.json().catch(() => ({
       error: { code: 'UNKNOWN', message: res.statusText, requestId: '' },
-    }));
+    }))) as ApiError;
     throw new Error(err.error.message);
   }
 
