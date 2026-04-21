@@ -22,14 +22,23 @@ describe('sendEmail', () => {
     });
 
     expect(globalThis.fetch).toHaveBeenCalledOnce();
-    const [url, init] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    const call = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0] as [
+      string,
+      { body: string },
+    ];
+    const [url, init] = call;
     expect(url).toBe('https://api.mailchannels.net/tx/v1/send');
-    const body = JSON.parse(init.body);
-    expect(body.personalizations[0].to[0].email).toBe('kofi@example.com');
+    const body = JSON.parse(init.body) as {
+      personalizations: Array<{ to: Array<{ email: string }> }>;
+      from: { email: string; name: string };
+      subject: string;
+      content: Array<{ type: string; value: string }>;
+    };
+    expect(body.personalizations[0]!.to[0]!.email).toBe('kofi@example.com');
     expect(body.from.email).toBe('noreply@example.com');
     expect(body.subject).toBe('Hello');
-    expect(body.content[0].type).toBe('text/html');
-    expect(body.content[0].value).toBe('<p>Hi</p>');
+    expect(body.content[0]!.type).toBe('text/html');
+    expect(body.content[0]!.value).toBe('<p>Hi</p>');
   });
 
   it('falls back to Resend on MailChannels 4xx if RESEND_API_KEY is set', async () => {
@@ -46,8 +55,12 @@ describe('sendEmail', () => {
     });
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(fetchMock.mock.calls[1][0]).toBe('https://api.resend.com/emails');
-    const resendInit = fetchMock.mock.calls[1][1];
+    const resendCall = fetchMock.mock.calls[1] as [
+      string,
+      { headers: { Authorization: string } },
+    ];
+    expect(resendCall[0]).toBe('https://api.resend.com/emails');
+    const resendInit = resendCall[1];
     expect(resendInit.headers.Authorization).toBe('Bearer test-key');
   });
 
