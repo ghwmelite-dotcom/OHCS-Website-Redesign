@@ -16,7 +16,7 @@ describe('GET /api/health', () => {
   it('returns 200 with status:ok when all bindings are healthy', async () => {
     const res = await onRequestGet(makeContext());
     expect(res.status).toBe(200);
-    const body = await res.json();
+    const body = (await res.json()) as any;
     expect(body.status).toBe('ok');
     expect(body.checks).toEqual({
       d1: 'ok',
@@ -31,7 +31,7 @@ describe('GET /api/health', () => {
     const env = mockEnv({ d1Healthy: false });
     const res = await onRequestGet(makeContext(env));
     expect(res.status).toBe(503);
-    const body = await res.json();
+    const body = (await res.json()) as any;
     expect(body.status).toBe('degraded');
     expect(body.checks.d1).toBe('error');
     expect(body.checks.r2).toBe('ok');
@@ -42,7 +42,7 @@ describe('GET /api/health', () => {
     const env = mockEnv({ r2Healthy: false });
     const res = await onRequestGet(makeContext(env));
     expect(res.status).toBe(503);
-    const body = await res.json();
+    const body = (await res.json()) as any;
     expect(body.checks.r2).toBe('error');
   });
 
@@ -50,7 +50,7 @@ describe('GET /api/health', () => {
     const env = mockEnv({ aiHealthy: false });
     const res = await onRequestGet(makeContext(env));
     expect(res.status).toBe(503);
-    const body = await res.json();
+    const body = (await res.json()) as any;
     expect(body.checks.workers_ai).toBe('error');
   });
 
