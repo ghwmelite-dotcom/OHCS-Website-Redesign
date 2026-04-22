@@ -52,3 +52,86 @@ export async function saveDraft(patch: SaveDraftInput): Promise<{ last_saved_at:
 export async function logout(): Promise<void> {
   await request('/api/applications/me/logout', { method: 'POST' });
 }
+
+// ─── Documents (Phase 3) ─────────────────────────────────────────────────
+
+import type { ApplicantRequirementsView, ApplicationDocument } from '@/types/recruitment';
+
+export async function getRequirements(): Promise<ApplicantRequirementsView> {
+  const { data } = await request<{ data: ApplicantRequirementsView }>(
+    '/api/applications/me/requirements',
+  );
+  return data;
+}
+
+export async function uploadDocument(
+  docTypeId: string,
+  file: File,
+  onProgress?: (pct: number) => void,
+): Promise<ApplicationDocument> {
+  // Use XHR (not fetch) so we get upload progress events
+  const fd = new FormData();
+  fd.append('file', file);
+  return new Promise<ApplicationDocument>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `/api/applications/me/documents/${encodeURIComponent(docTypeId)}`);
+    xhr.withCredentials = true;
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100));
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const parsed = JSON.parse(xhr.responseText) as { data: ApplicationDocument };
+          resolve(parsed.data);
+        } catch {
+          reject(new Error(`bad response ${xhr.status}`));
+        }
+      } else {
+        reject(new Error(`upload failed ${xhr.status}: ${xhr.responseText}`));
+      }
+    };
+    xhr.onerror = () => reject(new Error('network error during upload'));
+    xhr.send(fd);
+  });
+}
+
+export async function deleteDocument(docTypeId: string): Promise<void> {
+  await request(`/api/applications/me/documents/${encodeURIComponent(docTypeId)}`, {
+    method: 'DELETE',
+  });
+}
+
+export async function submitApplication(): Promise<{
+  reference_number: string;
+  status: string;
+  submitted_at: number;
+}> {
+  const { data } = await request<{
+    data: { reference_number: string; status: string; submitted_at: number };
+  }>('/api/applications/me/submit', { method: 'POST' });
+  return data;
+}
+
+export async function trackApplication(
+  ref: string,
+  email: string,
+): Promise<{
+  reference_number: string;
+  exercise_id: string;
+  status: string;
+  submitted_at: number | null;
+  created_at: number;
+}> {
+  const params = new URLSearchParams({ ref, email });
+  const { data } = await request<{
+    data: {
+      reference_number: string;
+      exercise_id: string;
+      status: string;
+      submitted_at: number | null;
+      created_at: number;
+    };
+  }>(`/api/applications/track?${params.toString()}`);
+  return data;
+}
