@@ -95,6 +95,9 @@ export interface ApplicationFormData {
   region?: string;
   consent?: { agreed: boolean; agreed_at: number; ip?: string };
 
+  // Step 2 (eligibility — checkbox-only field stored in form_data)
+  holds_first_degree?: boolean;
+
   // Step 3
   highest_qualification?: 'first_degree' | 'pg_diploma' | 'masters' | 'phd';
   field_of_study?: string;
