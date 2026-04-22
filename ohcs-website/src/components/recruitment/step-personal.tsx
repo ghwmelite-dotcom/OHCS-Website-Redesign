@@ -66,6 +66,36 @@ function formatPhone(raw: string): string {
   return digits.slice(0, 10);
 }
 
+/** Civil-service entry minimum and maximum ages — used to validate DOB. */
+const MIN_AGE = 18;
+const MAX_AGE = 65;
+
+function todayIso(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function ageOn(dobIso: string, on: Date = new Date()): number {
+  const dob = new Date(dobIso);
+  let age = on.getFullYear() - dob.getFullYear();
+  const m = on.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && on.getDate() < dob.getDate())) age--;
+  return age;
+}
+
+/** Returns the human-readable error or null if the DOB is acceptable. */
+function dobError(dobIso: string): string | null {
+  if (!dobIso) return null;
+  const dob = new Date(dobIso);
+  if (Number.isNaN(dob.getTime())) return 'Enter a valid date.';
+  const today = new Date();
+  if (dob > today) return 'Date of birth cannot be in the future.';
+  const age = ageOn(dobIso, today);
+  if (age < MIN_AGE) return `You must be at least ${MIN_AGE} years old to apply.`;
+  if (age > MAX_AGE) return `Civil-service entry is capped at ${MAX_AGE} years old.`;
+  return null;
+}
+
 /**
  * Auto-formats raw input into GHA-XXXXXXXXX-X as the user types.
  * Strips everything except digits and the leading GHA prefix, then
@@ -142,14 +172,24 @@ export function StepPersonal({ application, data, onChange }: StepPersonalProps)
 
       {/* DOB + Gender */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <Field label="Date of birth" htmlFor="date_of_birth" required>
+        <Field
+          label="Date of birth"
+          htmlFor="date_of_birth"
+          required
+          hint={`Must be between ${MIN_AGE} and ${MAX_AGE} years old.`}
+          error={dobError(data.date_of_birth ?? '')}
+        >
           <input
             id="date_of_birth"
             type="date"
             required
             value={data.date_of_birth ?? ''}
             onChange={(e) => onChange({ date_of_birth: e.target.value })}
-            className={inputCls}
+            max={todayIso()}
+            aria-invalid={dobError(data.date_of_birth ?? '') ? true : undefined}
+            className={
+              dobError(data.date_of_birth ?? '') ? inputClsError : inputCls
+            }
           />
         </Field>
 
