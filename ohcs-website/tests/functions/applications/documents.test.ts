@@ -57,7 +57,10 @@ function ctx(req: Request, docTypeId: string, db?: D1Database, envOverrides?: Pa
 
 function buildUploadRequest(body: Uint8Array, mime: string, path = 'national_id'): Request {
   const fd = new FormData();
-  fd.append('file', new Blob([body], { type: mime }), 'card.pdf');
+  // `body as BlobPart` — Uint8Array IS a valid BlobPart at runtime; the
+  // strict-tsc complaint is about ArrayBufferLike vs ArrayBuffer (Shared
+  // ArrayBuffer narrowing) which doesn't apply here.
+  fd.append('file', new Blob([body as BlobPart], { type: mime }), 'card.pdf');
   return new Request(`https://x/api/applications/me/documents/${path}`, {
     method: 'POST',
     headers: { Cookie: SESSION_COOKIE },
