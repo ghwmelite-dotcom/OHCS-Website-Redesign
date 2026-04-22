@@ -73,3 +73,51 @@ export function rowToRequirement(row: ExerciseRequirementRow): ExerciseRequireme
     max_mb_override: row.max_mb_override,
   };
 }
+
+// ─── Applicant ───────────────────────────────────────────────────────────
+
+export type ApplicationStatus =
+  | 'draft'
+  | 'submitted'
+  | 'under_review'
+  | 'requires_action'
+  | 'shortlisted'
+  | 'rejected';
+
+export interface ApplicationFormData {
+  // Step 1
+  full_name?: string;
+  date_of_birth?: string;          // 'YYYY-MM-DD'
+  gender?: 'male' | 'female' | 'prefer_not_to_say';
+  nia_number?: string;             // Ghana Card 'GHA-XXXXXXXXX-X'
+  phone?: string;
+  postal_address?: string;
+  region?: string;
+  consent?: { agreed: boolean; agreed_at: number; ip?: string };
+
+  // Step 2 (eligibility — checkbox-only field stored in form_data)
+  holds_first_degree?: boolean;
+
+  // Step 3
+  highest_qualification?: 'first_degree' | 'pg_diploma' | 'masters' | 'phd';
+  field_of_study?: string;
+  institution?: string;
+  graduation_year?: number;
+  class_of_degree?: 'first' | 'second_upper' | 'second_lower' | 'third' | 'pass';
+  years_experience?: number;
+  current_employment?: string;
+  work_history?: string;
+}
+
+export interface Application {
+  id: string;
+  exercise_id: string;
+  email: string;
+  status: ApplicationStatus;
+  has_professional_qualification: boolean;
+  is_pwd: boolean;
+  form_data: ApplicationFormData;
+  created_at: number;
+  submitted_at: number | null;
+  last_saved_at: number;
+}

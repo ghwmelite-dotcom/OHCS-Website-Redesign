@@ -19,6 +19,7 @@ import {
   Briefcase,
   Mail,
 } from 'lucide-react';
+import { StartApplicationModal } from '@/components/recruitment/start-application-modal';
 
 const PROCESS_STEPS = [
   {
@@ -58,6 +59,7 @@ export default function RecruitmentPage() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
+  const [startModalOpen, setStartModalOpen] = useState(false);
 
   // Check if recruitment window is open (synced from admin portal via localStorage)
   const [isOpen] = useState(() => {
@@ -207,13 +209,24 @@ export default function RecruitmentPage() {
                   Complete the form below to apply. You will receive a reference number to track your application.
                 </p>
               </div>
-              <div className="bg-white rounded-2xl border-2 border-border/40 p-8 shadow-sm">
-                <p className="text-center text-text-muted py-8">
-                  Application form will load here when connected to the backend.
-                  <br />
-                  <span className="text-sm text-text-muted/50 mt-2 block">Deadline: {deadline}</span>
+              <div className="bg-white rounded-2xl border-2 border-border/40 p-8 shadow-sm text-center">
+                <p className="text-base text-text-muted mb-6">
+                  Click below to start a new application or resume one in progress.
+                  We&apos;ll email you a secure link — no password required.
                 </p>
+                <button
+                  onClick={() => setStartModalOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white text-base font-semibold rounded-xl hover:bg-primary-light transition-colors"
+                >
+                  Start or Resume Application
+                </button>
+                <p className="text-xs text-text-muted/60 mt-4">Deadline: {deadline}</p>
               </div>
+              <StartApplicationModal
+                open={startModalOpen}
+                onClose={() => setStartModalOpen(false)}
+                exerciseId="ex-001"
+              />
             </div>
           </section>
         </>
