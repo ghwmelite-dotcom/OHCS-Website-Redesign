@@ -49,6 +49,12 @@ submitted
   ▼
 under_review
   │
+  ├─→ requires_action               (reviewer asked for re-upload of one or
+  │     │                            more docs; back to `submitted` on resubmit;
+  │     │                            auto → `vetting_failed` on deadline expiry)
+  │     ▼
+  │   submitted (cycles)
+  │
   ├─→ vetting_passed
   │     │ (applicant given X days from this transition to pay; X is per-exercise)
   │     ▼
