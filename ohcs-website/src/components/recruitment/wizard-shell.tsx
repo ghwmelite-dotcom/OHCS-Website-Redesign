@@ -14,18 +14,16 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Save,
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { logout, type SaveDraftInput } from '@/lib/applicant-api';
 import { useAutoSave } from '@/lib/use-auto-save';
 import type { Application, ApplicationFormData } from '@/types/recruitment';
 import { StepPersonal } from './step-personal';
 import { StepEligibility } from './step-eligibility';
 import { StepEducation } from './step-education';
-import { StepDocumentsStub } from './step-documents-stub';
+import { StepDocuments } from './step-documents';
 import { StepReview } from './step-review';
 
 /* ------------------------------------------------------------------ */
@@ -54,12 +52,9 @@ const STEP_TITLES: Record<number, string> = {
   1: 'Personal Details',
   2: 'Eligibility',
   3: 'Education & Experience',
-  4: 'Documents (Coming in Phase 3)',
+  4: 'Documents',
   5: 'Review & Submit',
 };
-
-const SUBMIT_DISABLED_TOOLTIP =
-  'Document uploads coming in Phase 3 — submission unlocks then.';
 
 /* ------------------------------------------------------------------ */
 /*  Working-copy state — survives step switches before autosave fires. */
@@ -211,7 +206,7 @@ export function WizardShell({ application, step, onStepChange }: WizardShellProp
       case 3:
         return <StepEducation data={working.formData} onChange={handleFormChange} />;
       case 4:
-        return <StepDocumentsStub />;
+        return <StepDocuments />;
       case 5:
         return (
           <StepReview
@@ -219,6 +214,7 @@ export function WizardShell({ application, step, onStepChange }: WizardShellProp
             data={working.formData}
             hasProfessionalQualification={working.has_professional_qualification}
             isPwd={working.is_pwd}
+            onChange={handleFormChange}
           />
         );
       default:
@@ -342,19 +338,8 @@ export function WizardShell({ application, step, onStepChange }: WizardShellProp
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </button>
             ) : (
-              <button
-                type="button"
-                disabled
-                title={SUBMIT_DISABLED_TOOLTIP}
-                aria-label={`Submit Application — ${SUBMIT_DISABLED_TOOLTIP}`}
-                className={cn(
-                  'inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl',
-                  'bg-gray-200 text-text-muted cursor-not-allowed opacity-70',
-                )}
-              >
-                <Save className="h-4 w-4" aria-hidden="true" />
-                Submit Application
-              </button>
+              // Submit lives inside <StepReview /> on step 5 — footer shows only Previous.
+              <span aria-hidden="true" />
             )}
           </div>
         </footer>

@@ -107,6 +107,9 @@ export interface ApplicationFormData {
   years_experience?: number;
   current_employment?: string;
   work_history?: string;
+
+  // Step 5 (declaration — collected on the Review screen, mirrors `consent` shape)
+  declaration?: { agreed: boolean; agreed_at: number };
 }
 
 export interface Application {
