@@ -24,11 +24,23 @@ bucket_name = "ohcs-recruitment-uploads"
 binding = "AI"
 
 # Non-secret env vars
+#
+# ─── EMAIL CONFIG (TEMPORARY) ───────────────────────────────────────
+# Sender is currently the Resend sandbox `onboarding@resend.dev`.
+# EMAIL_PROVIDER='resend' forces sendEmail() to skip MailChannels
+# entirely (MailChannels can't accept mail from a domain we don't own
+# DNS for). When OHCS infra adds the Domain Lockdown + SPF records on
+# ohcs.gov.gh, swap EMAIL_FROM to noreply@ohcs.gov.gh and set
+# EMAIL_PROVIDER='auto' (or remove it). See docs/email-setup.md.
+# RESEND_API_KEY is set as a secret via:
+#   npx wrangler pages secret put RESEND_API_KEY --project-name=ohcs
+# ────────────────────────────────────────────────────────────────────
 [vars]
 APP_NAME = "OHCS Recruitment"
 APP_ENV = "production"
-EMAIL_FROM = "noreply@ohcs.gov.gh"
-EMAIL_FROM_NAME = "OHCS Recruitment"
+EMAIL_FROM = "onboarding@resend.dev"
+EMAIL_FROM_NAME = "OHCS Recruitment (Test)"
+EMAIL_PROVIDER = "resend"
 
 # ──────────────────────────────────────────────────────────────────────
 # Preview environment (Cloudflare Pages preview deployments)
@@ -54,5 +66,6 @@ binding = "AI"
 [env.preview.vars]
 APP_NAME = "OHCS Recruitment (Preview)"
 APP_ENV = "preview"
-EMAIL_FROM = "noreply@ohcs.gov.gh"
+EMAIL_FROM = "onboarding@resend.dev"
 EMAIL_FROM_NAME = "OHCS Recruitment (Preview)"
+EMAIL_PROVIDER = "resend"

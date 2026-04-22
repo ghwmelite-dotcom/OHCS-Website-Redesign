@@ -85,3 +85,43 @@ describe('sendEmail', () => {
     ).rejects.toThrow(/mailchannels failed/i);
   });
 });
+
+describe('sendEmail provider override', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('uses Resend directly when EMAIL_PROVIDER=resend (skips MailChannels)', async () => {
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify({ id: 'r1' }), { status: 200 }));
+
+    const env = { ...mockEnv(), EMAIL_PROVIDER: 'resend' as const, RESEND_API_KEY: 'test-key' };
+    await sendEmail(env, { to: 'kofi@example.com', subject: 'Hello', html: '<p>Hi</p>' });
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(fetchMock.mock.calls[0]![0]).toBe('https://api.resend.com/emails');
+  });
+
+  it('throws when EMAIL_PROVIDER=resend but RESEND_API_KEY is missing', async () => {
+    const env = { ...mockEnv(), EMAIL_PROVIDER: 'resend' as const };
+    await expect(
+      sendEmail(env, { to: 'kofi@example.com', subject: 'X', html: '<p>X</p>' }),
+    ).rejects.toThrow(/EMAIL_PROVIDER=resend but RESEND_API_KEY/);
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
+  it('uses MailChannels only (no Resend fallback) when EMAIL_PROVIDER=mailchannels', async () => {
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    fetchMock.mockResolvedValueOnce(new Response('rejected', { status: 401 }));
+
+    const env = { ...mockEnv(), EMAIL_PROVIDER: 'mailchannels' as const, RESEND_API_KEY: 'test-key' };
+    await expect(
+      sendEmail(env, { to: 'kofi@example.com', subject: 'X', html: '<p>X</p>' }),
+    ).rejects.toThrow(/mailchannels failed \(401\)/);
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(fetchMock.mock.calls[0]![0]).toBe('https://api.mailchannels.net/tx/v1/send');
+  });
+});

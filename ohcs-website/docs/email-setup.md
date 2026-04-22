@@ -1,8 +1,74 @@
-# Email Setup (MailChannels) for OHCS Recruitment
+# Email Setup for OHCS Recruitment
 
 The recruitment system sends transactional email (magic links, status
-notifications) via Cloudflare's free MailChannels integration. For the
-sender domain `ohcs.gov.gh` to be accepted by MailChannels and not
+notifications). It supports two transports:
+
+- **MailChannels** (free via Cloudflare, requires DNS setup on the
+  sending domain — production target)
+- **Resend** (free tier, sandbox sender works without DNS — current
+  preview/dev configuration)
+
+Selection is via the `EMAIL_PROVIDER` env var in `wrangler.toml`:
+`'auto'` (default — MailChannels primary, Resend fallback),
+`'resend'` (Resend only, skips MailChannels), or `'mailchannels'`
+(MailChannels only, no fallback).
+
+---
+
+## Current state (preview / pre-launch)
+
+`wrangler.toml` is set to:
+
+    EMAIL_FROM = "onboarding@resend.dev"
+    EMAIL_FROM_NAME = "OHCS Recruitment (Test)"
+    EMAIL_PROVIDER = "resend"
+
+`RESEND_API_KEY` is stored as a Cloudflare Pages secret. To rotate or
+re-set:
+
+    npx wrangler pages secret put RESEND_API_KEY --project-name=ohcs
+
+**Limitation of the Resend sandbox sender:** Resend only delivers mail
+from `onboarding@resend.dev` to email addresses that are verified on
+the Resend account. To add OHCS staff for testing, log in at
+https://resend.com/emails and verify their addresses individually.
+
+A manual smoke-test endpoint exists at
+`POST /api/admin/dev/test-email` (admin-gated) — useful for confirming
+the pipeline works without waiting for the magic-link UI:
+
+    curl -X POST \
+      -H "X-Admin-User-Email: admin@ohcs.gov.gh" \
+      -H "X-Admin-User-Role: super_admin" \
+      -H "content-type: application/json" \
+      -d '{"to":"you@example.com"}' \
+      https://ohcs.pages.dev/api/admin/dev/test-email
+
+---
+
+## Switching to ohcs.gov.gh (production)
+
+When the OHCS infra team has provisioned DNS on `ohcs.gov.gh`, switch
+to either Resend-with-custom-domain (simpler) or MailChannels (free
+via Cloudflare).
+
+### Path A: Resend with custom domain (recommended)
+
+1. Add `ohcs.gov.gh` at https://resend.com/domains
+2. Resend gives 3 TXT records — paste them into the `ohcs.gov.gh` DNS
+   zone (DKIM signing key, return-path CNAME, optional DMARC)
+3. Wait 5-60 minutes for verification to flip to "Verified"
+4. In `wrangler.toml`:
+
+       EMAIL_FROM = "noreply@ohcs.gov.gh"
+       EMAIL_FROM_NAME = "OHCS Recruitment"
+       EMAIL_PROVIDER = "resend"
+
+5. Redeploy. Send to any recipient now works.
+
+### Path B: MailChannels (free, requires more DNS)
+
+For the sender domain `ohcs.gov.gh` to be accepted by MailChannels and not
 rejected as spam by recipients, the following DNS records must exist
 on the `ohcs.gov.gh` zone.
 

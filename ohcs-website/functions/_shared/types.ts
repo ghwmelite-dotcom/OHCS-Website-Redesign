@@ -8,6 +8,7 @@ export interface Env {
   APP_ENV: 'production' | 'preview' | 'development';
   EMAIL_FROM: string;
   EMAIL_FROM_NAME: string;
+  EMAIL_PROVIDER?: 'auto' | 'resend' | 'mailchannels';
   RESEND_API_KEY?: string;
 }
 
