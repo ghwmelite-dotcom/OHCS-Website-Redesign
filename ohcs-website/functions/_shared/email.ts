@@ -46,6 +46,24 @@ async function sendViaResend(env: Env, input: SendEmailInput): Promise<Response>
 }
 
 export async function sendEmail(env: Env, input: SendEmailInput): Promise<void> {
+  const provider = env.EMAIL_PROVIDER ?? 'auto';
+
+  if (provider === 'resend') {
+    if (!env.RESEND_API_KEY) {
+      throw new Error('EMAIL_PROVIDER=resend but RESEND_API_KEY is not set');
+    }
+    const rs = await sendViaResend(env, input);
+    if (rs.ok) return;
+    throw new Error(`resend failed (${rs.status}): ${await rs.text()}`);
+  }
+
+  if (provider === 'mailchannels') {
+    const mc = await sendViaMailChannels(env, input);
+    if (mc.ok) return;
+    throw new Error(`mailchannels failed (${mc.status}): ${await mc.text()}`);
+  }
+
+  // provider === 'auto' — MailChannels primary, Resend fallback if key set
   const mc = await sendViaMailChannels(env, input);
   if (mc.ok) return;
 
