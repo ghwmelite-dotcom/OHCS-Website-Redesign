@@ -108,3 +108,49 @@ export async function putExerciseRequirements(
   );
   return data;
 }
+
+// ─── Exercises (Phase 3.5 — moved out of localStorage into D1) ──────────
+
+export type ExerciseStatus = 'draft' | 'active' | 'closed' | 'completed';
+
+export interface AdminExercise {
+  id: string;
+  name: string;
+  description: string | null;
+  start_date: string;
+  end_date: string;
+  status: ExerciseStatus;
+  positions: number;
+  applications: number;
+}
+
+export async function listExercises(): Promise<AdminExercise[]> {
+  const { data } = await request<{ data: AdminExercise[] }>('/api/admin/exercises');
+  return data;
+}
+
+export interface CreateExerciseInput {
+  name: string;
+  description?: string;
+  start_date: string;
+  end_date: string;
+  positions?: number;
+}
+
+export async function createExercise(input: CreateExerciseInput): Promise<AdminExercise> {
+  const { data } = await request<{ data: AdminExercise }>('/api/admin/exercises', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+  return data;
+}
+
+export async function patchExercise(
+  id: string,
+  patch: Partial<CreateExerciseInput> & { status?: ExerciseStatus },
+): Promise<void> {
+  await request(`/api/admin/exercises/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(patch),
+  });
+}

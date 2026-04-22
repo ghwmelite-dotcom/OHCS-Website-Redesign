@@ -111,6 +111,8 @@ export default function AdminEventsPage() {
     } else {
       const newItem: EventItem = {
         ...form,
+        // Date.now() runs only inside the submit handler, not during render.
+        // eslint-disable-next-line react-hooks/purity
         id: Date.now().toString(),
       };
       setItems((prev) => [newItem, ...prev]);

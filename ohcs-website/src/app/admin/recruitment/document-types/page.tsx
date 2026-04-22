@@ -186,6 +186,8 @@ export default function DocumentTypesPage() {
   }, []);
 
   useEffect(() => {
+    // Async fetch + setState pattern; the rule still flags the fetch wrapper.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh();
   }, [refresh]);
 

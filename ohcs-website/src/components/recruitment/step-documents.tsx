@@ -29,6 +29,8 @@ export function StepDocuments() {
 
   // Initial load — preserve loading state on first mount only
   useEffect(() => {
+    // Async fetch + setState pattern; the rule still flags the fetch wrapper.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh();
   }, [refresh]);
 

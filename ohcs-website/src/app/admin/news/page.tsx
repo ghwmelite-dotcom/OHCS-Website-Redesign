@@ -142,6 +142,8 @@ export default function AdminNewsPage() {
     } else {
       const newItem: NewsItem = {
         ...form,
+        // Date.now() runs only inside the submit handler, not during render.
+        // eslint-disable-next-line react-hooks/purity
         id: Date.now().toString(),
         publishedAt: form.publishedAt || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
       };

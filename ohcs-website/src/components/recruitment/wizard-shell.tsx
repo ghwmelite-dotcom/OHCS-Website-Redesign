@@ -84,6 +84,8 @@ export function WizardShell({ application, step, onStepChange }: WizardShellProp
 
   // Re-base when the upstream application reference changes (e.g. retry/refetch).
   useEffect(() => {
+    // Sync external prop into local working copy; legitimate effect-driven setState.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setWorking({
       formData: { ...application.form_data },
       has_professional_qualification: application.has_professional_qualification,

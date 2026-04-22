@@ -85,6 +85,8 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     getAdminUser().then(setUser);
+    // Reads localStorage on mount; lazy useState() init would crash SSR.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRecentActivity(getAuditLog().slice(0, 5));
   }, []);
 
