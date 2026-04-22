@@ -134,7 +134,7 @@ export default function TrackPage() {
               <input
                 id="referenceNumber"
                 type="text"
-                placeholder="OHCS-XXX-XXXXXXXX-XXXX"
+                placeholder="OHCS-2026-00001 or OHCS-CMP-20260418-A7F3"
                 className={cn(
                   'w-full px-4 py-3 rounded-xl border-2 bg-white text-base transition-colors font-mono',
                   errors.referenceNumber
@@ -148,7 +148,9 @@ export default function TrackPage() {
                 <p className="mt-1.5 text-sm text-red-500">{errors.referenceNumber.message}</p>
               )}
               <p className="mt-1 text-xs text-text-muted">
-                Format: OHCS-XXX-YYYYMMDD-XXXX
+                Recruitment applications: <span className="font-mono">OHCS-YYYY-NNNNN</span>
+                {' · '}
+                Complaints / RTI: <span className="font-mono">OHCS-XXX-YYYYMMDD-XXXX</span>
               </p>
             </div>
 
