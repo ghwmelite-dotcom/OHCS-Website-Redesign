@@ -34,6 +34,35 @@ const GENDERS: ReadonlyArray<{ value: Gender; label: string }> = [
 ];
 
 const NIA_PATTERN = '^GHA-[0-9]{9}-[0-9]$';
+const NIA_REGEX = /^GHA-\d{9}-\d$/;
+
+/** True if the (non-empty) value looks like a valid Ghana Card number. */
+function isNiaValid(value: string): boolean {
+  return NIA_REGEX.test(value);
+}
+
+/**
+ * Auto-formats raw input into GHA-XXXXXXXXX-X as the user types.
+ * Strips everything except digits and the leading GHA prefix, then
+ * re-inserts hyphens at the correct positions and caps at 15 chars.
+ */
+function formatNia(raw: string): string {
+  // Strip everything except letters and digits, uppercase
+  const cleaned = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (cleaned.length === 0) return '';
+
+  // Force the prefix to "GHA"
+  let body = cleaned;
+  if (body.startsWith('GHA')) body = body.slice(3);
+  // If the user typed digits without the GHA prefix, treat the whole
+  // string as the digit body
+  body = body.replace(/[^0-9]/g, '');
+
+  const digits = body.slice(0, 10); // 9 main + 1 check
+  if (digits.length === 0) return 'GHA-';
+  if (digits.length <= 9) return `GHA-${digits}`;
+  return `GHA-${digits.slice(0, 9)}-${digits.slice(9, 10)}`;
+}
 
 interface StepPersonalProps {
   application: Application;
@@ -132,17 +161,32 @@ export function StepPersonal({ application, data, onChange }: StepPersonalProps)
         <Field
           label="NIA / Ghana Card number"
           htmlFor="nia_number"
-          hint="Format: GHA-XXXXXXXXX-X"
+          hint="Format: GHA-XXXXXXXXX-X (15 characters total)"
+          error={
+            data.nia_number && data.nia_number.length > 0 && !isNiaValid(data.nia_number)
+              ? 'Enter a valid Ghana Card number — GHA-, then 9 digits, a hyphen, and the check digit.'
+              : null
+          }
         >
           <input
             id="nia_number"
             type="text"
             value={data.nia_number ?? ''}
-            onChange={(e) => onChange({ nia_number: e.target.value.toUpperCase() })}
+            onChange={(e) => onChange({ nia_number: formatNia(e.target.value) })}
             placeholder="GHA-123456789-0"
             pattern={NIA_PATTERN}
             inputMode="text"
-            className={inputCls}
+            maxLength={15}
+            aria-invalid={
+              data.nia_number && data.nia_number.length > 0 && !isNiaValid(data.nia_number)
+                ? true
+                : undefined
+            }
+            className={
+              data.nia_number && data.nia_number.length > 0 && !isNiaValid(data.nia_number)
+                ? inputClsError
+                : inputCls
+            }
           />
         </Field>
 
@@ -216,15 +260,19 @@ export function StepPersonal({ application, data, onChange }: StepPersonalProps)
 const inputCls =
   'w-full px-4 py-2.5 rounded-xl border-2 border-border/60 bg-white text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10';
 
+const inputClsError =
+  'w-full px-4 py-2.5 rounded-xl border-2 border-red-400 bg-white text-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200';
+
 interface FieldProps {
   label: string;
   htmlFor: string;
   hint?: string;
+  error?: string | null;
   required?: boolean;
   children: React.ReactNode;
 }
 
-function Field({ label, htmlFor, hint, required, children }: FieldProps) {
+function Field({ label, htmlFor, hint, error, required, children }: FieldProps) {
   return (
     <div>
       <label
@@ -235,7 +283,13 @@ function Field({ label, htmlFor, hint, required, children }: FieldProps) {
         {required && <span className="text-red-600 ml-0.5">*</span>}
       </label>
       {children}
-      {hint && <p className="mt-1 text-xs text-text-muted">{hint}</p>}
+      {error ? (
+        <p className="mt-1 text-xs text-red-700" role="alert">
+          {error}
+        </p>
+      ) : (
+        hint && <p className="mt-1 text-xs text-text-muted">{hint}</p>
+      )}
     </div>
   );
 }
