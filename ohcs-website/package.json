@@ -13,7 +13,7 @@
     "pages:build": "next build",
     "pages:deploy": "next build && npx wrangler pages deploy out --project-name=ohcs",
     "pages:preview": "next build && npx wrangler pages dev out",
-    "pages:dev": "npx wrangler pages dev out --d1=DB --r2=UPLOADS --ai=AI",
+    "pages:dev": "npx wrangler pages dev out",
     "migrate": "tsx scripts/migrate.ts",
     "migrate:remote": "tsx scripts/migrate.ts --remote"
   },
