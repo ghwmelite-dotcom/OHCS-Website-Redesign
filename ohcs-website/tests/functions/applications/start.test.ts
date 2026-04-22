@@ -35,6 +35,11 @@ describe('POST /api/applications/start', () => {
   it('issues a magic-link token and sends email when input is valid', async () => {
     const db = makeD1([
       {
+        sql: 'SELECT status FROM recruitment_exercises WHERE id = ?',
+        binds: ['ex-001'],
+        first: { status: 'active' },
+      },
+      {
         sql: 'INSERT INTO magic_link_tokens (token, email, exercise_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)',
         run: {},
       },
@@ -57,5 +62,32 @@ describe('POST /api/applications/start', () => {
   it('returns 400 on missing exercise_id', async () => {
     const res = await onRequestPost(ctx(startReq({ email: 'kofi@example.com' })));
     expect(res.status).toBe(400);
+  });
+
+  it('returns 404 when exercise does not exist', async () => {
+    const db = makeD1([
+      {
+        sql: 'SELECT status FROM recruitment_exercises WHERE id = ?',
+        binds: ['ex-ghost'],
+      },
+    ]);
+    const res = await onRequestPost(
+      ctx(startReq({ email: 'kofi@example.com', exercise_id: 'ex-ghost' }), db),
+    );
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 409 when exercise is not active', async () => {
+    const db = makeD1([
+      {
+        sql: 'SELECT status FROM recruitment_exercises WHERE id = ?',
+        binds: ['ex-002'],
+        first: { status: 'completed' },
+      },
+    ]);
+    const res = await onRequestPost(
+      ctx(startReq({ email: 'kofi@example.com', exercise_id: 'ex-002' }), db),
+    );
+    expect(res.status).toBe(409);
   });
 });
