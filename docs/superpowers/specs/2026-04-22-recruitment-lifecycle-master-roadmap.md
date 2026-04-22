@@ -98,6 +98,7 @@ type ApplicationStatus =
   | 'draft'
   | 'submitted'
   | 'under_review'
+  | 'requires_action'   // reviewer asked for resubmission of one or more docs
   | 'vetting_passed'
   | 'vetting_failed'
   | 'payment_pending'
