@@ -1,13 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { audit } from '@/lib/audit-logger';
 import {
+  listExercises,
+  createExercise,
+  patchExercise,
+  type AdminExercise,
+  type ExerciseStatus,
+} from '@/lib/recruitment-api';
+import {
   LayoutDashboard, FolderOpen, Kanban, GraduationCap, MessageSquare,
   BarChart3, ShieldAlert, Trophy, Plus, X, Calendar, CheckCircle,
-  Play, Pause, Lock, FileText, Users,
+  Play, Pause, Lock, FileText, Users, Loader2,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -52,21 +59,8 @@ function RecruitmentTabs({ current }: { current: string }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Types & Data                                                       */
+/*  Status config                                                      */
 /* ------------------------------------------------------------------ */
-type ExerciseStatus = 'draft' | 'active' | 'closed' | 'completed';
-
-interface Exercise {
-  id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  status: ExerciseStatus;
-  positions: number;
-  applications: number;
-}
-
 const STATUS_CONFIG: Record<ExerciseStatus, { label: string; color: string; icon: typeof Play }> = {
   draft: { label: 'Draft', color: 'bg-gray-100 text-gray-700', icon: FileText },
   active: { label: 'Active', color: 'bg-green-100 text-green-800', icon: Play },
@@ -74,99 +68,80 @@ const STATUS_CONFIG: Record<ExerciseStatus, { label: string; color: string; icon
   completed: { label: 'Completed', color: 'bg-blue-100 text-blue-800', icon: CheckCircle },
 };
 
-const INITIAL_EXERCISES: Exercise[] = [
-  {
-    id: 'ex-001',
-    name: '2026 Graduate Entrance Examination',
-    description: 'Civil Service Online Graduate Entrance Examination for new graduates seeking to join the public service.',
-    startDate: '2026-03-15',
-    endDate: '2026-04-30',
-    status: 'active',
-    positions: 24,
-    applications: 371,
-  },
-  {
-    id: 'ex-002',
-    name: '2025 Senior Officer Recruitment',
-    description: 'Recruitment of experienced professionals for senior officer positions across MDAs.',
-    startDate: '2025-09-01',
-    endDate: '2025-11-30',
-    status: 'completed',
-    positions: 12,
-    applications: 198,
-  },
-  {
-    id: 'ex-003',
-    name: '2026 Technical Specialist Drive',
-    description: 'Targeted recruitment for IT, Engineering, and Scientific Officer roles in technical agencies.',
-    startDate: '2026-05-01',
-    endDate: '2026-06-30',
-    status: 'draft',
-    positions: 8,
-    applications: 0,
-  },
-];
-
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
 /* ------------------------------------------------------------------ */
 export default function ExercisesPage() {
-  const [exercises, setExercises] = useState<Exercise[]>(INITIAL_EXERCISES);
+  const [exercises, setExercises] = useState<AdminExercise[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast] = useState('');
   const [form, setForm] = useState({ name: '', description: '', startDate: '', endDate: '' });
 
+  const refresh = useCallback(async () => {
+    try {
+      setError(null);
+      const list = await listExercises();
+      setExercises(list);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load exercises');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch wrapper
+    void refresh();
+  }, [refresh]);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- setToast inside setTimeout, not sync
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(''), 3000);
     return () => clearTimeout(t);
   }, [toast]);
 
-  function handleCreate() {
+  async function handleCreate() {
     if (!form.name || !form.startDate || !form.endDate) return;
-    const newEx: Exercise = {
-      id: `ex-${Date.now()}`,
-      name: form.name,
-      description: form.description,
-      startDate: form.startDate,
-      endDate: form.endDate,
-      status: 'draft',
-      positions: 0,
-      applications: 0,
-    };
-    setExercises((prev) => [newEx, ...prev]);
-    audit('create', 'recruitment_exercise', newEx.id, newEx.name, 'Created recruitment exercise');
-    setForm({ name: '', description: '', startDate: '', endDate: '' });
-    setShowModal(false);
-    setToast('Exercise created successfully.');
+    try {
+      const created = await createExercise({
+        name: form.name,
+        description: form.description || undefined,
+        start_date: form.startDate,
+        end_date: form.endDate,
+      });
+      audit('create', 'recruitment_exercise', created.id, created.name, 'Created recruitment exercise');
+      setForm({ name: '', description: '', startDate: '', endDate: '' });
+      setShowModal(false);
+      setToast('Exercise created successfully.');
+      await refresh();
+    } catch (err) {
+      setToast(err instanceof Error ? err.message : 'Failed to create exercise');
+    }
   }
 
-  function toggleStatus(id: string) {
-    setExercises((prev) =>
-      prev.map((ex) => {
-        if (ex.id !== id) return ex;
-        const transitions: Record<ExerciseStatus, ExerciseStatus> = {
-          draft: 'active',
-          active: 'closed',
-          closed: 'completed',
-          completed: 'completed',
-        };
-        const next = transitions[ex.status];
+  async function toggleStatus(ex: AdminExercise) {
+    const transitions: Record<ExerciseStatus, ExerciseStatus> = {
+      draft: 'active',
+      active: 'closed',
+      closed: 'completed',
+      completed: 'completed',
+    };
+    const next = transitions[ex.status];
+    if (next === ex.status) return;
 
-        // Sync to localStorage so the public recruitment page can detect it
-        if (next === 'active') {
-          localStorage.setItem('ohcs_recruitment_open', 'true');
-          localStorage.setItem('ohcs_recruitment_deadline', ex.endDate);
-        } else if (next === 'closed' || next === 'completed') {
-          localStorage.setItem('ohcs_recruitment_open', 'false');
-        }
-
-        const actionType = next === 'active' ? 'activate' : next === 'closed' ? 'deactivate' : 'status_change';
-        audit(actionType, 'recruitment_exercise', ex.id, ex.name, `Exercise ${next === 'active' ? 'activated' : next === 'closed' ? 'closed' : 'completed'}`);
-        setToast(`Exercise ${next === 'active' ? 'activated' : next === 'closed' ? 'closed' : 'completed'}.`);
-        return { ...ex, status: next };
-      }),
-    );
+    try {
+      await patchExercise(ex.id, { status: next });
+      const actionType = next === 'active' ? 'activate' : next === 'closed' ? 'deactivate' : 'status_change';
+      const verb = next === 'active' ? 'activated' : next === 'closed' ? 'closed' : 'completed';
+      audit(actionType, 'recruitment_exercise', ex.id, ex.name, `Exercise ${verb}`);
+      setToast(`Exercise ${verb}.`);
+      await refresh();
+    } catch (err) {
+      setToast(err instanceof Error ? err.message : 'Failed to update exercise');
+    }
   }
 
   return (
@@ -198,6 +173,19 @@ export default function ExercisesPage() {
         </div>
       )}
 
+      {/* Loading + error states */}
+      {loading && (
+        <div className="flex items-center justify-center py-16 text-text-muted">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </div>
+      )}
+      {error && !loading && (
+        <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-6 text-sm text-red-800">
+          Couldn&apos;t load exercises: {error}{' '}
+          <button onClick={() => void refresh()} className="underline font-semibold">Retry</button>
+        </div>
+      )}
+
       {/* Exercise Cards */}
       <div className="grid gap-6">
         {exercises.map((ex) => {
@@ -226,7 +214,7 @@ export default function ExercisesPage() {
                   <div className="flex flex-wrap items-center gap-6 text-sm text-text-muted">
                     <span className="flex items-center gap-1.5">
                       <Calendar className="h-4 w-4" aria-hidden="true" />
-                      {ex.startDate} &mdash; {ex.endDate}
+                      {ex.start_date} &mdash; {ex.end_date}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <FileText className="h-4 w-4" aria-hidden="true" />
@@ -248,7 +236,7 @@ export default function ExercisesPage() {
                   </Link>
                   {ex.status !== 'completed' && (
                     <button
-                      onClick={() => toggleStatus(ex.id)}
+                      onClick={() => void toggleStatus(ex)}
                       className={cn(
                         'inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition-colors',
                         ex.status === 'draft'

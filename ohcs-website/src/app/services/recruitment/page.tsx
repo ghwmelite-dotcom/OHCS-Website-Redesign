@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PageHero } from '@/components/layout/page-hero';
 import { FloatingShapes } from '@/components/home/floating-shapes';
 import { KenteSectionDivider } from '@/components/kente/kente-section-divider';
@@ -55,21 +55,39 @@ const SCAM_WARNINGS = [
   'Report suspected fraud to info@ohcs.gov.gh or call +233 (0)30 266 5421',
 ];
 
+interface ActiveExercise {
+  id: string;
+  name: string;
+  end_date: string;
+}
+
 export default function RecruitmentPage() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
   const [startModalOpen, setStartModalOpen] = useState(false);
+  const [activeExercise, setActiveExercise] = useState<ActiveExercise | null>(null);
+  const [exerciseLoaded, setExerciseLoaded] = useState(false);
 
-  // Check if recruitment window is open (synced from admin portal via localStorage)
-  const [isOpen] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('ohcs_recruitment_open') === 'true';
-  });
-  const [deadline] = useState(() => {
-    if (typeof window === 'undefined') return '';
-    return localStorage.getItem('ohcs_recruitment_deadline') ?? '30 April 2026';
-  });
+  // Source of truth for "is recruitment open" is now D1 via /api/exercises/active.
+  // Falls through to "no active exercise" on any error or 404.
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on mount
+  useEffect(() => {
+    fetch('/api/exercises/active')
+      .then(async (res) => {
+        if (!res.ok) return null;
+        const body = (await res.json()) as { data: ActiveExercise };
+        return body.data;
+      })
+      .catch(() => null)
+      .then((data) => {
+        setActiveExercise(data);
+        setExerciseLoaded(true);
+      });
+  }, []);
+
+  const isOpen = activeExercise !== null;
+  const deadline = activeExercise?.end_date ?? '';
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -222,11 +240,13 @@ export default function RecruitmentPage() {
                 </button>
                 <p className="text-xs text-text-muted/60 mt-4">Deadline: {deadline}</p>
               </div>
-              <StartApplicationModal
-                open={startModalOpen}
-                onClose={() => setStartModalOpen(false)}
-                exerciseId="ex-001"
-              />
+              {activeExercise && (
+                <StartApplicationModal
+                  open={startModalOpen}
+                  onClose={() => setStartModalOpen(false)}
+                  exerciseId={activeExercise.id}
+                />
+              )}
             </div>
           </section>
         </>
