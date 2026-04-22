@@ -41,6 +41,31 @@ function isNiaValid(value: string): boolean {
   return NIA_REGEX.test(value);
 }
 
+/** Ghanaian mobile number — accepts either local (0XXXXXXXXX) or
+ * international (+233XXXXXXXXX) form. Permits any operator prefix. */
+const PHONE_REGEX = /^(0\d{9}|\+233\d{9})$/;
+
+function isPhoneValid(value: string): boolean {
+  return PHONE_REGEX.test(value);
+}
+
+/**
+ * Normalises raw phone input by stripping spaces, hyphens, parens,
+ * and any '+' that isn't at the very start. Caps at 13 chars
+ * (`+233XXXXXXXXX`) so the user can't keep typing past a valid number.
+ */
+function formatPhone(raw: string): string {
+  // Preserve a leading '+' only if it's the very first character
+  const leadingPlus = raw.trimStart().startsWith('+');
+  // Strip everything except digits
+  const digits = raw.replace(/[^\d]/g, '');
+  if (digits.length === 0) return leadingPlus ? '+' : '';
+
+  // If user typed +233..., keep the +
+  if (leadingPlus) return `+${digits}`.slice(0, 13);
+  return digits.slice(0, 10);
+}
+
 /**
  * Auto-formats raw input into GHA-XXXXXXXXX-X as the user types.
  * Strips everything except digits and the leading GHA prefix, then
@@ -190,15 +215,33 @@ export function StepPersonal({ application, data, onChange }: StepPersonalProps)
           />
         </Field>
 
-        <Field label="Phone number" htmlFor="phone">
+        <Field
+          label="Phone number"
+          htmlFor="phone"
+          hint="0XXXXXXXXX (local) or +233XXXXXXXXX (international)"
+          error={
+            data.phone && data.phone.length > 0 && !isPhoneValid(data.phone)
+              ? 'Enter a valid Ghana mobile number — 10 digits starting with 0, or +233 followed by 9 digits.'
+              : null
+          }
+        >
           <input
             id="phone"
             type="tel"
             value={data.phone ?? ''}
-            onChange={(e) => onChange({ phone: e.target.value })}
+            onChange={(e) => onChange({ phone: formatPhone(e.target.value) })}
             autoComplete="tel"
-            placeholder="+233 XX XXX XXXX"
-            className={inputCls}
+            placeholder="0241234567 or +233241234567"
+            inputMode="tel"
+            maxLength={13}
+            aria-invalid={
+              data.phone && data.phone.length > 0 && !isPhoneValid(data.phone) ? true : undefined
+            }
+            className={
+              data.phone && data.phone.length > 0 && !isPhoneValid(data.phone)
+                ? inputClsError
+                : inputCls
+            }
           />
         </Field>
       </div>
