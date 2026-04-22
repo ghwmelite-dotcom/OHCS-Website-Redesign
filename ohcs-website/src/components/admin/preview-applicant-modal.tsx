@@ -69,14 +69,9 @@ export function PreviewApplicantModal({
   const [hasProQual, setHasProQual] = useState(false);
   const [isPwd, setIsPwd] = useState(false);
 
-  /* Reset toggles every time the modal opens so previews are always
-     deterministic from the admin's perspective. */
-  useEffect(() => {
-    if (open) {
-      setHasProQual(false);
-      setIsPwd(false);
-    }
-  }, [open]);
+  /* Toggles default to false because the parent passes a fresh `key`
+     when opening the modal — React fully remounts and state resets
+     deterministically without a setState-in-effect anti-pattern. */
 
   /* ESC to close — only attach the listener while open. */
   useEffect(() => {

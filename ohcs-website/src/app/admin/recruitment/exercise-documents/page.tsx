@@ -684,6 +684,7 @@ function ConfigureRequirements({ exerciseId }: { exerciseId: string }) {
       )}
 
       <PreviewApplicantModal
+        key={previewOpen ? 'open' : 'closed'}
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
         documentTypes={docTypes}
