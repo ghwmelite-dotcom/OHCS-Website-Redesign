@@ -79,13 +79,19 @@ export const recruitmentFormSchema = z.object({
     .max(5000, 'Cover letter must be 5 000 characters or fewer'),
 });
 
+// Accept either the legacy submission format (complaints/RTI) OR the
+// recruitment application format (OHCS-YYYY-NNNNN). The /track page
+// branches at runtime based on which one matched.
+const LEGACY_REF = /^OHCS-[A-Z]{3}-\d{8}-[A-Z0-9]{4}$/;
+const RECRUITMENT_REF = /^OHCS-\d{4}-\d+$/;
+
 export const trackFormSchema = z.object({
   referenceNumber: z
     .string()
     .min(1, 'Reference number is required')
-    .regex(
-      /^OHCS-[A-Z]{3}-\d{8}-[A-Z0-9]{4}$/,
-      'Reference number must follow the format OHCS-XXX-YYYYMMDD-XXXX',
+    .refine(
+      (v) => LEGACY_REF.test(v) || RECRUITMENT_REF.test(v),
+      'Enter a valid reference number (OHCS-XXX-YYYYMMDD-XXXX or OHCS-YYYY-NNNNN)',
     ),
   contact: z.string().min(1, 'Email address or phone number is required'),
 });

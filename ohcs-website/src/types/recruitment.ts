@@ -107,6 +107,9 @@ export interface ApplicationFormData {
   years_experience?: number;
   current_employment?: string;
   work_history?: string;
+
+  // Step 5 (declaration — collected on the Review screen, mirrors `consent` shape)
+  declaration?: { agreed: boolean; agreed_at: number };
 }
 
 export interface Application {
@@ -120,4 +123,42 @@ export interface Application {
   created_at: number;
   submitted_at: number | null;
   last_saved_at: number;
+}
+
+// ─── Documents (Phase 3) ─────────────────────────────────────────────────
+
+export type AiVerdict = 'passed' | 'flagged' | 'unchecked';
+
+export interface ApplicationDocument {
+  id: string;
+  document_type_id: string;
+  original_filename: string;
+  size_bytes: number;
+  mime_type: string;
+  sha256: string;
+  uploaded_at: number;
+  ai_verdict: AiVerdict;
+  ai_reason: string | null;
+  applicant_confirmed: boolean;
+}
+
+export interface RequirementWithUpload {
+  document_type_id: string;
+  label: string;
+  description: string | null;
+  is_required: boolean;
+  conditional_on: ConditionalTrigger | null;
+  display_order: number;
+  max_mb: number;
+  accepted_mimes: string[];
+  ai_check_type: AiCheckType;
+  upload: ApplicationDocument | null;
+  visible: boolean;
+}
+
+export interface ApplicantRequirementsView {
+  exercise_id: string;
+  has_professional_qualification: boolean;
+  is_pwd: boolean;
+  requirements: RequirementWithUpload[];
 }

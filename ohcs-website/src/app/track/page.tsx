@@ -59,6 +59,44 @@ export default function TrackPage() {
     setTrackError(null);
     setResult(null);
     try {
+      // Recruitment application references look like OHCS-YYYY-NNNNN
+      // and live in a different table. Branch the lookup accordingly.
+      if (/^OHCS-\d{4}-\d+$/i.test(data.referenceNumber.trim())) {
+        const { trackApplication } = await import('@/lib/applicant-api');
+        const r = await trackApplication(data.referenceNumber.trim(), data.contact);
+        setResult({
+          referenceNumber: r.reference_number,
+          type: 'recruitment',
+          status: r.status,
+          subject: `Recruitment exercise ${r.exercise_id}`,
+          createdAt: new Date(r.created_at).toISOString(),
+          updatedAt: new Date(r.submitted_at ?? r.created_at).toISOString(),
+          timeline: r.submitted_at
+            ? [
+                {
+                  id: 'created',
+                  status: 'received',
+                  note: 'Application created',
+                  created_at: new Date(r.created_at).toISOString(),
+                },
+                {
+                  id: 'submitted',
+                  status: r.status,
+                  note: 'Application submitted',
+                  created_at: new Date(r.submitted_at).toISOString(),
+                },
+              ]
+            : [
+                {
+                  id: 'created',
+                  status: 'draft',
+                  note: 'Application not yet submitted',
+                  created_at: new Date(r.created_at).toISOString(),
+                },
+              ],
+        });
+        return;
+      }
       const response = await trackSubmission(data.referenceNumber, data.contact);
       setResult(response.data);
     } catch (err) {
@@ -96,7 +134,7 @@ export default function TrackPage() {
               <input
                 id="referenceNumber"
                 type="text"
-                placeholder="OHCS-XXX-XXXXXXXX-XXXX"
+                placeholder="OHCS-2026-00001 or OHCS-CMP-20260418-A7F3"
                 className={cn(
                   'w-full px-4 py-3 rounded-xl border-2 bg-white text-base transition-colors font-mono',
                   errors.referenceNumber
@@ -110,7 +148,9 @@ export default function TrackPage() {
                 <p className="mt-1.5 text-sm text-red-500">{errors.referenceNumber.message}</p>
               )}
               <p className="mt-1 text-xs text-text-muted">
-                Format: OHCS-XXX-YYYYMMDD-XXXX
+                Recruitment applications: <span className="font-mono">OHCS-YYYY-NNNNN</span>
+                {' · '}
+                Complaints / RTI: <span className="font-mono">OHCS-XXX-YYYYMMDD-XXXX</span>
               </p>
             </div>
 
