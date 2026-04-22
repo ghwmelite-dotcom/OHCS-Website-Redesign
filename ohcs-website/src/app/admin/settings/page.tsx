@@ -67,13 +67,14 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState<string | null>(null);
 
   useEffect(() => {
-    // Load settings from localStorage
+    // Load settings from localStorage on mount; lazy useState() init would crash SSR.
     const loaded: Record<string, boolean> = {};
     SETTINGS_CONFIG.forEach((s) => {
       const stored = localStorage.getItem(s.key);
       // Default: all demo mode (true = demo, false = live)
       loaded[s.key] = stored === null ? true : stored === 'true';
     });
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSettings(loaded);
   }, []);
 

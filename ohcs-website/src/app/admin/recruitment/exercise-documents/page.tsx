@@ -216,6 +216,8 @@ function ConfigureRequirements({ exerciseId }: { exerciseId: string }) {
 
   /* ── Local-store presence check (warning banner) ────────────────── */
   useEffect(() => {
+    // Reads localStorage; lazy useState() init would crash SSR.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMissingFromStore(!exerciseExistsLocally(exerciseId));
   }, [exerciseId]);
 
@@ -241,6 +243,8 @@ function ConfigureRequirements({ exerciseId }: { exerciseId: string }) {
   }, [exerciseId]);
 
   useEffect(() => {
+    // Async fetch + setState pattern; the rule still flags the fetch wrapper.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
 

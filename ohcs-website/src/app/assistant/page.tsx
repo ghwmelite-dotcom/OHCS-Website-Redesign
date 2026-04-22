@@ -409,6 +409,8 @@ export default function AssistantPage() {
     if (!msg || isTyping) return;
 
     const userMsg: Message = {
+      // Date.now() runs only inside the send handler, not during render.
+      // eslint-disable-next-line react-hooks/purity
       id: `user-${Date.now()}`,
       role: 'user',
       content: msg,
@@ -421,6 +423,8 @@ export default function AssistantPage() {
     await new Promise((r) => setTimeout(r, 800 + Math.random() * 1200));
 
     const botMsg: Message = {
+      // Date.now() runs only inside the send handler, not during render.
+      // eslint-disable-next-line react-hooks/purity
       id: `bot-${Date.now()}`,
       role: 'assistant',
       content: getBotResponse(msg),

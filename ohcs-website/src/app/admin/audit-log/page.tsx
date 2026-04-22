@@ -81,6 +81,8 @@ export default function AuditLogPage() {
   const [toast, setToast] = useState('');
 
   useEffect(() => {
+    // Reads localStorage on mount; lazy useState() init would crash SSR.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEntries(getAuditLog());
   }, []);
 
@@ -130,8 +132,9 @@ export default function AuditLogPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  // Reset page when filters change
+  // Reset page when filters change — derived sync we deliberately want as an effect.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [search, actionFilter, resourceFilter, dateRange]);
 
