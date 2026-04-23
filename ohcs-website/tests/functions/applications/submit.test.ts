@@ -70,6 +70,11 @@ describe('POST /api/applications/me/submit', () => {
         binds: ['OHCS-2026-00001'],
         all: { results: [{ document_type_id: 'national_id' }] },
       },
+      {
+        sql:
+          'INSERT INTO status_transitions (id, application_id, from_status, to_status, actor_email, actor_role, reason, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        run: {},
+      },
       { sql: 'UPDATE applications SET status = ?, submitted_at = ? WHERE id = ?', run: {} },
     ]);
     const req = new Request('https://x/api/applications/me/submit', {

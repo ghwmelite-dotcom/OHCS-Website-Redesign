@@ -1,6 +1,6 @@
 import type { PagesFunction, Env } from '../../_shared/types';
 import { json } from '../../_shared/json';
-import { run } from '../../_shared/db';
+import { all, run } from '../../_shared/db';
 import { constantTimeEquals } from '../../_shared/hmac';
 
 const STALE_CLAIM_MS = 30 * 60 * 1000;
@@ -28,11 +28,32 @@ export const onRequestPost: PagesFunction<Env & { SYSTEM_CRON_SECRET?: string }>
   );
 
   // 2) requires_action past resubmission deadline → vetting_failed
-  await run(
+  // Find affected ids first so we can write status_transitions audit rows.
+  const expired = await all<{ id: string }>(
     env,
-    "UPDATE applications SET status = 'vetting_failed' WHERE status = 'requires_action' AND id IN (SELECT a.id FROM applications a JOIN application_review_decisions ard ON ard.application_id = a.id JOIN recruitment_exercises e ON e.id = a.exercise_id WHERE a.status = 'requires_action' AND ard.outcome = 'requires_action' AND ard.created_at + (e.vetting_window_days * 86400000) < ?)",
+    "SELECT a.id FROM applications a JOIN application_review_decisions ard ON ard.application_id = a.id JOIN recruitment_exercises e ON e.id = a.exercise_id WHERE a.status = 'requires_action' AND ard.outcome = 'requires_action' AND ard.created_at + (e.vetting_window_days * 86400000) < ?",
     now,
   );
 
-  return json({ data: { ran_at: now } });
+  for (const row of expired) {
+    await run(
+      env,
+      'INSERT INTO status_transitions (id, application_id, from_status, to_status, actor_email, actor_role, reason, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      `tx_${now}_${Math.random().toString(36).slice(2, 10)}`,
+      row.id,
+      'requires_action',
+      'vetting_failed',
+      null,
+      'system',
+      'Resubmission deadline expired',
+      now,
+    );
+    await run(
+      env,
+      "UPDATE applications SET status = 'vetting_failed' WHERE id = ? AND status = 'requires_action'",
+      row.id,
+    );
+  }
+
+  return json({ data: { ran_at: now, expired_count: expired.length } });
 };

@@ -71,6 +71,18 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
   const now = Date.now();
   await run(
     env,
+    'INSERT INTO status_transitions (id, application_id, from_status, to_status, actor_email, actor_role, reason, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    `tx_${now}_${Math.random().toString(36).slice(2, 10)}`,
+    auth.application.id,
+    'draft',
+    'submitted',
+    auth.application.email,
+    'applicant',
+    'Application submitted',
+    now,
+  );
+  await run(
+    env,
     'UPDATE applications SET status = ?, submitted_at = ? WHERE id = ?',
     'submitted',
     now,
