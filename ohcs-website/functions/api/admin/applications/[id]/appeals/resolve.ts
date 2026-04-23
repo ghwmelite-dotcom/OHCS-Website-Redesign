@@ -1,3 +1,6 @@
+//
+// SECURITY: see functions/_shared/admin-auth.ts header.
+
 import type { PagesFunction, Env } from '../../../../../_shared/types';
 import { json } from '../../../../../_shared/json';
 import { requireAdmin } from '../../../../../_shared/admin-auth';
@@ -5,6 +8,7 @@ import { parseBody } from '../../../../../_shared/validate';
 import { first, run } from '../../../../../_shared/db';
 import { sendEmail } from '../../../../../_shared/email';
 import { sendSms } from '../../../../../_shared/sms';
+import { escapeHtml } from '../../../../../_shared/escape-html';
 import { z } from 'zod';
 
 const Body = z.object({
@@ -57,7 +61,7 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
       await sendEmail(env, {
         to: app.email,
         subject: 'OHCS Recruitment — appeal upheld, application proceeds',
-        html: `<p>Your appeal on application <strong>${params.id}</strong> has been overturned. You may now proceed to pay the exam fee.</p>`,
+        html: `<p>Your appeal on application <strong>${escapeHtml(params.id)}</strong> has been overturned. You may now proceed to pay the exam fee.</p>`,
         text: `Your appeal on application ${params.id} was overturned. Please pay the exam fee to proceed.`,
       });
       const phone = (() => {
@@ -81,7 +85,7 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
       await sendEmail(env, {
         to: app.email,
         subject: 'OHCS Recruitment — appeal outcome',
-        html: `<p>Your appeal on application <strong>${params.id}</strong> has been reviewed and the original decision stands.</p><p>Notes: ${body.value.notes}</p>`,
+        html: `<p>Your appeal on application <strong>${escapeHtml(params.id)}</strong> has been reviewed and the original decision stands.</p><p>Notes: ${escapeHtml(body.value.notes)}</p>`,
         text: `Your appeal on application ${params.id} was upheld. Notes: ${body.value.notes}`,
       });
     }

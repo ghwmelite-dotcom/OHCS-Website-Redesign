@@ -40,6 +40,10 @@ describe('POST /api/applications/start', () => {
         first: { status: 'active' },
       },
       {
+        sql: 'SELECT COUNT(*) AS n FROM magic_link_tokens WHERE email = ? AND created_at > ?',
+        first: { n: 0 },
+      },
+      {
         sql: 'INSERT INTO magic_link_tokens (token, email, exercise_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)',
         run: {},
       },
@@ -75,6 +79,25 @@ describe('POST /api/applications/start', () => {
       ctx(startReq({ email: 'kofi@example.com', exercise_id: 'ex-ghost' }), db),
     );
     expect(res.status).toBe(404);
+  });
+
+  it('returns 429 when the per-email rate limit is exceeded', async () => {
+    const db = makeD1([
+      {
+        sql: 'SELECT status FROM recruitment_exercises WHERE id = ?',
+        binds: ['ex-001'],
+        first: { status: 'active' },
+      },
+      {
+        sql: 'SELECT COUNT(*) AS n FROM magic_link_tokens WHERE email = ? AND created_at > ?',
+        first: { n: 3 },
+      },
+    ]);
+    const res = await onRequestPost(
+      ctx(startReq({ email: 'kofi@example.com', exercise_id: 'ex-001' }), db),
+    );
+    expect(res.status).toBe(429);
+    expect(res.headers.get('retry-after')).toBeTruthy();
   });
 
   it('returns 409 when exercise is not active', async () => {

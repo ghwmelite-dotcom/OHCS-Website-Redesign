@@ -3,6 +3,7 @@ import { json } from '../../../_shared/json';
 import { first, run } from '../../../_shared/db';
 import { buildSetSessionCookie } from '../../../_shared/cookies';
 import { generateReference } from '../../../_shared/reference-number';
+import { hashToken } from '../../../_shared/hash-token';
 
 const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
 
@@ -26,8 +27,13 @@ function generateSessionId(): string {
 }
 
 export const onRequestGet: PagesFunction<Env, 'token'> = async ({ env, params }) => {
-  const token = params.token;
-  const tokenRow = await first<TokenRow>(env, 'SELECT * FROM magic_link_tokens WHERE token = ?', token);
+  // Tokens are stored hashed at rest; hash the inbound value before lookup.
+  const tokenHash = await hashToken(params.token);
+  const tokenRow = await first<TokenRow>(
+    env,
+    'SELECT * FROM magic_link_tokens WHERE token = ?',
+    tokenHash,
+  );
 
   if (!tokenRow) return json({ error: 'token not found' }, { status: 404 });
 
@@ -81,7 +87,7 @@ export const onRequestGet: PagesFunction<Env, 'token'> = async ({ env, params })
     'UPDATE magic_link_tokens SET used_at = ?, application_id = ? WHERE token = ?',
     now,
     applicationId,
-    token,
+    tokenHash,
   );
 
   return new Response(null, {

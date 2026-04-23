@@ -1,6 +1,7 @@
 import type { PagesFunction, Env } from '../../_shared/types';
 import { json } from '../../_shared/json';
 import { run } from '../../_shared/db';
+import { constantTimeEquals } from '../../_shared/hmac';
 
 const STALE_CLAIM_MS = 30 * 60 * 1000;
 
@@ -8,9 +9,12 @@ export const onRequestPost: PagesFunction<Env & { SYSTEM_CRON_SECRET?: string }>
   request,
   env,
 }) => {
-  const auth = request.headers.get('Authorization');
-  const expected = `Bearer ${env.SYSTEM_CRON_SECRET ?? ''}`;
-  if (!env.SYSTEM_CRON_SECRET || auth !== expected) {
+  const auth = request.headers.get('Authorization') ?? '';
+  if (!env.SYSTEM_CRON_SECRET) {
+    return json({ error: 'unauthorized' }, { status: 401 });
+  }
+  const expected = `Bearer ${env.SYSTEM_CRON_SECRET}`;
+  if (!constantTimeEquals(auth, expected)) {
     return json({ error: 'unauthorized' }, { status: 401 });
   }
 

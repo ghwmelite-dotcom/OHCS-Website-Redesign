@@ -19,7 +19,6 @@ describe('GET /api/applications/magic/[token]', () => {
     const db = makeD1([
       {
         sql: 'SELECT * FROM magic_link_tokens WHERE token = ?',
-        binds: ['valid-token'],
         first: {
           token: 'valid-token',
           email: 'kofi@example.com',
@@ -72,7 +71,6 @@ describe('GET /api/applications/magic/[token]', () => {
     const db = makeD1([
       {
         sql: 'SELECT * FROM magic_link_tokens WHERE token = ?',
-        binds: ['valid-token-2'],
         first: {
           token: 'valid-token-2',
           email: 'kofi@example.com',
@@ -105,7 +103,6 @@ describe('GET /api/applications/magic/[token]', () => {
     const db = makeD1([
       {
         sql: 'SELECT * FROM magic_link_tokens WHERE token = ?',
-        binds: ['expired'],
         first: {
           token: 'expired',
           email: 'kofi@example.com',
@@ -127,7 +124,6 @@ describe('GET /api/applications/magic/[token]', () => {
     const db = makeD1([
       {
         sql: 'SELECT * FROM magic_link_tokens WHERE token = ?',
-        binds: ['used'],
         first: {
           token: 'used',
           email: 'k@x',
@@ -147,7 +143,7 @@ describe('GET /api/applications/magic/[token]', () => {
 
   it('returns 404 when token does not exist', async () => {
     const db = makeD1([
-      { sql: 'SELECT * FROM magic_link_tokens WHERE token = ?', binds: ['ghost'] },
+      { sql: 'SELECT * FROM magic_link_tokens WHERE token = ?' },
     ]);
     const res = await onRequestGet(
       ctx(new Request('https://x/api/applications/magic/ghost'), 'ghost', db),

@@ -4,9 +4,12 @@ import { parseBody } from '../../_shared/validate';
 import { first, run } from '../../_shared/db';
 import { sendEmail } from '../../_shared/email';
 import { magicLinkEmail } from '../../_shared/magic-link-email';
+import { hashToken } from '../../_shared/hash-token';
 import { z } from 'zod';
 
 const TOKEN_TTL_MS = 30 * 60 * 1000;
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
+const RATE_LIMIT_MAX_PER_EMAIL = 3;
 
 const Body = z.object({
   email: z.string().email().toLowerCase(),
@@ -46,14 +49,32 @@ export const onRequestPost: PagesFunction = async ({ request, env }) => {
     );
   }
 
-  const token = generateToken();
   const now = Date.now();
+
+  // Per-email rate limit: cap magic-link issuance to RATE_LIMIT_MAX_PER_EMAIL
+  // within the rolling RATE_LIMIT_WINDOW. Defends against spam/harassment
+  // via the email-blast endpoint and prevents Resend quota burn.
+  const recent = await first<{ n: number }>(
+    env,
+    'SELECT COUNT(*) AS n FROM magic_link_tokens WHERE email = ? AND created_at > ?',
+    email,
+    now - RATE_LIMIT_WINDOW_MS,
+  );
+  if (recent && recent.n >= RATE_LIMIT_MAX_PER_EMAIL) {
+    return json(
+      { error: 'too many magic-link requests; please try again later' },
+      { status: 429, headers: { 'retry-after': String(Math.ceil(RATE_LIMIT_WINDOW_MS / 1000)) } },
+    );
+  }
+
+  const token = generateToken();
+  const tokenHash = await hashToken(token);
   const expires = now + TOKEN_TTL_MS;
 
   await run(
     env,
     'INSERT INTO magic_link_tokens (token, email, exercise_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)',
-    token,
+    tokenHash,
     email,
     exercise_id,
     now,

@@ -8,6 +8,7 @@ import { parseBody } from '../../../../_shared/validate';
 import { first, run } from '../../../../_shared/db';
 import { sendEmail } from '../../../../_shared/email';
 import { sendSms } from '../../../../_shared/sms';
+import { escapeHtml } from '../../../../_shared/escape-html';
 import { z } from 'zod';
 
 const Body = z.object({
@@ -136,7 +137,7 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
       await sendEmail(env, {
         to: app.email,
         subject: 'OHCS Recruitment — vetting passed, please pay exam fee',
-        html: `<p>Your application <strong>${params.id}</strong> has passed initial review.</p><p>To proceed to the examination, please pay the exam fee. The payment portal will open soon.</p>`,
+        html: `<p>Your application <strong>${escapeHtml(params.id)}</strong> has passed initial review.</p><p>To proceed to the examination, please pay the exam fee. The payment portal will open soon.</p>`,
         text: `Your application ${params.id} has passed initial review. Please pay the exam fee to proceed.`,
       });
       const phone = extractPhone(app.form_data);
@@ -147,21 +148,25 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
         });
       }
     } else if (outcome === 'vetting_failed') {
+      const notesHtml = v.notes ? escapeHtml(v.notes) : '(no overall notes)';
       await sendEmail(env, {
         to: app.email,
         subject: 'OHCS Recruitment — vetting outcome',
-        html: `<p>Your application <strong>${params.id}</strong> was not successful at vetting.</p><p>Notes: ${v.notes ?? '(no overall notes)'}</p><p>You may submit an appeal within the appeal window.</p>`,
+        html: `<p>Your application <strong>${escapeHtml(params.id)}</strong> was not successful at vetting.</p><p>Notes: ${notesHtml}</p><p>You may submit an appeal within the appeal window.</p>`,
         text: `Your application ${params.id} was not successful at vetting. Notes: ${v.notes ?? '(none)'}`,
       });
     } else {
       const reasonsList = v.document_decisions
         .filter((d) => d.decision !== 'accepted')
-        .map((d) => `<li><strong>${d.document_type_id}</strong>: ${d.reason}</li>`)
+        .map(
+          (d) =>
+            `<li><strong>${escapeHtml(d.document_type_id)}</strong>: ${escapeHtml(d.reason ?? '')}</li>`,
+        )
         .join('');
       await sendEmail(env, {
         to: app.email,
         subject: 'OHCS Recruitment — additional information needed',
-        html: `<p>Your application <strong>${params.id}</strong> needs additional information before vetting can complete:</p><ul>${reasonsList}</ul>`,
+        html: `<p>Your application <strong>${escapeHtml(params.id)}</strong> needs additional information before vetting can complete:</p><ul>${reasonsList}</ul>`,
         text: `Your application ${params.id} needs additional information. Please re-upload the indicated documents.`,
       });
     }

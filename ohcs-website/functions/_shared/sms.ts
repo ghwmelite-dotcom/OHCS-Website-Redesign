@@ -9,9 +9,11 @@ const HUBTEL_URL = 'https://sms.hubtel.com/v1/messages/send';
 
 export async function sendSms(env: Env, input: SendSmsInput): Promise<void> {
   if (!env.HUBTEL_SMS_API_KEY || !env.HUBTEL_SMS_FROM) {
-    console.log(
-      `[sms:dev] would send to=${input.to} content=${JSON.stringify(input.message)}`,
-    );
+    if (env.APP_ENV !== 'production') {
+      console.log(
+        `[sms:dev] would send to=${input.to} content=${JSON.stringify(input.message)}`,
+      );
+    }
     return;
   }
 
