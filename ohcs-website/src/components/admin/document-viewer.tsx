@@ -49,6 +49,7 @@ export function DocumentViewer({
 
   // Fetch signed URL on active doc change. Stale-flag pattern keeps strict
   // mode happy and avoids racing late responses from prior selections.
+  /* eslint-disable react-hooks/set-state-in-effect -- async fetch keyed on active doc */
   useEffect(() => {
     if (!active) {
       setSignedUrl(null);
@@ -86,6 +87,7 @@ export function DocumentViewer({
       controller.abort();
     };
   }, [applicationId, active]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (uploaded.length === 0) {
     return (

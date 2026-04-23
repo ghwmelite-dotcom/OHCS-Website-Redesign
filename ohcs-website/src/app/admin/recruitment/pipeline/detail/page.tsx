@@ -144,6 +144,7 @@ function DetailInner() {
   }, [detail]);
 
   /* ── Submit-disabled rule ────────────────────────────────────────── */
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- early returns confuse the compiler; manual memoization preserves identity stability
   const submitGate = useMemo(() => {
     if (!detail) return { ok: false, reason: 'Loading…' };
 
