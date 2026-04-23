@@ -22,9 +22,9 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
   const body = await parseBody(request, Body);
   if (body.kind === 'reject') return body.response;
 
-  const app = await first<{ status: string; email: string }>(
+  const app = await first<{ status: string; email: string; form_data: string | null }>(
     env,
-    'SELECT status, email FROM applications WHERE id = ?',
+    'SELECT status, email, form_data FROM applications WHERE id = ?',
     params.id,
   );
   if (!app) return json({ error: 'not found' }, { status: 404 });
@@ -60,11 +60,23 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
         html: `<p>Your appeal on application <strong>${params.id}</strong> has been overturned. You may now proceed to pay the exam fee.</p>`,
         text: `Your appeal on application ${params.id} was overturned. Please pay the exam fee to proceed.`,
       });
-      await sendSms(env, {
-        // TODO sub-project B: pull phone from form_data
-        to: '+233000000000',
-        message: `OHCS: your appeal on ${params.id} was successful. Pay exam fee to proceed.`,
-      });
+      const phone = (() => {
+        if (!app.form_data) return null;
+        try {
+          const parsed = JSON.parse(app.form_data) as { phone?: unknown };
+          return typeof parsed.phone === 'string' && parsed.phone.trim().length > 0
+            ? parsed.phone.trim()
+            : null;
+        } catch {
+          return null;
+        }
+      })();
+      if (phone) {
+        await sendSms(env, {
+          to: phone,
+          message: `OHCS: your appeal on ${params.id} was successful. Pay exam fee to proceed.`,
+        });
+      }
     } else {
       await sendEmail(env, {
         to: app.email,
