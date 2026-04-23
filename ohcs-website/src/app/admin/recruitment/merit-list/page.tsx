@@ -8,6 +8,7 @@ import {
   BarChart3, ShieldAlert, Trophy, Download, FileText, CheckCircle,
   ToggleLeft, ToggleRight,
 } from 'lucide-react';
+import { DemoBanner } from '@/components/admin/demo-banner';
 
 /* ------------------------------------------------------------------ */
 /*  Tab Navigation                                                     */
@@ -120,6 +121,8 @@ export default function MeritListPage() {
     <div>
       <RecruitmentTabs current="/admin/recruitment/merit-list" />
 
+      <DemoBanner message="Merit list is not yet wired to live exam results — names and scores shown are samples." />
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
@@ -179,7 +182,7 @@ export default function MeritListPage() {
               setPublished(!published);
               setToast(published ? 'Merit list unpublished.' : 'Merit list published successfully.');
             }}
-            className="focus:outline-none"
+            className="rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             aria-label={published ? 'Unpublish merit list' : 'Publish merit list'}
           >
             {published ? (

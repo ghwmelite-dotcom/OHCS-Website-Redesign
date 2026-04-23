@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { listApplications, claimApplication } from '@/lib/recruitment-api';
 import type { AdminApplicationListItem } from '@/types/recruitment';
-import { Loader2, Search } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Loader2, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getStatusBadgeClasses, getStatusLabel } from '@/lib/application-status';
 
 const STATUS_FILTERS = [
   { key: 'submitted', label: 'New' },
@@ -57,11 +58,6 @@ export default function PipelinePage() {
       setError(err instanceof Error ? err.message : 'Failed to claim');
     }
   }
-
-  const totalDocsRendered = useMemo(
-    () => items.map((i) => `${i.doc_count} / ${i.doc_required_count} required`),
-    [items],
-  );
 
   return (
     <div className="p-6">
@@ -119,56 +115,120 @@ export default function PipelinePage() {
       )}
 
       {!loading && !error && (
-        <div className="bg-white rounded-2xl border-2 border-border/40 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-left">
-              <tr>
-                <th className="px-4 py-3 font-semibold text-text-muted">Reference</th>
-                <th className="px-4 py-3 font-semibold text-text-muted">Email</th>
-                <th className="px-4 py-3 font-semibold text-text-muted">Status</th>
-                <th className="px-4 py-3 font-semibold text-text-muted">Docs</th>
-                <th className="px-4 py-3 font-semibold text-text-muted">AI</th>
-                <th className="px-4 py-3 font-semibold text-text-muted">Claimed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((it, i) => (
-                <tr key={it.id} className="border-t border-border/40 hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-xs">
-                    <Link
-                      href={`/admin/recruitment/pipeline/detail/?id=${encodeURIComponent(it.id)}`}
-                      className="text-primary hover:underline"
-                    >
-                      {it.id}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 text-text-muted">{it.email}</td>
-                  <td className="px-4 py-3">
-                    <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-100">
-                      {it.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-xs">{totalDocsRendered[i]}</td>
-                  <td className="px-4 py-3 text-xs">
-                    {it.ai_flag_count > 0 ? (
-                      <span className="text-amber-700">⚠ {it.ai_flag_count}</span>
-                    ) : (
-                      <span className="text-green-700">✓ clean</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-xs text-text-muted">{it.review_claimed_by ?? '—'}</td>
-                </tr>
-              ))}
-              {items.length === 0 && (
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white rounded-2xl border-2 border-border/40 overflow-x-auto">
+            <table className="w-full text-sm min-w-[720px]">
+              <thead className="bg-gray-50 text-left">
                 <tr>
-                  <td colSpan={6} className="px-4 py-12 text-center text-text-muted">
-                    No applications match these filters.
-                  </td>
+                  <th className="px-4 py-3 font-semibold text-text-muted">Reference</th>
+                  <th className="px-4 py-3 font-semibold text-text-muted">Email</th>
+                  <th className="px-4 py-3 font-semibold text-text-muted">Status</th>
+                  <th className="px-4 py-3 font-semibold text-text-muted">Docs</th>
+                  <th className="px-4 py-3 font-semibold text-text-muted">AI</th>
+                  <th className="px-4 py-3 font-semibold text-text-muted">Claimed</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {items.map((it) => (
+                  <tr key={it.id} className="border-t border-border/40 hover:bg-gray-50">
+                    <td className="px-4 py-3 font-mono text-xs">
+                      <Link
+                        href={`/admin/recruitment/pipeline/detail/?id=${encodeURIComponent(it.id)}`}
+                        className="text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded"
+                      >
+                        {it.id}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-text-muted">{it.email}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={cn(
+                          'px-2 py-1 rounded text-xs font-semibold border',
+                          getStatusBadgeClasses(it.status),
+                        )}
+                      >
+                        {getStatusLabel(it.status)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-xs">
+                      {it.doc_count} / {it.doc_required_count} required
+                    </td>
+                    <td className="px-4 py-3 text-xs">
+                      {it.ai_flag_count > 0 ? (
+                        <span className="inline-flex items-center gap-1 text-amber-700">
+                          <AlertTriangle className="h-3.5 w-3.5" /> {it.ai_flag_count}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-emerald-700">
+                          <CheckCircle2 className="h-3.5 w-3.5" /> clean
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-text-muted">
+                      {it.review_claimed_by ?? '—'}
+                    </td>
+                  </tr>
+                ))}
+                {items.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-12 text-center text-text-muted">
+                      No applications match these filters.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {items.map((it) => (
+              <Link
+                key={it.id}
+                href={`/admin/recruitment/pipeline/detail/?id=${encodeURIComponent(it.id)}`}
+                className="block bg-white rounded-2xl border-2 border-border/40 p-4 hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="font-mono text-xs text-primary">{it.id}</span>
+                  <span
+                    className={cn(
+                      'px-2 py-1 rounded text-xs font-semibold border',
+                      getStatusBadgeClasses(it.status),
+                    )}
+                  >
+                    {getStatusLabel(it.status)}
+                  </span>
+                </div>
+                <div className="text-sm text-text-muted truncate mb-2">{it.email}</div>
+                <div className="flex items-center justify-between text-xs">
+                  <span>
+                    {it.doc_count} / {it.doc_required_count} docs
+                  </span>
+                  {it.ai_flag_count > 0 ? (
+                    <span className="inline-flex items-center gap-1 text-amber-700">
+                      <AlertTriangle className="h-3.5 w-3.5" /> {it.ai_flag_count} flagged
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-emerald-700">
+                      <CheckCircle2 className="h-3.5 w-3.5" /> AI clean
+                    </span>
+                  )}
+                </div>
+                {it.review_claimed_by && (
+                  <div className="text-xs text-text-muted mt-2">
+                    Claimed by {it.review_claimed_by}
+                  </div>
+                )}
+              </Link>
+            ))}
+            {items.length === 0 && (
+              <div className="bg-white rounded-2xl border-2 border-border/40 p-12 text-center text-text-muted">
+                No applications match these filters.
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );

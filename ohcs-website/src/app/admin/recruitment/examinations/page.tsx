@@ -8,6 +8,7 @@ import {
   BarChart3, ShieldAlert, Trophy, Calendar, MapPin, Monitor, Wrench,
   Upload, CheckCircle, XCircle, Settings,
 } from 'lucide-react';
+import { DemoBanner } from '@/components/admin/demo-banner';
 
 /* ------------------------------------------------------------------ */
 /*  Tab Navigation                                                     */
@@ -109,6 +110,8 @@ export default function ExaminationsPage() {
   return (
     <div>
       <RecruitmentTabs current="/admin/recruitment/examinations" />
+
+      <DemoBanner message="Examinations is still spec-only — schedules, papers, and centres shown are samples for design review." />
 
       {/* Header */}
       <div className="mb-8">

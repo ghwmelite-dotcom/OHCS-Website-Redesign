@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { AiChatPanel } from '@/components/admin/ai-chat-panel';
 import { AiInsightCard } from '@/components/admin/ai-insight-card';
+import { DemoBanner } from '@/components/admin/demo-banner';
 
 const TABS = [
   { label: 'Dashboard', href: '/admin/recruitment', icon: LayoutDashboard },
@@ -83,6 +84,8 @@ export default function RecruitmentDashboardPage() {
     <div>
       <RecruitmentTabs current="/admin/recruitment" />
 
+      <DemoBanner message="Dashboard mixes live application counts with sample shortlisted/appointed/recent-apps figures until sub-projects B–D ship." />
+
       {/* Active Exercise Card */}
       <div className="bg-gradient-to-br from-primary-dark to-primary rounded-2xl p-8 text-white mb-8 relative overflow-hidden">
         <div
@@ -99,27 +102,27 @@ export default function RecruitmentDashboardPage() {
               <span className="px-3 py-1 bg-green-500/20 border border-green-400/30 text-green-300 text-xs font-bold rounded-full uppercase tracking-wider">
                 Active
               </span>
-              <span className="text-white/40 text-xs">Started 15 Mar 2026</span>
+              <span className="text-white/80 text-xs">Started 15 Mar 2026</span>
             </div>
             <h2 className="font-display text-2xl font-bold mb-1 text-white drop-shadow-sm">
               2026 Graduate Entrance Examination
             </h2>
-            <p className="text-white/50 text-sm">
+            <p className="text-white/85 text-sm">
               Civil Service Online Graduate Entrance Examination &bull; Deadline: 30 Apr 2026
             </p>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-center px-5 py-3 bg-white/[0.08] rounded-xl border border-white/10">
               <p className="text-2xl font-bold text-white">{totalApps}</p>
-              <p className="text-[10px] text-white/50 uppercase tracking-wider">Total Apps</p>
+              <p className="text-xs text-white/85 uppercase tracking-wider font-medium">Total Apps</p>
             </div>
             <div className="text-center px-5 py-3 bg-white/[0.08] rounded-xl border border-white/10">
               <p className="text-2xl font-bold text-accent">18</p>
-              <p className="text-[10px] text-white/50 uppercase tracking-wider">Shortlisted</p>
+              <p className="text-xs text-white/85 uppercase tracking-wider font-medium">Shortlisted</p>
             </div>
             <div className="text-center px-5 py-3 bg-white/[0.08] rounded-xl border border-white/10">
               <p className="text-2xl font-bold text-green-400">12</p>
-              <p className="text-[10px] text-white/50 uppercase tracking-wider">Appointed</p>
+              <p className="text-xs text-white/85 uppercase tracking-wider font-medium">Appointed</p>
             </div>
           </div>
         </div>

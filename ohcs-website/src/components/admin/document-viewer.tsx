@@ -112,11 +112,40 @@ export function DocumentViewer({
 
   return (
     <div className="space-y-4">
-      {/* Thumbnail strip */}
+      {/* Thumbnail strip — supports ArrowLeft / ArrowRight / Home / End to switch */}
       <div
         className="flex gap-2 overflow-x-auto pb-2"
         role="tablist"
         aria-label="Uploaded documents"
+        onKeyDown={(e) => {
+          if (uploaded.length < 2) return;
+          const idx = uploaded.findIndex((r) => r.document_type_id === activeDocId);
+          if (e.key === 'ArrowRight') {
+            const next = uploaded[(idx + 1 + uploaded.length) % uploaded.length];
+            if (next) {
+              e.preventDefault();
+              onSelectDoc(next.document_type_id);
+            }
+          } else if (e.key === 'ArrowLeft') {
+            const prev = uploaded[(idx - 1 + uploaded.length) % uploaded.length];
+            if (prev) {
+              e.preventDefault();
+              onSelectDoc(prev.document_type_id);
+            }
+          } else if (e.key === 'Home') {
+            const first = uploaded[0];
+            if (first) {
+              e.preventDefault();
+              onSelectDoc(first.document_type_id);
+            }
+          } else if (e.key === 'End') {
+            const last = uploaded[uploaded.length - 1];
+            if (last) {
+              e.preventDefault();
+              onSelectDoc(last.document_type_id);
+            }
+          }
+        }}
       >
         {uploaded.map((r) => {
           const Icon = r.upload ? fileIcon(r.upload.mime_type) : FileText;
@@ -127,9 +156,10 @@ export function DocumentViewer({
               type="button"
               role="tab"
               aria-selected={selected}
+              tabIndex={selected ? 0 : -1}
               onClick={() => onSelectDoc(r.document_type_id)}
               className={cn(
-                'flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border-2 text-xs font-semibold transition-all max-w-[220px]',
+                'flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl border-2 text-xs font-semibold transition-all max-w-[220px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
                 selected
                   ? 'bg-primary text-white border-primary shadow-sm'
                   : 'bg-white text-primary-dark border-border/40 hover:border-primary/50',

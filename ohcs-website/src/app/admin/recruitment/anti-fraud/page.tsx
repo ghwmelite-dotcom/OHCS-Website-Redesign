@@ -8,6 +8,7 @@ import {
   BarChart3, ShieldAlert, Trophy, AlertTriangle, CheckCircle, Search,
   Eye, XCircle, Shield, Activity, Globe,
 } from 'lucide-react';
+import { DemoBanner } from '@/components/admin/demo-banner';
 
 /* ------------------------------------------------------------------ */
 /*  Tab Navigation                                                     */
@@ -175,6 +176,8 @@ export default function AntiFraudPage() {
   return (
     <div>
       <RecruitmentTabs current="/admin/recruitment/anti-fraud" />
+
+      <DemoBanner message="Anti-fraud detection is not yet wired to live data — figures and flagged cases are samples." />
 
       {/* Header */}
       <div className="mb-8">

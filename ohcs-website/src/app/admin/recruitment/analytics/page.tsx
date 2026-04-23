@@ -7,6 +7,7 @@ import {
   BarChart3, ShieldAlert, Trophy, Users, TrendingUp, Clock, UserCheck,
 } from 'lucide-react';
 import { AiInsightCard } from '@/components/admin/ai-insight-card';
+import { DemoBanner } from '@/components/admin/demo-banner';
 
 /* ------------------------------------------------------------------ */
 /*  Tab Navigation                                                     */
@@ -90,6 +91,8 @@ export default function AnalyticsPage() {
   return (
     <div>
       <RecruitmentTabs current="/admin/recruitment/analytics" />
+
+      <DemoBanner message="Analytics is not yet computed from D1 — KPIs and charts shown are samples." />
 
       {/* Header */}
       <div className="mb-8">

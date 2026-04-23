@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { audit } from '@/lib/audit-logger';
 import { DocumentViewer } from '@/components/admin/document-viewer';
 import { PerDocDecision } from '@/components/admin/per-doc-decision';
+import { getStatusBadgeClasses, getStatusLabel } from '@/lib/application-status';
 
 /* ------------------------------------------------------------------ */
 /*  Page wrapper — Suspense boundary required for useSearchParams      */
@@ -166,6 +167,18 @@ function DetailInner() {
       .filter((r) => r.visible)
       .sort((a, b) => a.display_order - b.display_order);
   }, [detail]);
+
+  /* ── Decided / total summary (drives the "X of Y decided" pill) ──── */
+  const { decidedCount, requiredCount } = useMemo(() => {
+    let total = 0;
+    let decided = 0;
+    for (const r of visibleRequirements) {
+      if (!r.is_required) continue;
+      total += 1;
+      if (decisions[r.document_type_id]) decided += 1;
+    }
+    return { decidedCount: decided, requiredCount: total };
+  }, [visibleRequirements, decisions]);
 
   /* ── Submit-disabled rule ────────────────────────────────────────── */
   // eslint-disable-next-line react-hooks/preserve-manual-memoization -- early returns confuse the compiler; manual memoization preserves identity stability
@@ -330,8 +343,13 @@ function DetailInner() {
             <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono bg-gray-100 text-text-muted">
               {detail.id}
             </span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-primary/10 text-primary capitalize">
-              {detail.status.replace(/_/g, ' ')}
+            <span
+              className={cn(
+                'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold border',
+                getStatusBadgeClasses(detail.status),
+              )}
+            >
+              {getStatusLabel(detail.status)}
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-text-muted">
@@ -409,42 +427,64 @@ function DetailInner() {
 
       {/* Side-by-side panes */}
       <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6">
-        {/* Left pane — decisions */}
-        <div className="lg:max-h-[calc(100vh-180px)] lg:overflow-y-auto lg:pr-2 space-y-3">
-          {visibleRequirements.length === 0 && (
-            <div className="bg-white rounded-2xl border-2 border-dashed border-border/40 p-8 text-center">
-              <AlertTriangle
-                className="h-8 w-8 text-text-muted mx-auto mb-2"
-                aria-hidden="true"
-              />
-              <p className="text-sm font-semibold text-primary-dark">
-                No requirements configured
-              </p>
-              <p className="text-xs text-text-muted mt-1">
-                The exercise has no documents to vet.
-              </p>
+        {/* Left pane — decisions (header + scrollable list + always-visible footer) */}
+        <div className="lg:max-h-[calc(100vh-180px)] lg:flex lg:flex-col">
+          {/* Decided summary pill — always visible */}
+          {requiredCount > 0 && (
+            <div className="mb-3 flex items-center justify-between rounded-xl border-2 border-border/40 bg-white px-4 py-2.5">
+              <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+                Decisions
+              </span>
+              <span
+                className={cn(
+                  'inline-flex items-center rounded-full px-3 py-1 text-xs font-bold',
+                  decidedCount === requiredCount
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-amber-100 text-amber-900',
+                )}
+              >
+                {decidedCount} / {requiredCount} decided
+              </span>
             </div>
           )}
 
-          {visibleRequirements.map((r) => {
-            const state = decisions[r.document_type_id];
-            return (
-              <PerDocDecision
-                key={r.document_type_id}
-                requirement={r}
-                decision={state?.decision}
-                reason={state?.reason ?? ''}
-                onChange={(decision, reason) =>
-                  changeDecision(r.document_type_id, decision, reason)
-                }
-                onSelectDoc={(docId) => setActiveDocId(docId)}
-                isActive={activeDocId === r.document_type_id}
-              />
-            );
-          })}
+          {/* Scrollable list */}
+          <div className="lg:flex-1 lg:overflow-y-auto lg:pr-2 space-y-3">
+            {visibleRequirements.length === 0 && (
+              <div className="bg-white rounded-2xl border-2 border-dashed border-border/40 p-8 text-center">
+                <AlertTriangle
+                  className="h-8 w-8 text-text-muted mx-auto mb-2"
+                  aria-hidden="true"
+                />
+                <p className="text-sm font-semibold text-primary-dark">
+                  No requirements configured
+                </p>
+                <p className="text-xs text-text-muted mt-1">
+                  The exercise has no documents to vet.
+                </p>
+              </div>
+            )}
 
-          {/* Notes + submit */}
-          <div className="bg-white rounded-2xl border-2 border-border/40 p-4 sticky bottom-0">
+            {visibleRequirements.map((r) => {
+              const state = decisions[r.document_type_id];
+              return (
+                <PerDocDecision
+                  key={r.document_type_id}
+                  requirement={r}
+                  decision={state?.decision}
+                  reason={state?.reason ?? ''}
+                  onChange={(decision, reason) =>
+                    changeDecision(r.document_type_id, decision, reason)
+                  }
+                  onSelectDoc={(docId) => setActiveDocId(docId)}
+                  isActive={activeDocId === r.document_type_id}
+                />
+              );
+            })}
+          </div>
+
+          {/* Always-visible footer — outside the scroll */}
+          <div className="lg:flex-shrink-0 mt-3 bg-white rounded-2xl border-2 border-border/40 p-4">
             <label
               htmlFor="reviewer-notes"
               className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1"
@@ -457,14 +497,14 @@ function DetailInner() {
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="Internal notes for this review…"
-              className="w-full px-3 py-2 rounded-xl border-2 border-border/60 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary resize-none mb-3"
+              className="w-full px-3 py-2 rounded-xl border-2 border-border/60 bg-white text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary resize-none mb-3"
             />
 
             <button
               type="button"
               onClick={() => void handleSubmit()}
               disabled={!submitGate.ok || submitting}
-              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {submitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />

@@ -8,6 +8,7 @@ import {
   BarChart3, ShieldAlert, Trophy, Mail, Edit3, Send, CheckCircle,
   Clock, Eye, FileText,
 } from 'lucide-react';
+import { DemoBanner } from '@/components/admin/demo-banner';
 
 /* ------------------------------------------------------------------ */
 /*  Tab Navigation                                                     */
@@ -143,6 +144,8 @@ export default function CommunicationsPage() {
   return (
     <div>
       <RecruitmentTabs current="/admin/recruitment/communications" />
+
+      <DemoBanner message="Communications composer is not yet wired — recipient counts and send buttons are samples." />
 
       {/* Header */}
       <div className="mb-8">
