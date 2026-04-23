@@ -58,6 +58,7 @@ export function makeD1(scripts: D1Script[]): D1Database {
       };
       return stmt;
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async batch(_statements: unknown[]): Promise<unknown[]> {
       return [];
     },

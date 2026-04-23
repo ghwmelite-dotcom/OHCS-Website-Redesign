@@ -96,7 +96,6 @@ export default function ExercisesPage() {
     void refresh();
   }, [refresh]);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- setToast inside setTimeout, not sync
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(''), 3000);

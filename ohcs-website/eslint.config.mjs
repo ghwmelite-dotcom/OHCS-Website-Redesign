@@ -8,12 +8,27 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Disables ESLint rules that conflict with Prettier formatting.
   prettierConfig,
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
+    ".wrangler/**",
     "next-env.d.ts",
   ]),
 ]);

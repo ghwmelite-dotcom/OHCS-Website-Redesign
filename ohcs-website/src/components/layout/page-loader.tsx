@@ -12,7 +12,6 @@ export function PageLoader() {
     // Reset loader state on every route change to drive the animation timeline.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPhase(1);
 
     // Phase 1: Kente blocks build (0-900ms)

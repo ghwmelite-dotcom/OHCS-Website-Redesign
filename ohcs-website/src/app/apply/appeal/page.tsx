@@ -15,7 +15,6 @@ function AppealInner() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on mount
     getDraft()
       .then((d) => setReferenceNumber(d.id))
       .catch(() => router.replace('/services/recruitment/'))

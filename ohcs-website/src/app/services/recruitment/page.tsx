@@ -71,7 +71,6 @@ export default function RecruitmentPage() {
 
   // Source of truth for "is recruitment open" is now D1 via /api/exercises/active.
   // Falls through to "no active exercise" on any error or 404.
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on mount
   useEffect(() => {
     fetch('/api/exercises/active')
       .then(async (res) => {
