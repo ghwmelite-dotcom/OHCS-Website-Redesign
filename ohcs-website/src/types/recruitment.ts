@@ -162,3 +162,65 @@ export interface ApplicantRequirementsView {
   is_pwd: boolean;
   requirements: RequirementWithUpload[];
 }
+
+// ─── Vetting (Sub-project A) ─────────────────────────────────────────────
+
+export type DocDecision = 'accepted' | 'rejected' | 'needs_better_scan';
+export type VettingOutcome = 'vetting_passed' | 'vetting_failed' | 'requires_action';
+
+export interface DocumentReviewDecision {
+  document_type_id: string;
+  decision: DocDecision;
+  reason: string | null;
+  reviewer_email: string;
+  created_at: number;
+}
+
+export interface ApplicationReviewDecision {
+  outcome: VettingOutcome;
+  notes: string | null;
+  reviewer_email: string;
+  created_at: number;
+}
+
+export interface StatusTransition {
+  from_status: string;
+  to_status: string;
+  actor_email: string | null;
+  actor_role: string | null;
+  reason: string | null;
+  created_at: number;
+}
+
+export interface AdminApplicationListItem {
+  id: string;
+  exercise_id: string;
+  email: string;
+  status: ApplicationStatus;
+  submitted_at: number | null;
+  doc_count: number;
+  doc_required_count: number;
+  ai_flag_count: number;
+  review_claimed_by: string | null;
+}
+
+export interface AdminApplicationDetail {
+  id: string;
+  exercise_id: string;
+  email: string;
+  status: ApplicationStatus;
+  has_professional_qualification: boolean;
+  is_pwd: boolean;
+  form_data: ApplicationFormData;
+  documents: ApplicationDocument[];
+  requirements: RequirementWithUpload[];
+  decisions: DocumentReviewDecision[];
+  reviews: ApplicationReviewDecision[];
+  history: StatusTransition[];
+  appeal_reason: string | null;
+}
+
+export interface AppealResolution {
+  outcome: 'upheld' | 'overturned';
+  notes: string;
+}

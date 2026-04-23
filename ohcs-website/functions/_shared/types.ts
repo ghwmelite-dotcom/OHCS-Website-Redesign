@@ -10,6 +10,8 @@ export interface Env {
   EMAIL_FROM_NAME: string;
   EMAIL_PROVIDER?: 'auto' | 'resend' | 'mailchannels';
   RESEND_API_KEY?: string;
+  HUBTEL_SMS_API_KEY?: string;
+  HUBTEL_SMS_FROM?: string;
 }
 
 export type PagesFunction<E = Env, P extends string = string> = (context: {

@@ -154,3 +154,91 @@ export async function patchExercise(
     body: JSON.stringify(patch),
   });
 }
+
+// ─── Reviewer Pipeline (Sub-project A) ───────────────────────────────────
+
+import type {
+  AdminApplicationListItem,
+  AdminApplicationDetail,
+  DocDecision,
+  AppealResolution,
+} from '@/types/recruitment';
+
+export async function listApplications(filters?: {
+  status?: string;
+  exercise_id?: string;
+  search?: string;
+  claimed_by_me?: boolean;
+}): Promise<AdminApplicationListItem[]> {
+  const params = new URLSearchParams();
+  if (filters?.status) params.set('status', filters.status);
+  if (filters?.exercise_id) params.set('exercise_id', filters.exercise_id);
+  if (filters?.search) params.set('search', filters.search);
+  if (filters?.claimed_by_me) params.set('claimed_by_me', '1');
+  const qs = params.toString();
+  const { data } = await request<{ data: AdminApplicationListItem[] }>(
+    `/api/admin/applications${qs ? `?${qs}` : ''}`,
+  );
+  return data;
+}
+
+export async function getApplicationDetail(id: string): Promise<AdminApplicationDetail> {
+  const { data } = await request<{ data: AdminApplicationDetail }>(
+    `/api/admin/applications/${encodeURIComponent(id)}`,
+  );
+  return data;
+}
+
+export async function claimApplication(id: string): Promise<void> {
+  await request(`/api/admin/applications/${encodeURIComponent(id)}/claim`, { method: 'POST' });
+}
+
+export async function releaseApplication(id: string): Promise<void> {
+  await request(`/api/admin/applications/${encodeURIComponent(id)}/claim`, { method: 'DELETE' });
+}
+
+export async function getDocumentSignedUrl(
+  applicationId: string,
+  docTypeId: string,
+): Promise<string> {
+  const { data } = await request<{ data: { url: string } }>(
+    `/api/admin/applications/${encodeURIComponent(applicationId)}/documents/${encodeURIComponent(docTypeId)}/url`,
+  );
+  return data.url;
+}
+
+export interface DocDecisionInput {
+  document_type_id: string;
+  decision: DocDecision;
+  reason?: string;
+}
+
+export async function submitVettingDecision(
+  applicationId: string,
+  body: { document_decisions: DocDecisionInput[]; notes?: string },
+): Promise<{ outcome: 'vetting_passed' | 'vetting_failed' | 'requires_action' }> {
+  const { data } = await request<{
+    data: { outcome: 'vetting_passed' | 'vetting_failed' | 'requires_action' };
+  }>(`/api/admin/applications/${encodeURIComponent(applicationId)}/vetting`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  return data;
+}
+
+export async function listAppeals(): Promise<AdminApplicationListItem[]> {
+  const { data } = await request<{ data: AdminApplicationListItem[] }>(
+    '/api/admin/applications/appeals',
+  );
+  return data;
+}
+
+export async function resolveAppeal(
+  applicationId: string,
+  resolution: AppealResolution,
+): Promise<void> {
+  await request(
+    `/api/admin/applications/${encodeURIComponent(applicationId)}/appeals/resolve`,
+    { method: 'POST', body: JSON.stringify(resolution) },
+  );
+}
