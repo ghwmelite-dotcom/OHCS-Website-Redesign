@@ -135,3 +135,10 @@ export async function trackApplication(
   }>(`/api/applications/track?${params.toString()}`);
   return data;
 }
+
+export async function submitAppeal(reason: string): Promise<void> {
+  await request('/api/applications/me/appeals', {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  });
+}
