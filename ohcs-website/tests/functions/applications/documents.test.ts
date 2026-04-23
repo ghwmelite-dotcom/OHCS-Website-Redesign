@@ -93,6 +93,11 @@ describe('POST /api/applications/me/documents/[docTypeId]', () => {
           'INSERT INTO application_documents (id, application_id, document_type_id, r2_key, original_filename, size_bytes, mime_type, sha256, uploaded_at, ai_verdict, applicant_confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0) ON CONFLICT(application_id, document_type_id) DO UPDATE SET r2_key=excluded.r2_key, original_filename=excluded.original_filename, size_bytes=excluded.size_bytes, mime_type=excluded.mime_type, sha256=excluded.sha256, uploaded_at=excluded.uploaded_at, ai_verdict=excluded.ai_verdict, ai_reason=NULL, ai_confidence=NULL, ai_prompt_version=NULL, manual_flag=NULL, applicant_confirmed=0',
         run: {},
       },
+      // AI check_type lookup post-upload — return null to skip the AI path
+      {
+        sql: 'SELECT ai_check_type FROM document_types WHERE id = ?',
+        first: { ai_check_type: null },
+      },
     ]);
     const r2 = makeR2Mock();
     const req = buildUploadRequest(PDF_BYTES, 'application/pdf');

@@ -26,7 +26,12 @@ function sanitiseFilename(raw: string): string {
   return raw.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 100) || 'upload';
 }
 
-export const onRequestPost: PagesFunction<Env, 'docTypeId'> = async ({ request, env, params }) => {
+export const onRequestPost: PagesFunction<Env, 'docTypeId'> = async ({
+  request,
+  env,
+  params,
+  waitUntil,
+}) => {
   const auth = await requireApplicant(request, env);
   if (auth.kind === 'reject') return auth.response;
   if (auth.application.status !== 'draft') {
@@ -118,6 +123,27 @@ export const onRequestPost: PagesFunction<Env, 'docTypeId'> = async ({ request, 
     now,
     'unchecked',
   );
+
+  // Async AI verification — fires after the response returns to the
+  // applicant. Updates ai_verdict / ai_confidence / ai_reason in place.
+  // Phase 4 absorbed into sub-project A.
+  const docTypeRow = await first<{ ai_check_type: string | null }>(
+    env,
+    'SELECT ai_check_type FROM document_types WHERE id = ?',
+    params.docTypeId,
+  );
+  if (docTypeRow?.ai_check_type) {
+    const { verifyDocument } = await import('../../../../_shared/ai-verify');
+    waitUntil(
+      verifyDocument(env, {
+        applicationId: auth.application.id,
+        documentTypeId: params.docTypeId,
+        checkType: docTypeRow.ai_check_type as 'identity' | 'photo' | 'certificate',
+        r2Key: key,
+        mimeType: file.type,
+      }).catch((err) => console.error('ai-verify failed', err)),
+    );
+  }
 
   return json(
     {
