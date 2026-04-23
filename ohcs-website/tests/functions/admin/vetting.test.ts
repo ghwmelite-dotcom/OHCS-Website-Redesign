@@ -31,9 +31,9 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
   it('rolls up to vetting_passed when all decisions are accepted', async () => {
     const db = makeD1([
       {
-        sql: 'SELECT status, exercise_id, email FROM applications WHERE id = ?',
+        sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
-        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com' },
+        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com', form_data: null },
       },
       {
         sql:
@@ -76,9 +76,9 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
   it('rolls up to requires_action when some decisions are needs_better_scan and none rejected', async () => {
     const db = makeD1([
       {
-        sql: 'SELECT status, exercise_id, email FROM applications WHERE id = ?',
+        sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
-        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com' },
+        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com', form_data: null },
       },
       {
         sql:
@@ -121,9 +121,9 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
   it('rolls up to vetting_failed when any decision is rejected', async () => {
     const db = makeD1([
       {
-        sql: 'SELECT status, exercise_id, email FROM applications WHERE id = ?',
+        sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
-        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com' },
+        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com', form_data: null },
       },
       {
         sql:
@@ -165,9 +165,9 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
   it('rejects 400 when a non-accept decision lacks a reason', async () => {
     const db = makeD1([
       {
-        sql: 'SELECT status, exercise_id, email FROM applications WHERE id = ?',
+        sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
-        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com' },
+        first: { status: 'under_review', exercise_id: 'ex-001', email: 'kofi@example.com', form_data: null },
       },
     ]);
     const req = new Request('https://x/api/admin/applications/OHCS-2026-00001/vetting', {
@@ -185,9 +185,9 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
   it('rejects when application is not under_review', async () => {
     const db = makeD1([
       {
-        sql: 'SELECT status, exercise_id, email FROM applications WHERE id = ?',
+        sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
-        first: { status: 'submitted', exercise_id: 'ex-001', email: 'kofi@example.com' },
+        first: { status: 'submitted', exercise_id: 'ex-001', email: 'kofi@example.com', form_data: null },
       },
     ]);
     const req = new Request('https://x/api/admin/applications/OHCS-2026-00001/vetting', {

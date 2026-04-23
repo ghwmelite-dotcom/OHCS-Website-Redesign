@@ -43,6 +43,20 @@ interface AppRow {
   status: string;
   exercise_id: string;
   email: string;
+  form_data: string | null;
+}
+
+function extractPhone(formDataJson: string | null): string | null {
+  if (!formDataJson) return null;
+  try {
+    const parsed = JSON.parse(formDataJson) as { phone?: unknown };
+    if (typeof parsed.phone === 'string' && parsed.phone.trim().length > 0) {
+      return parsed.phone.trim();
+    }
+  } catch {
+    // form_data corrupt — silently skip SMS
+  }
+  return null;
 }
 
 export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
@@ -51,7 +65,7 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
 
   const app = await first<AppRow>(
     env,
-    'SELECT status, exercise_id, email FROM applications WHERE id = ?',
+    'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
     params.id,
   );
   if (!app) return json({ error: 'not found' }, { status: 404 });
@@ -125,11 +139,13 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
         html: `<p>Your application <strong>${params.id}</strong> has passed initial review.</p><p>To proceed to the examination, please pay the exam fee. The payment portal will open soon.</p>`,
         text: `Your application ${params.id} has passed initial review. Please pay the exam fee to proceed.`,
       });
-      await sendSms(env, {
-        // TODO sub-project B: pull applicant phone from form_data
-        to: '+233000000000',
-        message: `OHCS: your application ${params.id} has passed vetting. Pay your exam fee to proceed.`,
-      });
+      const phone = extractPhone(app.form_data);
+      if (phone) {
+        await sendSms(env, {
+          to: phone,
+          message: `OHCS: your application ${params.id} has passed vetting. Pay your exam fee to proceed.`,
+        });
+      }
     } else if (outcome === 'vetting_failed') {
       await sendEmail(env, {
         to: app.email,
