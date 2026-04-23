@@ -39,7 +39,7 @@ const DECISION_OPTIONS: DecisionOption[] = [
   },
   {
     key: 'needs_better_scan',
-    label: 'Needs Better Scan',
+    label: 'Re-upload',
     icon: RefreshCw,
     active: 'bg-amber-600 text-white border-amber-600 shadow-sm',
     inactive: 'bg-white text-amber-800 border-amber-200 hover:bg-amber-50',

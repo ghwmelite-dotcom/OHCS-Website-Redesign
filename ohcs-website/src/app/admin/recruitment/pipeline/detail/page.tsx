@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import {
   getApplicationDetail,
+  claimApplication,
   releaseApplication,
   submitVettingDecision,
   type DocDecisionInput,
@@ -105,7 +106,30 @@ function DetailInner() {
     setLoading(true);
     setLoadError(null);
     try {
-      const d = await getApplicationDetail(id);
+      let d = await getApplicationDetail(id);
+
+      // Auto-claim if it's still in `submitted` — this transitions to
+      // under_review so the vetting submit endpoint will accept the
+      // decision later. Without this, clicking a row from the queue
+      // (rather than using "Take next") would leave the app in
+      // `submitted` and submit would 409.
+      if (d.status === 'submitted') {
+        try {
+          await claimApplication(id);
+          // Re-fetch after the claim so detail.status reflects under_review.
+          d = await getApplicationDetail(id);
+        } catch (err) {
+          // 409 means someone else holds the claim — surface a toast but
+          // still show the detail in read-only mode.
+          setToast({
+            type: 'error',
+            message:
+              err instanceof Error
+                ? `This application is currently being reviewed by someone else. ${err.message}`
+                : 'Claim failed.',
+          });
+        }
+      }
       setDetail(d);
 
       // Pre-seed any existing decisions so the reviewer sees their prior work.
