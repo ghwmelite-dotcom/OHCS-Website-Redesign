@@ -33,7 +33,12 @@ jobs:
 
       - name: Install dependencies
         working-directory: ohcs-website
-        run: npm ci
+        # --legacy-peer-deps required: @cloudflare/next-on-pages declares
+        # peer compat up to Next 15.5.2, but the project is on Next 16.2.4.
+        # The dep itself isn't used at deploy time (we use plain `next build`
+        # + `wrangler pages deploy out`), but it's in package.json so npm ci
+        # fails strict resolution without the flag.
+        run: npm ci --legacy-peer-deps
 
       - name: Run tests (gate)
         working-directory: ohcs-website
