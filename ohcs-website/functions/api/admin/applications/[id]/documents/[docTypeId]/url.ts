@@ -24,7 +24,7 @@ export const onRequestGet: PagesFunction<
   Env & { SYSTEM_CRON_SECRET?: string },
   keyof ParamsLocal
 > = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   let secret: string;

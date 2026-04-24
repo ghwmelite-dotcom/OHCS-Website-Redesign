@@ -79,24 +79,43 @@ export async function adminLogin(
 }
 
 export async function adminLogout(): Promise<void> {
-  const token = getToken();
   audit('logout', 'session', '', '', 'Logged out');
 
-  if (!isDemoMode() && token) {
-    await fetch(`${API_BASE}/api/v1/admin/auth/logout`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-    }).catch(() => {});
+  // 1) Magic-link session — POST to /logout endpoint, server clears cookie.
+  try {
+    await fetch('/api/admin/auth/logout', { method: 'POST', credentials: 'include' });
+  } catch {
+    // Best effort.
   }
 
+  // 2) Demo fallback — clear localStorage.
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
 }
 
 export async function getAdminUser(): Promise<AdminUser | null> {
-  const token = getToken();
-  if (!token) return null;
+  // 1) Cookie-backed session (magic-link path) — preferred
+  try {
+    const res = await fetch('/api/admin/auth/me', { credentials: 'include' });
+    if (res.ok) {
+      const body = (await res.json()) as { data: { email: string; role: string } };
+      const rawRole = body.data.role;
+      const validRoles: AdminUser['role'][] = ['super_admin', 'content_manager', 'recruitment_admin', 'viewer'];
+      const role = validRoles.includes(rawRole as AdminUser['role'])
+        ? (rawRole as AdminUser['role'])
+        : 'viewer';
+      return {
+        id: `cookie-${body.data.email}`,
+        email: body.data.email,
+        name: body.data.email.split('@')[0] ?? body.data.email,
+        role,
+      };
+    }
+  } catch {
+    // Fall through to demo path.
+  }
 
+  // 2) Demo fallback (localStorage)
   if (isDemoMode()) {
     const stored = localStorage.getItem(USER_KEY);
     if (!stored) return null;
@@ -107,20 +126,7 @@ export async function getAdminUser(): Promise<AdminUser | null> {
     }
   }
 
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/admin/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
-      return null;
-    }
-    const { data } = (await res.json()) as { data: AdminUser };
-    return data;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 export function getToken(): string | null {

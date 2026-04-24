@@ -18,7 +18,7 @@ const Body = z.object({
 });
 
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const parsed = await parseBody(request, Body);

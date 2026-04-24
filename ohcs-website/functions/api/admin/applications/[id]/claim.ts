@@ -9,7 +9,7 @@ import { first, run } from '../../../../_shared/db';
 const CLAIM_TTL_MS = 30 * 60 * 1000;
 
 export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const now = Date.now();
@@ -74,7 +74,7 @@ export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, pa
 };
 
 export const onRequestDelete: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   await run(

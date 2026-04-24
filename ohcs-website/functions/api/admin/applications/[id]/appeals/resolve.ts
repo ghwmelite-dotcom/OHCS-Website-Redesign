@@ -17,7 +17,7 @@ const Body = z.object({
 });
 
 export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
   if (auth.admin.role !== 'recruitment_admin' && auth.admin.role !== 'super_admin') {
     return json({ error: 'recruitment_admin role required' }, { status: 403 });

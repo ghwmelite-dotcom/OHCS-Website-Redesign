@@ -12,12 +12,30 @@ export function mockEnv(o: MockEnvOverrides = {}): Env {
   const { d1Healthy = true, r2Healthy = true, aiHealthy = true, db } = o;
 
   const defaultDb = {
-    prepare: vi.fn(() => ({
-      first: vi.fn(async () => {
-        if (!d1Healthy) throw new Error('D1 unavailable');
-        return { ok: 1 };
-      }),
-    })),
+    prepare: vi.fn((sql: string) => {
+      let boundArgs: unknown[] = [];
+      const stmt = {
+        bind: vi.fn((...args: unknown[]) => {
+          boundArgs = args;
+          return stmt;
+        }),
+        first: vi.fn(async () => {
+          if (!d1Healthy) throw new Error('D1 unavailable');
+          // Return null by default so demo-mode check returns false and
+          // unauthenticated requests get the expected 401.
+          return null;
+        }),
+        all: vi.fn(async () => {
+          if (!d1Healthy) throw new Error('D1 unavailable');
+          return { results: [] };
+        }),
+        run: vi.fn(async () => {
+          if (!d1Healthy) throw new Error('D1 unavailable');
+          return { meta: { changes: 0 } };
+        }),
+      };
+      return stmt;
+    }),
   } as unknown as D1Database;
 
   const uploads = {

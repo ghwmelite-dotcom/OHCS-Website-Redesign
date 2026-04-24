@@ -18,6 +18,17 @@ export interface D1Script {
   run?: { meta?: Record<string, unknown> };
 }
 
+/**
+ * Convenience: a `D1Script` that resolves the `admin_demo_mode_enabled`
+ * site_config lookup as `'true'`. Most existing admin endpoint tests
+ * use the header-based demo-mode auth path; prepend this to their
+ * `makeD1([...])` so `requireAdmin` finds the toggle is on.
+ */
+export const DEMO_MODE_ON: D1Script = {
+  sql: 'SELECT value FROM site_config WHERE key = ?',
+  first: { value: 'true' },
+};
+
 export function makeD1(scripts: D1Script[]): D1Database {
   function find(sql: string, binds: unknown[]): D1Script {
     const match = scripts.find((s) => {

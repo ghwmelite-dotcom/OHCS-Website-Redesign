@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { onRequestGet } from '../../../functions/api/admin/applications/appeals';
 import { mockEnv } from '../_helpers/mock-env';
-import { makeD1 } from '../_helpers/d1-mock';
+import { makeD1, DEMO_MODE_ON } from '../_helpers/d1-mock';
 
 const ADMIN_HEADERS = {
   'X-Admin-User-Email': 'reviewer-b@ohcs.gov.gh',
@@ -18,6 +18,7 @@ function ctx(req: Request, db?: D1Database) {
 describe('GET /api/admin/applications/appeals', () => {
   it('returns appeals filtered to exclude self-as-latest-reviewer (the SQL fix)', async () => {
     const db = makeD1([
+      DEMO_MODE_ON,
       {
         sql: APPEALS_SQL,
         binds: ['appeal_under_review', 'reviewer-b@ohcs.gov.gh'],
@@ -46,10 +47,13 @@ describe('GET /api/admin/applications/appeals', () => {
   });
 
   it('rejects 403 when caller is not recruitment_admin or super_admin', async () => {
+    const db = makeD1([
+      DEMO_MODE_ON,
+    ]);
     const req = new Request('https://x/api/admin/applications/appeals', {
       headers: { 'X-Admin-User-Email': 'r@x', 'X-Admin-User-Role': 'reviewer' },
     });
-    const res = await onRequestGet(ctx(req));
+    const res = await onRequestGet(ctx(req, db));
     expect(res.status).toBe(403);
   });
 
