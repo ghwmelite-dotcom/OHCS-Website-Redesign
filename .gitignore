@@ -1,5 +1,9 @@
 .superpowers/
 
+# D1 backup dumps — may contain applicant PII; keep out of git
+backups/
+**/backups/
+
 # Node dependencies
 node_modules/
 **/node_modules/

@@ -12,7 +12,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "ohcs-recruitment"
-database_id = "f2683715-2426-43d9-bb7c-885d9e64648d"
+database_id = "75e11590-a648-45ba-98a2-658525794896"
 
 # R2 bucket (uploaded files)
 [[r2_buckets]]
@@ -54,7 +54,7 @@ EMAIL_PROVIDER = "resend"
 [[env.preview.d1_databases]]
 binding = "DB"
 database_name = "ohcs-recruitment"
-database_id = "f2683715-2426-43d9-bb7c-885d9e64648d"
+database_id = "75e11590-a648-45ba-98a2-658525794896"
 
 [[env.preview.r2_buckets]]
 binding = "UPLOADS"
