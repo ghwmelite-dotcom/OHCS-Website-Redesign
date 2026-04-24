@@ -9,6 +9,7 @@ import { first, run } from '../../../../_shared/db';
 import { sendEmail } from '../../../../_shared/email';
 import { sendSms } from '../../../../_shared/sms';
 import { escapeHtml } from '../../../../_shared/escape-html';
+import { extractPhone } from '../../../../_shared/form-data';
 import { z } from 'zod';
 
 const Body = z.object({
@@ -45,19 +46,6 @@ interface AppRow {
   exercise_id: string;
   email: string;
   form_data: string | null;
-}
-
-function extractPhone(formDataJson: string | null): string | null {
-  if (!formDataJson) return null;
-  try {
-    const parsed = JSON.parse(formDataJson) as { phone?: unknown };
-    if (typeof parsed.phone === 'string' && parsed.phone.trim().length > 0) {
-      return parsed.phone.trim();
-    }
-  } catch {
-    // form_data corrupt — silently skip SMS
-  }
-  return null;
 }
 
 export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {

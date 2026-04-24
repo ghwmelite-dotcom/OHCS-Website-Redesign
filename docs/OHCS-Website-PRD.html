@@ -1,0 +1,1600 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OHCS Digital Portal &amp; Recruitment Platform — PRD v1.0.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@page {
+  size: A4;
+  margin: 22mm 18mm 24mm 18mm;
+}
+
+@page :first {
+  margin: 0;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Libre Baskerville', Georgia, serif;
+  font-size: 10.5pt;
+  line-height: 1.55;
+  color: #1A1A1A;
+  background: #FDFAF5;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ---------- Title page ---------- */
+
+.title-page {
+  height: 297mm;
+  width: 210mm;
+  padding: 0;
+  position: relative;
+  background: linear-gradient(160deg, #0E3819 0%, #1B5E20 50%, #2E7D32 100%);
+  color: #FDFAF5;
+  page-break-after: always;
+  overflow: hidden;
+}
+
+.title-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(212,160,23,0.06) 0 1px, transparent 1px 38px),
+    repeating-linear-gradient(90deg, rgba(212,160,23,0.06) 0 1px, transparent 1px 38px);
+  pointer-events: none;
+}
+
+.title-page::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14px;
+  background:
+    linear-gradient(90deg,
+      #D4A017 0 16.66%,
+      #B71C1C 16.66% 33.32%,
+      #1B5E20 33.32% 49.98%,
+      #D4A017 49.98% 66.64%,
+      #B71C1C 66.64% 83.30%,
+      #1B5E20 83.30% 100%
+    );
+}
+
+.title-inner {
+  position: relative;
+  z-index: 2;
+  padding: 26mm 22mm 20mm 22mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.title-eyebrow {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 10pt;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #E8C547;
+  margin-bottom: 16mm;
+}
+
+.title-stripe {
+  width: 64px;
+  height: 4px;
+  background: #D4A017;
+  margin-bottom: 12mm;
+}
+
+.title-page h1.doc-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: 44pt;
+  line-height: 1.05;
+  margin: 0 0 8mm 0;
+  color: #FFFFFF;
+  letter-spacing: -0.5pt;
+}
+
+.title-page .doc-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 18pt;
+  font-weight: 500;
+  font-style: italic;
+  color: #E8C547;
+  margin-bottom: 14mm;
+}
+
+.title-page .doc-tagline {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 11.5pt;
+  font-style: italic;
+  color: rgba(253,250,245,0.92);
+  max-width: 130mm;
+  line-height: 1.55;
+  margin-bottom: auto;
+}
+
+.title-meta {
+  border-collapse: collapse;
+  margin-top: 12mm;
+  width: 130mm;
+}
+
+.title-meta td {
+  padding: 6px 14px 6px 0;
+  vertical-align: top;
+  font-size: 10pt;
+  border: none;
+  border-bottom: 1px solid rgba(232,197,71,0.25);
+}
+
+.title-meta td:first-child {
+  font-family: 'Libre Baskerville', serif;
+  font-weight: 700;
+  color: #E8C547;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 8.5pt;
+  width: 36mm;
+  white-space: nowrap;
+  padding-top: 9px;
+}
+
+.title-meta td:nth-child(2) {
+  color: rgba(253,250,245,0.95);
+  padding-left: 0;
+}
+
+.title-meta strong { color: #FFFFFF; }
+
+/* ---------- Body ---------- */
+
+.body-wrap {
+  background: #FDFAF5;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Playfair Display', serif;
+  color: #0E3819;
+  font-weight: 700;
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 22pt;
+  letter-spacing: -0.3pt;
+  border-bottom: 2px solid #D4A017;
+  padding-bottom: 8px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  page-break-before: always;
+  page-break-after: avoid;
+}
+
+h1:first-of-type {
+  page-break-before: auto;
+}
+
+/* The numbered section heading "1. Executive Summary" gets a tinted background */
+h1::before {
+  display: block;
+  font-size: 9pt;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #B71C1C;
+  margin-bottom: 6px;
+  font-family: 'Libre Baskerville', serif;
+  font-weight: 700;
+  font-style: normal;
+  content: 'OHCS DIGITAL PORTAL · PRD';
+}
+
+h2 {
+  font-size: 15pt;
+  margin-top: 22px;
+  margin-bottom: 12px;
+  color: #1B5E20;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 12pt;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  color: #1B5E20;
+  page-break-after: avoid;
+}
+
+p {
+  margin: 0 0 10px 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+a { color: #1B5E20; text-decoration: none; border-bottom: 1px dotted #D4A017; }
+
+strong { color: #0E3819; font-weight: 700; }
+
+em { color: #5C5549; }
+
+ul, ol { margin: 6px 0 12px 0; padding-left: 22px; }
+li { margin-bottom: 4px; }
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9pt;
+  background: rgba(27,94,32,0.07);
+  color: #0E3819;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+pre {
+  background: #0E3819;
+  color: #E8C547;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  line-height: 1.5;
+  overflow-x: auto;
+  page-break-inside: avoid;
+}
+
+pre code { background: transparent; color: inherit; padding: 0; }
+
+/* ---------- Tables ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 16px 0;
+  font-size: 9.5pt;
+  page-break-inside: avoid;
+}
+
+table th {
+  background: #1B5E20;
+  color: #FDFAF5;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 9.5pt;
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 2px solid #D4A017;
+}
+
+table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #E5DDD0;
+  vertical-align: top;
+}
+
+table tr:nth-child(even) td { background: rgba(253,250,245,0.6); }
+
+table tr:hover td { background: rgba(212,160,23,0.06); }
+
+/* ---------- Hero stat strip (first table in Executive Summary) ---------- */
+
+.hero-stats {
+  margin: 14px 0 20px 0;
+  background: #0E3819;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hero-stats table {
+  margin: 0;
+  background: transparent;
+}
+
+.hero-stats td {
+  background: transparent !important;
+  border: none;
+  text-align: center;
+  padding: 14px 6px 6px 6px;
+  color: #FDFAF5;
+  width: 16.66%;
+  vertical-align: middle;
+  border-right: 1px solid rgba(212,160,23,0.18);
+}
+
+.hero-stats td:last-child { border-right: none; }
+
+.hero-stats tr:first-child td {
+  font-family: 'Playfair Display', serif;
+  font-size: 26pt;
+  font-weight: 800;
+  color: #E8C547;
+  padding-top: 16px;
+  padding-bottom: 0;
+}
+
+.hero-stats tr:nth-child(2) td {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 8pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(253,250,245,0.85);
+  padding-top: 4px;
+  padding-bottom: 14px;
+  font-weight: 400;
+  background: transparent !important;
+}
+
+.hero-stats tr:hover td { background: transparent !important; }
+
+/* ---------- Blockquotes / pull quotes ---------- */
+
+blockquote {
+  margin: 18px 0;
+  padding: 12px 18px 12px 18px;
+  border-left: 4px solid #D4A017;
+  background: rgba(212,160,23,0.07);
+  font-family: 'Playfair Display', serif;
+  font-size: 12pt;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #0E3819;
+  page-break-inside: avoid;
+}
+
+blockquote p { margin: 0; text-align: left; }
+
+blockquote strong { color: #B71C1C; }
+
+/* ---------- Horizontal rules ---------- */
+
+hr {
+  border: none;
+  border-top: 1px solid #E5DDD0;
+  margin: 18px 0;
+}
+
+/* ---------- TOC ---------- */
+
+.toc-wrap ol {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: section;
+}
+
+.toc-wrap ol li {
+  counter-increment: section;
+  padding: 8px 0;
+  border-bottom: 1px dotted #E5DDD0;
+  font-size: 10.5pt;
+  display: flex;
+  align-items: baseline;
+}
+
+.toc-wrap ol li::before {
+  content: counter(section, decimal-leading-zero);
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: #D4A017;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+/* ---------- Closing block ---------- */
+
+.closing {
+  margin-top: 24mm;
+  padding: 12mm 0 0 0;
+  border-top: 4px solid #D4A017;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  page-break-before: always;
+}
+
+.closing .crest {
+  font-size: 16pt;
+  font-weight: 700;
+  color: #0E3819;
+  margin-bottom: 4px;
+}
+
+.closing .republic {
+  font-size: 11pt;
+  color: #5C5549;
+  margin-bottom: 6px;
+}
+
+.closing .motto {
+  font-style: italic;
+  color: #B71C1C;
+  font-size: 11pt;
+  letter-spacing: 0.1em;
+  margin-bottom: 18mm;
+}
+
+.closing .prepared {
+  font-family: 'Libre Baskerville', serif;
+  font-style: italic;
+  color: #5C5549;
+  font-size: 9.5pt;
+}
+
+/* keep tables and figures intact */
+table, figure, blockquote, pre { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<section class="title-page">
+  <div class="title-inner">
+    <div>
+      <div class="title-eyebrow">Office of the Head of the Civil Service · Republic of Ghana</div>
+      <div class="title-stripe"></div>
+      <h1 class="doc-title">OHCS Digital Portal<br>&amp; Recruitment Platform</h1>
+      <div class="doc-subtitle">Product Requirements Document</div>
+      <div class="doc-tagline">
+        The Official Web Presence and End-to-End Recruitment System of the
+        Office of the Head of the Civil Service, Republic of Ghana.
+        Built for citizens, for prospective recruits, and for the officers
+        who serve them.
+      </div>
+    </div>
+
+    <table class="title-meta">
+      <tr><td>Document</td><td><strong>PRD v1.0.0</strong></td></tr>
+      <tr><td>Date</td><td>April 2026</td></tr>
+      <tr><td>Author</td><td>OHCS Product Engineering</td></tr>
+      <tr><td>Status</td><td>Production — Sub-project A shipped, B–D scoped</td></tr>
+      <tr><td>For</td><td>Head of the Civil Service · Permanent Secretaries · Civil Service Council</td></tr>
+      <tr><td>Classification</td><td>Internal — OHCS Leadership</td></tr>
+    </table>
+  </div>
+</section>
+
+<div class="body-wrap">
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Document</strong></td>
+<td>PRD v1.0.0</td>
+</tr>
+<tr>
+<td><strong>Date</strong></td>
+<td>April 2026</td>
+</tr>
+<tr>
+<td><strong>Author</strong></td>
+<td>OHCS Product Engineering</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Production — Sub-project A shipped, B–D scoped</td>
+</tr>
+<tr>
+<td><strong>For</strong></td>
+<td>Head of the Civil Service · Permanent Secretaries · Civil Service Council</td>
+</tr>
+<tr>
+<td><strong>Classification</strong></td>
+<td>Internal — OHCS Leadership</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Table of Contents</h2><div class="toc-wrap"><ol>
+<li><strong>Executive Summary</strong> — Vision, what we shipped, and what is next</li>
+<li><strong>The Case for a Modern OHCS Portal</strong> — Why the WordPress era ended</li>
+<li><strong>The Case for a Digital Recruitment Pipeline</strong> — Why paper recruitment has to stop</li>
+<li><strong>Product Overview</strong> — What the platform delivers today</li>
+<li><strong>Target Audience &amp; User Personas</strong> — Who we serve and how</li>
+<li><strong>Public Website — Feature Inventory</strong> — Every page, every feature</li>
+<li><strong>Recruitment Portal — The Applicant Journey</strong> — Magic link to merit list</li>
+<li><strong>Recruitment Portal — The Reviewer &amp; Admin Workflow</strong> — Open-queue vetting at scale</li>
+<li><strong>AI &amp; Intelligence</strong> — Lexi AI assistant and document verification</li>
+<li><strong>System Architecture</strong> — Cloudflare-native edge platform</li>
+<li><strong>Design System &amp; UX</strong> — &quot;Institutional Luxury with Ghanaian Soul&quot;</li>
+<li><strong>Security &amp; Privacy</strong> — Defence in depth for citizen data</li>
+<li><strong>Deployment &amp; Operations</strong> — How the platform runs in production</li>
+<li><strong>Roadmap</strong> — From shipped to fully operational</li>
+</ol></div>
+<hr />
+<h2>1. Executive Summary</h2>
+<p>The Office of the Head of the Civil Service has, for the better part of a decade, presented itself to Ghana through a basic WordPress brochure site and conducted recruitment on paper, in queues, with hand-delivered envelopes and manually adjudicated certificates. In a country where 65% of citizens reach the internet through a smartphone first, where graduate applicants come from twelve regional universities, and where every other arm of the Civil Service is being asked to digitise — that posture is no longer defensible.</p>
+<p>The OHCS Digital Portal replaces both. It is a single, coherent web application that does two things at the same level of polish: it is the <strong>public face</strong> of the Civil Service, and it is the <strong>end-to-end recruitment system</strong> that selects who joins it.</p>
+<blockquote>
+<p>&quot;The OHCS website should look and feel like the institution it represents — rigorous, dignified, modern, and unmistakably Ghanaian. The recruitment system should be the easiest part of joining the Civil Service, not the hardest.&quot;</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">22+</th>
+<th style="text-align:center">19</th>
+<th style="text-align:center">21</th>
+<th style="text-align:center">14</th>
+<th style="text-align:center">202</th>
+<th style="text-align:center">0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Public pages</td>
+<td style="text-align:center">Public routes</td>
+<td style="text-align:center">Application states</td>
+<td style="text-align:center">Document types</td>
+<td style="text-align:center">Tests passing</td>
+<td style="text-align:center">TypeScript errors</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What is shipped to production today (<code>ohcs.pages.dev</code>)</strong></p>
+<ul>
+<li>The full public website — homepage, About (5 pages), 5 Directorates, 6 Units, Departments, Services hub, Publications library, Training Institutions, Contact, /track lookup</li>
+<li><strong>Lexi</strong> — the OHCS Live Engagement &amp; eXpert Intelligence AI bot, with 25 seeded knowledge entries</li>
+<li>The complete admin shell — content management for News, Events, Publications, Leadership, Submissions, Users, Audit Log, Settings, and the Lexi Training Hub</li>
+<li><strong>Recruitment Sub-project A</strong> — Applicant magic-link authentication, 5-step application wizard with auto-save, 15-document master library with AI-assisted verification, reviewer pipeline with side-by-side decision UI, per-document accept/reject/re-upload decisions, application-level vetting roll-up, appeals queue, status-transition audit trail, daily cron deadline processing</li>
+<li>A comprehensive security baseline — SHA-256 hashed magic-link tokens, HMAC-signed admin document URLs, constant-time comparisons, HTML-escaped outbound emails, per-email rate limiting</li>
+</ul>
+<p><strong>What is next</strong></p>
+<ul>
+<li><strong>Sub-project B — Online Payment</strong> (Hubtel MoMo + bank, GHS 100 cap, refunds, deferred per leadership instruction)</li>
+<li><strong>Sub-project C — Online Examination</strong> (admin question bank, timed exam UI, server-enforced timer, auto-grade against per-exercise pass mark)</li>
+<li><strong>Sub-project D — Online Interview</strong> (slot picker, Zoom or Microsoft Teams meeting auto-create, outcome capture, waitlist management)</li>
+</ul>
+<p><strong>What is needed to operationalise</strong></p>
+<p>The technology has been built. To go from a finished product to an operational national service:</p>
+<ol>
+<li><strong>DNS cutover from <code>ohcs.pages.dev</code> to <code>ohcs.gov.gh</code></strong> — Coordination with NITA. The application is ready; the domain is gated externally.</li>
+<li><strong>Real admin authentication</strong> — A formal decision between Cloudflare Access SSO (recommended), magic-link admin, or D1-backed PBKDF2. The interim header-based gate must be replaced before the portal goes public to citizens.</li>
+<li><strong><code>ohcs.gov.gh</code> email sender via Resend or MailChannels</strong> — Today every magic link sends from the Resend sandbox address <code>onboarding@resend.dev</code>, which only delivers to addresses verified on the OHCS Resend account. DKIM/SPF on <code>ohcs.gov.gh</code> unblocks real applicant testing.</li>
+<li><strong>Knowledge population for Lexi</strong> — Each directorate and unit can supply policy documents to deepen Lexi's grounding.</li>
+<li><strong>Endorsement and rollout</strong> — A formal announcement that recruitment will proceed exclusively through the portal for the next graduate exercise.</li>
+</ol>
+<p>The cost of all four items combined is a fraction of a single year of paper recruitment.</p>
+<hr />
+<h2>2. The Case for a Modern OHCS Portal</h2>
+<p>The current <code>ohcs.gov.gh</code> is a stock WordPress installation. It loads slowly on metered mobile data, surfaces the same six press releases month after month, has no search, no application status lookup, and offers visiting officers, journalists, partners, and prospective recruits no meaningful way to engage with the institution other than to read whatever was last posted.</p>
+<h3>2.1 What citizens, civil servants, and partners actually need</h3>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Old WordPress Site</th>
+<th>OHCS Digital Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>First impression</strong></td>
+<td>Generic theme, undifferentiated stock images, broken thumbnails.</td>
+<td>Cinematic hero carousel, animated OHCS crest, Kente-woven motifs, editorial typography.</td>
+</tr>
+<tr>
+<td><strong>Find a directorate</strong></td>
+<td>Buried in nested menus, no slugs, no visual hierarchy.</td>
+<td>First-class <code>/directorates</code> and <code>/units</code> with detail pages for each of the 5 directorates and 6 units.</td>
+</tr>
+<tr>
+<td><strong>Submit a complaint or RTI request</strong></td>
+<td>PDF download, print, scan, email.</td>
+<td>Native web forms at <code>/services/complaints</code>, <code>/services/rti</code>, <code>/services/feedback</code> with reference numbers and <code>/track</code> lookup.</td>
+</tr>
+<tr>
+<td><strong>Apply for a Civil Service post</strong></td>
+<td>Notice in a newspaper, queue at a regional office.</td>
+<td><code>/services/recruitment</code> → magic-link in email → 5-step wizard → applicant dashboard.</td>
+</tr>
+<tr>
+<td><strong>Track an application</strong></td>
+<td>Phone the office, hope someone picks up.</td>
+<td>Self-service <code>/track</code> accepts both <code>OHCS-YYYY-NNNNN</code> (recruitment) and <code>OHCS-XXX-YYYYMMDD-XXXX</code> (complaint/RTI) reference formats.</td>
+</tr>
+<tr>
+<td><strong>Get an answer at 11pm</strong></td>
+<td>Wait until office hours.</td>
+<td><strong>Lexi</strong> at <code>/assistant</code> — 25-entry knowledge base on the Civil Service Act, RTI Act, leave entitlements, pension system, code of conduct, promotions, and discipline procedures.</td>
+</tr>
+<tr>
+<td><strong>Read official publications</strong></td>
+<td>Hyperlink farm with broken downloads.</td>
+<td>Searchable <code>/publications</code> library, paginated 12 per page, category filters across forms, circulars, policy, reports, legislation, guidelines.</td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 The institutional argument</h3>
+<p>A government website is not a marketing surface. It is the most-visited document the institution publishes. It tells journalists, prospective recruits, foreign delegations, donor partners, and citizens what the Civil Service believes about itself. A site that cannot reach the height of professionalism the institution holds itself to in person is an active liability.</p>
+<p>The OHCS Digital Portal corrects this. It is not a brochure that needs to be tolerated. It is a working instrument of governance that every other agency can be pointed to as a benchmark.</p>
+<hr />
+<h2>3. The Case for a Digital Recruitment Pipeline</h2>
+<p>Civil Service recruitment in Ghana, as conducted today, has five well-documented friction points: physical queues at a single Accra location for nationals of every region; opaque document checking with no audit trail; no consistent communication channel between the Service and the applicant; manual roll-up of decisions across hundreds of folders; and complete invisibility into where any given application sits in the pipeline at any given time.</p>
+<h3>3.1 What the platform changes</h3>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Old Process</th>
+<th>OHCS Recruitment Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Discovery</strong></td>
+<td>Newspaper notice, regional office circular.</td>
+<td><code>/services/recruitment</code> page, prominent on the homepage when an exercise is active.</td>
+</tr>
+<tr>
+<td><strong>Apply</strong></td>
+<td>Physical form, photocopies of certificates, courier or in-person.</td>
+<td>Magic-link email → 5-step wizard → upload documents from a phone.</td>
+</tr>
+<tr>
+<td><strong>Identity</strong></td>
+<td>Visual check at counter.</td>
+<td>NIA Ghana Card field with format enforcement, optional AI photo and identity verification.</td>
+</tr>
+<tr>
+<td><strong>Document vetting</strong></td>
+<td>Folder-by-folder by hand.</td>
+<td>Side-by-side reviewer view: per-document Accept / Reject / Re-upload decisions, automatic application-level roll-up.</td>
+</tr>
+<tr>
+<td><strong>AI assistance</strong></td>
+<td>None.</td>
+<td>Workers AI runs <code>@cf/llava-hf/llava-1.5-7b-hf</code> on uploaded image documents and <code>@cf/meta/llama-3.1-8b-instruct</code> on PDF text — flags suspicious certificates and obvious mismatches before a human ever opens the file.</td>
+</tr>
+<tr>
+<td><strong>Communication</strong></td>
+<td>Phone calls, sometimes letters.</td>
+<td>Templated email and SMS at every status change — submission confirmation, vetting outcome, appeal acknowledgement.</td>
+</tr>
+<tr>
+<td><strong>Appeals</strong></td>
+<td>Walk in to file an appeal. Weeks of follow-up.</td>
+<td><code>/apply/appeal/</code> form, routed to a separate <code>recruitment_admin</code> reviewer who cannot self-approve. 7-day window enforced by daily cron.</td>
+</tr>
+<tr>
+<td><strong>Audit</strong></td>
+<td>Paper trail in folders.</td>
+<td>Append-only <code>status_transitions</code> table with actor, role, reason, timestamp on every state change.</td>
+</tr>
+<tr>
+<td><strong>Tracking</strong></td>
+<td>Phone the office.</td>
+<td><code>/track</code> lookup using only the reference number.</td>
+</tr>
+</tbody>
+</table>
+<h3>3.2 The five non-negotiables, locked in</h3>
+<p>After review with leadership, the following decisions are fixed and reflected in the system architecture:</p>
+<ol>
+<li><strong>Maximum exam fee: GHS 100.</strong> Hard-coded as the upper bound in Sub-project B's specification.</li>
+<li><strong>Exams: fully online.</strong> No physical centres. Sub-project C will deliver a server-timed, auto-graded exam UI.</li>
+<li><strong>Interviews: fully online via Zoom or Microsoft Teams.</strong> Choice between the two finalised in Sub-project D's design phase.</li>
+<li><strong>A single active recruitment exercise at a time.</strong> Server-enforced since Phase 3.5 — the constraint lives in D1, not in client memory.</li>
+<li><strong>All time-critical notifications via SMS in addition to email.</strong> Hubtel SMS already integrated; the helper falls back to a development log when the API key is not set.</li>
+</ol>
+<hr />
+<h2>4. Product Overview</h2>
+<p>The OHCS Digital Portal is a single Next.js 16 application deployed on Cloudflare Pages, with all server-side logic running as Pages Functions on Cloudflare's edge. It comprises three surfaces:</p>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Audience</th>
+<th>What it delivers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Public Website</strong></td>
+<td>Citizens, journalists, prospective applicants, partners</td>
+<td>22+ pages including homepage, About, 5 Directorates, 6 Units, Departments, Services hub, Publications, Training, Contact, <code>/track</code>, Lexi AI assistant</td>
+</tr>
+<tr>
+<td><strong>Recruitment Portal</strong></td>
+<td>Applicants and Civil Service reviewers</td>
+<td>Magic-link applicant authentication, 5-step application wizard, 15-document master library, AI-assisted verification, reviewer pipeline, appeals queue, status-transition audit trail</td>
+</tr>
+<tr>
+<td><strong>Admin Console</strong></td>
+<td>OHCS staff and content managers</td>
+<td>News, Events, Publications, Leadership, Submissions, Users, Audit Log, Settings, and the <strong>Lexi Training Hub</strong> for managing the AI knowledge base</td>
+</tr>
+</tbody>
+</table>
+<p>The platform is multi-channel by design. Applicants receive notifications on email and (when phone is supplied) SMS; admins access the same data on desktop and mobile; the public site is fully responsive down to feature-phone-class viewports.</p>
+<hr />
+<h2>5. Target Audience &amp; User Personas</h2>
+<h3>Akua — Graduate Applicant</h3>
+<p>KNUST BSc Computer Science, applying for her first Civil Service post.
+Lives in Kumasi, applies from her phone on metered data, has never set up a Resend or Hubtel account in her life.</p>
+<ul>
+<li>One-tap magic link — no password to remember</li>
+<li>Auto-save at every wizard step — survives a Dumsor at any moment</li>
+<li>SMS receipts the moment vetting passes or fails</li>
+<li><code>/track</code> page she can check from her mother's phone if her own runs out of credit</li>
+</ul>
+<h3>Nana Yaw — Recruitment Reviewer</h3>
+<p>Recruitment Officer in the Recruitment, Training &amp; Development Directorate (RTDD).
+Reviews 80–120 applications per day during an active exercise. Wants to do it accurately and quickly without getting fatigued.</p>
+<ul>
+<li>Open-queue model — clicks &quot;Take next&quot; and is auto-assigned the oldest unclaimed application</li>
+<li>Side-by-side viewer — left pane: per-document decision; right pane: signed-URL R2 preview</li>
+<li>AI pre-flagging on uploaded documents</li>
+<li>30-minute idle TTL on claims so abandoned reviews automatically return to the queue</li>
+<li>Cannot review his own appeal — the SQL filter excludes any application where he was the latest reviewer</li>
+</ul>
+<h3>Mr Adzornu — Recruitment Admin (recruitment_admin role)</h3>
+<p>Senior Officer authorised to handle appeals.
+Reviews escalated cases where an applicant disputes a vetting outcome.</p>
+<ul>
+<li>Dedicated <code>/admin/recruitment/appeals</code> queue, separated from the main pipeline</li>
+<li>Sees the original reviewer's decision, the applicant's appeal text, and full status history</li>
+<li>Two-click overturn or uphold with mandatory notes (minimum 10 characters)</li>
+<li>Decision triggers an applicant email with the outcome and next steps</li>
+</ul>
+<h3>Mrs Aboah — Communications Officer</h3>
+<p>OHCS Communications team.
+Publishes news, events, leadership profile updates, and downloadable publications.</p>
+<ul>
+<li>WYSIWYG-free admin shell — fields, not freeform HTML</li>
+<li>News, Events, Publications, Leadership all manageable through <code>/admin</code></li>
+<li>Recently-changed activity feed on the admin dashboard</li>
+<li>Submissions inbox unifies RTI, complaints, and feedback for triage</li>
+</ul>
+<hr />
+<h2>6. Public Website — Feature Inventory</h2>
+<p>22+ pages, all server-rendered to static HTML for sub-second loads on 3G.</p>
+<h3>Homepage (<code>/</code>)</h3>
+<ul>
+<li><strong>Hero carousel</strong> — 3-slide showcase with Ken Burns zoom, animated Kente mesh overlay, floating civic icons, gold bokeh particles, Kente-framed borders</li>
+<li><strong>Animated logo</strong> — OHCS Ghana Civil Service crest with letter-by-letter reveal, gold divider growth, Kente stripe draw animation</li>
+<li><strong>Quick services</strong> — 4-tile direct entry to the highest-traffic services</li>
+<li><strong>Stats banner</strong> — current Civil Service strength</li>
+<li><strong>News &amp; events section</strong> — latest published items, admin-managed</li>
+<li><strong>Leadership spotlight</strong> — featured leader with photo and quote (currently Dr. Evans Aggrey-Darkoh, Head of the Civil Service; Mr. Sylvanus Kofi Adzornu, Chief Director)</li>
+<li><strong>Directorates grid</strong> — visual entry into all 5 line directorates</li>
+<li><strong>Lexi AI CTA</strong> — invitation to talk to the assistant</li>
+<li><strong>Final CTA section</strong> — recruitment entry point when an exercise is active</li>
+</ul>
+<h3>About (<code>/about</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/about</code></td>
+<td>Overview of the OHCS mandate</td>
+</tr>
+<tr>
+<td><code>/about/civil-service</code></td>
+<td>Constitutional and statutory framework</td>
+</tr>
+<tr>
+<td><code>/about/structure</code></td>
+<td>The 5 directorates + 6 units organogram</td>
+</tr>
+<tr>
+<td><code>/about/leadership</code></td>
+<td>Leadership team profiles</td>
+</tr>
+<tr>
+<td><code>/about/partners</code></td>
+<td>Partner institutions and collaborations</td>
+</tr>
+</tbody>
+</table>
+<h3>Organisational Surfaces</h3>
+<ul>
+<li><code>/directorates</code> — Master grid of all 5 line directorates</li>
+<li><code>/directorates/[slug]</code> — Detail page for each (RSIMD, F&amp;A, PBMED, CMD, RTDD)</li>
+<li><code>/units</code> — Master grid of all 6 support units</li>
+<li><code>/units/[slug]</code> — Detail page for each (Reform Coordinating Unit, Internal Audit Unit, Civil Service Council, Estate, Accounts, Stores)</li>
+<li><code>/departments</code> — Civil Service departments directory</li>
+<li><code>/training</code> — Training &amp; development programmes</li>
+<li><code>/training/[slug]</code> — Individual programme detail (CSTC, GIMPA collaboration, Regional Training)</li>
+</ul>
+<h3>Services Hub (<code>/services</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/services/recruitment</code></td>
+<td>Recruitment portal entry — process steps, scam warnings, active-exercise tracker. Hides the application form when no exercise is active to prevent fraud.</td>
+</tr>
+<tr>
+<td><code>/services/rti</code></td>
+<td>Right to Information request — educational FAQ accordion, process explainer, hidden-by-default request form</td>
+</tr>
+<tr>
+<td><code>/services/complaints</code></td>
+<td>Complaints submission portal</td>
+</tr>
+<tr>
+<td><code>/services/feedback</code></td>
+<td>General feedback form</td>
+</tr>
+</tbody>
+</table>
+<h3>Public Utilities</h3>
+<ul>
+<li><code>/publications</code> — Searchable, category-filtered document library (forms, circulars, policy, reports, legislation, guidelines), paginated 12 per page</li>
+<li><code>/contact</code> — Office address, map, support channels</li>
+<li><code>/track</code> — Universal submission tracker, accepts both reference formats</li>
+<li><code>/assistant</code> — Standalone Lexi AI chat interface</li>
+</ul>
+<hr />
+<h2>7. Recruitment Portal — The Applicant Journey</h2>
+<p>The applicant never sees a password. They never see an &quot;account&quot; page. The whole flow is built around a single contract: <strong>the email address you use to apply is the only thing you need to remember.</strong></p>
+<h3>Step 0 — Discovery</h3>
+<p>Applicant lands on <code>/services/recruitment</code>. If a recruitment exercise is currently <code>active</code> in D1, they see the exercise name, the deadline, the scam warnings, and a single &quot;Start Application&quot; button. If no exercise is active, the form is hidden entirely — there is no way to fill out a phantom application during a quiet period.</p>
+<h3>Step 1 — Magic Link Request</h3>
+<p>Applicant enters their email address and clicks a button. A POST request hits <code>/api/applications/start</code>:</p>
+<ol>
+<li>Per-email rate limit (3 requests per rolling 5 minutes) is enforced before any work is done.</li>
+<li>The active exercise is verified server-side.</li>
+<li>A 256-bit random token is generated, <strong>SHA-256 hashed</strong>, and the hash is stored in D1 along with the email and exercise id.</li>
+<li>The raw token is emailed to the applicant via Resend, embedded in a magic link.</li>
+<li>Token expires in 30 minutes and is single-use.</li>
+</ol>
+<p>This is the only authentication step the applicant ever does. There is no password to forget, no account to recover.</p>
+<h3>Step 2 — Magic Link Click</h3>
+<p>Applicant clicks the link in their inbox. The endpoint at <code>/api/applications/magic/[token]</code> hashes the inbound token, looks up the matching row, marks it <code>used_at</code>, creates an <code>application_sessions</code> row keyed by an <code>HttpOnly; Secure; SameSite=Lax</code> cookie with a 7-day TTL, generates a unique reference number in the format <code>OHCS-YYYY-NNNNN</code>, creates a <code>draft</code> application in D1, and 302-redirects to <code>/apply/form/?step=1</code>.</p>
+<h3>Step 3 — The 5-Step Wizard</h3>
+<p>The wizard at <code>/apply/form/</code> auto-saves the applicant's working draft on every field change with debounce. A header indicator shows <strong>Saving / Saved / Error with retry</strong> in real time so the applicant always knows whether they can close the tab safely.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Title</th>
+<th>Captures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Personal Details</strong></td>
+<td>Full name, date of birth, gender, NIA Ghana Card number, phone, address, region, consent agreement</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Eligibility</strong></td>
+<td>Holds first degree, professional qualification flag, PWD status. These flags drive conditional document requirements in Step 4.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Education &amp; Experience</strong></td>
+<td>Highest qualification, field of study, institution, graduation year, degree class, years experience, current employment, work history</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Documents</strong></td>
+<td>Upload required documents per exercise requirements. Each upload runs server-side magic-byte sniffing, MIME validation, size enforcement, and (where configured) Workers AI verification</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Review &amp; Submit</strong></td>
+<td>Final review, declarative signature, submit</td>
+</tr>
+</tbody>
+</table>
+<p>The applicant can close the tab at any moment, click the magic link again the next day from a different device, and pick up exactly where they left off.</p>
+<h3>Step 4 — Submission</h3>
+<p>On submit, <code>/api/applications/me/submit</code> validates that all required documents are uploaded (respecting conditional requirements like &quot;PWD applicants must upload a medical certificate&quot;), confirms the declaration is agreed, writes a <code>draft → submitted</code> row to <code>status_transitions</code>, sets the application status to <code>submitted</code>, and sends a confirmation email containing the <code>OHCS-YYYY-NNNNN</code> reference number and a link to <code>/track</code>.</p>
+<h3>Step 5 — Vetting Outcome</h3>
+<p>The applicant does nothing during vetting. When a reviewer reaches a decision, the applicant receives:</p>
+<ul>
+<li><strong><code>vetting_passed</code></strong> — Email + SMS: &quot;Your application has passed initial review. Please pay the exam fee to proceed.&quot; (Sub-project B will activate the payment link.)</li>
+<li><strong><code>vetting_failed</code></strong> — Email: &quot;Your application was not successful at vetting. Notes: [reviewer notes]. You may submit an appeal within the appeal window.&quot;</li>
+<li><strong><code>requires_action</code></strong> — Email: &quot;Your application needs additional information before vetting can complete: [list of documents to re-upload].&quot;</li>
+</ul>
+<p>All admin-supplied notes are HTML-escaped before being interpolated into the outbound email, so a malicious reviewer cannot inject arbitrary HTML into the applicant's inbox.</p>
+<h3>Step 6 — Appeal (Optional)</h3>
+<p>If the application terminated at <code>vetting_failed</code>, <code>exam_failed</code>, or <code>rejected</code>, the applicant can visit <code>/apply/appeal/</code>, write a free-text reason (minimum 20 characters), and submit. The application transitions to <code>appeal_under_review</code> and is routed to the dedicated appeals queue, reviewed by <code>recruitment_admin</code> only — never the original reviewer. Default appeal window is 7 days, configurable per exercise.</p>
+<h3>Step 7 — Track at any time</h3>
+<p><code>/track</code> accepts the <code>OHCS-YYYY-NNNNN</code> reference and shows a status timeline with badges for every state the application has passed through.</p>
+<h3>The 21-state ApplicationStatus enum</h3>
+<p>Every application moves through a subset of these states. The full list spans the entire lifecycle from draft to appointed.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>States</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application</td>
+<td><code>draft</code> → <code>submitted</code> → <code>under_review</code></td>
+</tr>
+<tr>
+<td>Vetting outcome</td>
+<td><code>vetting_passed</code> · <code>vetting_failed</code> · <code>requires_action</code></td>
+</tr>
+<tr>
+<td>Appeals</td>
+<td><code>appeal_under_review</code> → <code>appeal_overturned</code> · <code>appeal_upheld</code></td>
+</tr>
+<tr>
+<td>Payment</td>
+<td><code>awaiting_payment</code> → <code>paid</code></td>
+</tr>
+<tr>
+<td>Examination</td>
+<td><code>exam_scheduled</code> → <code>exam_completed</code> → <code>exam_passed</code> · <code>exam_failed</code></td>
+</tr>
+<tr>
+<td>Interview</td>
+<td><code>interview_scheduled</code> → <code>interview_completed</code></td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td><code>shortlisted</code> · <code>waitlisted</code> · <code>appointed</code> · <code>rejected</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each transition writes one append-only row to <code>status_transitions</code> with the actor, role, reason, and timestamp.</p>
+<hr />
+<h2>8. Recruitment Portal — The Reviewer &amp; Admin Workflow</h2>
+<h3>8.1 The Open-Queue Model</h3>
+<p>There is no batch assignment. There is no team lead handing out folders. Every reviewer who logs in sees one button: <strong>&quot;Take next.&quot;</strong> Clicking it triggers <code>/api/admin/applications/[id]/claim</code> which atomically picks the oldest <code>submitted</code> application, sets <code>review_claimed_by</code> and <code>review_claimed_at</code>, and routes the reviewer into the side-by-side detail view.</p>
+<p>If the reviewer walks away without making a decision, the daily cron at <code>/api/system/run-deadlines</code> releases their claim after 30 minutes of inactivity. The application returns to the queue and another reviewer picks it up.</p>
+<h3>8.2 The Side-by-Side Reviewer View (<code>/admin/recruitment/pipeline/detail/</code>)</h3>
+<p>This is where the work happens. The page is split into two panes:</p>
+<p><strong>Left pane — Per-document decisions</strong></p>
+<ul>
+<li>One card per required document type (e.g., National ID, First Degree Certificate, Reference Letter 1)</li>
+<li>Three-state radio: <strong>Accept · Reject · Re-upload</strong></li>
+<li>Mandatory reason field for any non-accept decision (enforced both in the UI and again at the API layer)</li>
+<li>A live &quot;X / Y decided&quot; pill at the top of the pane shows progress at a glance</li>
+<li>A persistent footer holds the reviewer notes textarea and the <strong>Submit Decision</strong> button — pulled out of the scrollable area so it is always visible</li>
+</ul>
+<p><strong>Right pane — Document viewer</strong></p>
+<ul>
+<li>Tabbed strip of every uploaded document, with file-type icons</li>
+<li>Active document is rendered inline via an HMAC-signed R2 URL with a 60-second time-to-live</li>
+<li>Keyboard navigation: ArrowLeft / ArrowRight / Home / End cycle through the documents (full WAI-ARIA tab pattern)</li>
+<li>AI verdict badge per document where Workers AI ran a check (clean ✓ or flagged ⚠)</li>
+</ul>
+<h3>8.3 The Roll-Up Logic</h3>
+<p>When the reviewer hits Submit Decision, the API computes the application-level outcome from the per-document decisions:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Any document <strong>rejected</strong></td>
+<td><code>vetting_failed</code></td>
+</tr>
+<tr>
+<td>Otherwise, any document <strong>needs re-upload</strong></td>
+<td><code>requires_action</code></td>
+</tr>
+<tr>
+<td>Otherwise (all accepted)</td>
+<td><code>vetting_passed</code></td>
+</tr>
+</tbody>
+</table>
+<p>The endpoint atomically writes one <code>document_review_decisions</code> row per document, one <code>application_review_decisions</code> row for the overall outcome, one <code>status_transitions</code> row for the audit trail, updates the application status, releases the claim, and dispatches the applicant notification email and SMS.</p>
+<h3>8.4 Pipeline List (<code>/admin/recruitment/pipeline/</code>)</h3>
+<p>Filter chips for the most-used statuses (New · In Review · Awaiting Resubmit · Passed · Failed · All), search by reference or email, and a status badge that uses a single source of truth — <code>src/lib/application-status.ts</code> — for both the human-readable label and the AA-contrast colour. The desktop view is a six-column table; on mobile it collapses cleanly to a card stack so the reviewer can scan from a phone in the field.</p>
+<h3>8.5 Appeals Queue (<code>/admin/recruitment/appeals/</code>)</h3>
+<p>A separate queue, accessible only to <code>recruitment_admin</code> and <code>super_admin</code> roles. The SQL filter explicitly excludes any application where the caller was the latest reviewer — so an officer who failed an applicant cannot then adjudicate that applicant's appeal. The reviewer reads the original decision, the applicant's appeal text, and either <strong>Overturns</strong> (advancing the application back to <code>vetting_passed</code>) or <strong>Upholds</strong> (terminating to <code>appeal_upheld</code>). Both paths require notes of at least 10 characters. Both paths trigger an email to the applicant.</p>
+<h3>8.6 Audit Trail</h3>
+<p>Every status change writes a row to <code>status_transitions</code> with from-status, to-status, actor email, actor role, reason, and timestamp. This includes system-initiated transitions — when the daily cron promotes a stuck <code>requires_action</code> application to <code>vetting_failed</code> past its resubmission deadline, that transition appears with <code>actor_role = 'system'</code> and reason &quot;Resubmission deadline expired.&quot; There are no silent state changes anywhere in the system.</p>
+<h3>8.7 Daily Cron</h3>
+<p>A GitHub Actions workflow at <code>.github/workflows/cron-deadlines.yml</code> POSTs <code>/api/system/run-deadlines</code> daily at 02:15 UTC with <code>SYSTEM_CRON_SECRET</code> as Bearer auth. The endpoint:</p>
+<ol>
+<li>Releases stale review claims (older than 30 minutes idle)</li>
+<li>Promotes <code>requires_action</code> applications past their resubmission deadline to <code>vetting_failed</code>, writing one audit row per affected application</li>
+<li>Returns the count of affected rows so the workflow log shows what actually happened</li>
+</ol>
+<hr />
+<h2>9. AI &amp; Intelligence</h2>
+<h3>9.1 Lexi — The OHCS Live Engagement &amp; eXpert Intelligence AI Bot</h3>
+<p>Lexi lives at <code>/assistant</code> and is also surfaced through the homepage CTA section. She is conversational, learns the visitor's name on request, varies her greeting by time of day (&quot;Good morning&quot; / &quot;Good afternoon&quot; / &quot;Good evening&quot;), and answers the questions the OHCS receives most often:</p>
+<ul>
+<li>The Civil Service Act (PNDCL 327) and the 1992 Constitution</li>
+<li>The Right to Information Act</li>
+<li>Leave entitlements (annual, sick, maternity, study leave, casual)</li>
+<li>The Civil Service Pension System (CAP 30 vs SSNIT)</li>
+<li>Code of conduct and discipline procedures</li>
+<li>Promotions and the performance management framework</li>
+<li>The 5 directorates, the 6 units, and the leadership team</li>
+<li>Recruitment frequency and how to apply</li>
+</ul>
+<p><strong>The Lexi Training Hub</strong> (<code>/admin/ai-training</code>) is a four-tab admin surface for the Communications team to extend her knowledge:</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Knowledge Base</strong></td>
+<td>25 seeded Q&amp;A pairs, full CRUD, search across entries</td>
+</tr>
+<tr>
+<td><strong>Documents</strong></td>
+<td>10 seeded source documents (Civil Service Act, RTI Act, Code of Conduct, Performance Framework, Conditions of Service, Pensions Act, Admin Instructions, Sexual Harassment Policy, Study Leave Guidelines), each with a processing-state indicator</td>
+</tr>
+<tr>
+<td><strong>Conversations</strong></td>
+<td>Review historic chats, capture user ratings and resolution status</td>
+</tr>
+<tr>
+<td><strong>Settings</strong></td>
+<td>Model parameter management</td>
+</tr>
+</tbody>
+</table>
+<h3>9.2 Document Verification AI (Recruitment)</h3>
+<p>Workers AI runs server-side on every applicant document upload. Two models are used depending on the file type:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Used on</th>
+<th>What it produces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@cf/llava-hf/llava-1.5-7b-hf</code></td>
+<td>JPEG, PNG</td>
+<td>Multi-modal vision verdict — for <code>identity</code> documents, checks whether the photo looks like an ID document; for <code>photo</code> documents, checks portrait-photo norms; for <code>certificate</code> documents, checks for institutional letterhead and signature regions</td>
+</tr>
+<tr>
+<td><code>@cf/meta/llama-3.1-8b-instruct</code></td>
+<td>PDF (text-extracted)</td>
+<td>Document classification — does the text content match what the document type claims to be</td>
+</tr>
+</tbody>
+</table>
+<p>The AI verdict is <strong>advisory</strong>, never blocking. It is stored alongside the upload, surfaced as a badge on the reviewer's tab strip, and used to prioritise: applications with one or more flagged documents bubble to the top of the queue. The reviewer always retains final authority. Confidence threshold is 0.75; the prompt version is recorded so the system can identify which historical decisions were made under which prompt revision.</p>
+<hr />
+<h2>10. System Architecture</h2>
+<h3>10.1 Edge-First on Cloudflare</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hosting</strong></td>
+<td>Cloudflare Pages</td>
+<td>Static HTML for the public site (Next.js App Router, <code>output: &quot;export&quot;</code>)</td>
+</tr>
+<tr>
+<td><strong>Server logic</strong></td>
+<td>Cloudflare Pages Functions</td>
+<td>All <code>/api/**</code> routes, written in TypeScript, deployed as edge functions</td>
+</tr>
+<tr>
+<td><strong>Database</strong></td>
+<td>Cloudflare D1 (SQLite)</td>
+<td>Applications, document types, exercise requirements, sessions, magic-link tokens (hashed), status transitions, review decisions</td>
+</tr>
+<tr>
+<td><strong>Object storage</strong></td>
+<td>Cloudflare R2</td>
+<td>Applicant document uploads, publication PDFs</td>
+</tr>
+<tr>
+<td><strong>AI inference</strong></td>
+<td>Cloudflare Workers AI</td>
+<td>LLaVA vision + Llama 3.1 text classification</td>
+</tr>
+<tr>
+<td><strong>Email</strong></td>
+<td>Resend</td>
+<td>Magic links, vetting outcomes, appeal acknowledgements (sandbox sender today; <code>ohcs.gov.gh</code> post-DNS)</td>
+</tr>
+<tr>
+<td><strong>SMS</strong></td>
+<td>Hubtel</td>
+<td>Time-critical notifications when applicant phone is on file (helper falls back to console log when key not set, so dev runs without an account)</td>
+</tr>
+<tr>
+<td><strong>Cron</strong></td>
+<td>GitHub Actions</td>
+<td>Daily <code>/api/system/run-deadlines</code> at 02:15 UTC</td>
+</tr>
+</tbody>
+</table>
+<h3>10.2 Frontend Stack</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Library</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Framework</td>
+<td>Next.js</td>
+<td>16.2.4</td>
+</tr>
+<tr>
+<td>UI library</td>
+<td>React</td>
+<td>19.2.4</td>
+</tr>
+<tr>
+<td>Styling</td>
+<td>Tailwind CSS</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Form management</td>
+<td>react-hook-form</td>
+<td>7.72.1</td>
+</tr>
+<tr>
+<td>Schema validation</td>
+<td>Zod</td>
+<td>4.3.6 (server-side input validation on every endpoint)</td>
+</tr>
+<tr>
+<td>Server state</td>
+<td>TanStack Query</td>
+<td>5.99.0</td>
+</tr>
+<tr>
+<td>Local state</td>
+<td>Zustand</td>
+<td>5.0.12</td>
+</tr>
+<tr>
+<td>Animation</td>
+<td>Framer Motion</td>
+<td>12.38.0</td>
+</tr>
+<tr>
+<td>Icons</td>
+<td>Lucide React</td>
+<td>1.8.0</td>
+</tr>
+<tr>
+<td>Internationalisation</td>
+<td>next-intl</td>
+<td>4.9.1</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td>Vitest</td>
+<td>4.1.4 (202 passing)</td>
+</tr>
+</tbody>
+</table>
+<h3>10.3 Schema Footprint</h3>
+<p>Nine D1 migrations from <code>0001_initial_meta.sql</code> through <code>0009_pipeline_indexes.sql</code>, comprising 14 tables: <code>applications</code>, <code>application_sessions</code>, <code>magic_link_tokens</code>, <code>application_documents</code>, <code>document_types</code>, <code>exercise_document_requirements</code>, <code>recruitment_exercises</code>, <code>document_review_decisions</code>, <code>application_review_decisions</code>, <code>status_transitions</code>, <code>news</code>, <code>events</code>, <code>publications</code>, <code>submissions</code>, <code>leadership</code>, <code>gallery</code>, <code>sequences</code>. Indexes are tuned for the queries reviewers actually run — application status, claimed_by, claimed_at, document_type ordering by created_at.</p>
+<h3>10.4 The 15-Document Master Library</h3>
+<p>The recruitment system ships with a master library of reusable document types. Each exercise picks which subset to require, with optional conditional triggers (e.g., &quot;PWD applicants must upload a medical certificate&quot;) and per-exercise size overrides.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Default size</th>
+<th>Accepted MIMEs</th>
+<th>AI check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>National ID (Ghana Card)</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Identity</td>
+</tr>
+<tr>
+<td>Birth Certificate</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>Passport-sized Photograph</td>
+<td>2 MB</td>
+<td>JPEG, PNG</td>
+<td>Photo</td>
+</tr>
+<tr>
+<td>SSSCE / WASSCE Certificate</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>First Degree Certificate</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>Degree Transcript</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>National Service Certificate (NSS)</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>Postgraduate Certificate (Masters / PhD)</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>Professional Qualification (ICAG / GhIE / BAR / GMA)</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>Curriculum Vitae</td>
+<td>5 MB</td>
+<td>PDF</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cover Letter / Statement of Purpose</td>
+<td>5 MB</td>
+<td>PDF</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Reference Letter 1</td>
+<td>5 MB</td>
+<td>PDF</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Reference Letter 2</td>
+<td>5 MB</td>
+<td>PDF</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Proof of Work Experience</td>
+<td>5 MB</td>
+<td>PDF, JPEG, PNG</td>
+<td>Certificate</td>
+</tr>
+<tr>
+<td>Medical Certificate (PWD)</td>
+<td>5 MB</td>
+<td>PDF</td>
+<td>Certificate</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>11. Design System &amp; UX</h2>
+<h3>&quot;Institutional Luxury with Ghanaian Soul&quot;</h3>
+<p>The design language pairs the rigour of editorial government publishing with the warmth and craft of Ghana's Kente weaving tradition. Every surface should feel as though it was designed for the Civil Service first, and never as though it was retrofitted from a generic template.</p>
+<h3>11.1 Colour Palette</h3>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Hex</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ghana Green (primary)</td>
+<td><code>#1B5E20</code></td>
+<td>Headers, primary actions, brand surfaces</td>
+</tr>
+<tr>
+<td>Ghana Green (light)</td>
+<td><code>#2E7D32</code></td>
+<td>Hover states, secondary surfaces</td>
+</tr>
+<tr>
+<td>Ghana Gold (accent)</td>
+<td><code>#D4A017</code></td>
+<td>Active states, focus rings, accent details</td>
+</tr>
+<tr>
+<td>Ghana Gold (light)</td>
+<td><code>#E8C547</code></td>
+<td>Hover accent, badge highlights</td>
+</tr>
+<tr>
+<td>Kente Red</td>
+<td><code>#B71C1C</code></td>
+<td>Destructive actions, alerts, error states</td>
+</tr>
+<tr>
+<td>Kente Black</td>
+<td><code>#212121</code></td>
+<td>Editorial type, structural lines</td>
+</tr>
+<tr>
+<td>Cream surface</td>
+<td><code>#FDFAF5</code></td>
+<td>Page background — warm, paper-like</td>
+</tr>
+<tr>
+<td>Card white</td>
+<td><code>#FFFFFF</code></td>
+<td>Card surfaces</td>
+</tr>
+<tr>
+<td>Border</td>
+<td><code>#E5DDD0</code></td>
+<td>Card borders, dividers</td>
+</tr>
+<tr>
+<td>Text primary</td>
+<td><code>#1A1A1A</code></td>
+<td>Long-form body type</td>
+</tr>
+<tr>
+<td>Text muted</td>
+<td><code>#5C5549</code></td>
+<td>Captions, metadata</td>
+</tr>
+</tbody>
+</table>
+<p>All combinations meet WCAG AA contrast (4.5:1).</p>
+<h3>11.2 Typography</h3>
+<ul>
+<li><strong>Display</strong> — Playfair Display (serif). Used for headlines, hero copy, page titles.</li>
+<li><strong>Body</strong> — Libre Baskerville (serif). Long-form readability.</li>
+<li><strong>Mono</strong> — JetBrains Mono. Reference numbers, code, form fields.</li>
+<li><strong>Scale</strong> — Major Third (1.25×) progression from <code>0.64rem</code> to <code>3.052rem</code>.</li>
+</ul>
+<h3>11.3 Distinctive Surfaces</h3>
+<ul>
+<li><strong>Animated OHCS crest</strong> — Ghana Civil Service coat-of-arms, letter-by-letter reveal on first paint, gold divider growth, Kente stripe draw animation</li>
+<li><strong>Hero carousel</strong> — 3-slide showcase, Ken Burns slow zoom, animated Kente mesh overlay, floating civic icons (briefcase, scroll, gavel, balance), gold bokeh particles</li>
+<li><strong>Kente section dividers</strong> — Horizontal woven-pattern strip with shimmer sweep, used between major sections</li>
+<li><strong>Floating geometric shapes</strong> — Subtle parallax behind hero and CTA sections (E-Library inspired)</li>
+<li><strong>Card system</strong> — 12–16px radius, subtle gold-tinted hover shadow, base-8 spacing</li>
+<li><strong>Status badges</strong> — One label, one colour per state, centralised in <code>src/lib/application-status.ts</code></li>
+</ul>
+<h3>11.4 UX Principles</h3>
+<ul>
+<li><strong>Offline-first wherever possible</strong> — auto-save every wizard step, retry on network errors, show clear save/error states</li>
+<li><strong>AA accessibility throughout</strong> — 4.5:1 contrast, 44px touch targets, <code>focus-visible</code> rings on every interactive element, <code>prefers-reduced-motion</code> honoured globally, skip-to-content link present</li>
+<li><strong>Mobile-first</strong> — every reviewer surface tested down to 375px viewport; pipeline table collapses to card stack on phones</li>
+<li><strong>No surprises in critical flows</strong> — every async action shows a loading state; every error shows a retry; every success shows a confirmation</li>
+</ul>
+<h3>11.5 Voice</h3>
+<p>Across the marketing site and applicant-facing surfaces, the voice is the Civil Service's own: dignified, plain, accurate, no marketing fluff, no buzzwords. Microcopy is specific (&quot;Submit Vetting Decision&quot; rather than &quot;Submit&quot;), instructions are direct, and error messages name what went wrong rather than hide behind generic platitudes.</p>
+<hr />
+<h2>12. Security &amp; Privacy</h2>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Authentication (applicant)</strong></td>
+<td>Magic link, 30-min TTL, single-use, SHA-256 hashed at rest in D1</td>
+</tr>
+<tr>
+<td><strong>Authentication (admin)</strong></td>
+<td>Interim header-based gate today; Cloudflare Access SSO recommended for production launch</td>
+</tr>
+<tr>
+<td><strong>Session</strong></td>
+<td>7-day TTL, <code>HttpOnly; Secure; SameSite=Lax</code> cookie, sliding extension on activity</td>
+</tr>
+<tr>
+<td><strong>SQL injection</strong></td>
+<td>Zero string interpolation into SQL; every query goes through prepared-statement helpers in <code>_shared/db.ts</code></td>
+</tr>
+<tr>
+<td><strong>Input validation</strong></td>
+<td>Zod schemas on every POST/PUT body, enforced at the API layer</td>
+</tr>
+<tr>
+<td><strong>HTML email</strong></td>
+<td>All admin notes and applicant text HTML-escaped before interpolation into outbound emails</td>
+</tr>
+<tr>
+<td><strong>Rate limiting</strong></td>
+<td>3 magic-link requests per email per 5-minute window</td>
+</tr>
+<tr>
+<td><strong>Document URLs</strong></td>
+<td>HMAC-SHA256 signed URLs with 60-second TTL; constant-time comparison; hard-fail when <code>SYSTEM_CRON_SECRET</code> is unset (no fallback secret)</td>
+</tr>
+<tr>
+<td><strong>File uploads</strong></td>
+<td>Server-side magic-byte sniffing, MIME validation, size enforcement, R2 keys derived from internal IDs (no path-traversal exposure)</td>
+</tr>
+<tr>
+<td><strong>Cron auth</strong></td>
+<td>Bearer token with constant-time comparison</td>
+</tr>
+<tr>
+<td><strong>Audit trail</strong></td>
+<td>Every status change writes a row to <code>status_transitions</code> with actor, role, reason, timestamp</td>
+</tr>
+<tr>
+<td><strong>PII in logs</strong></td>
+<td>Production logs never include applicant phone numbers (gated to non-production environments)</td>
+</tr>
+<tr>
+<td><strong><code>prefers-reduced-motion</code></strong></td>
+<td>Honoured globally in CSS — animations respect user accessibility preferences</td>
+</tr>
+</tbody>
+</table>
+<p>A comprehensive three-batch security audit was conducted on 2026-04-23, addressing every finding from parallel security, code-quality, and frontend audits. 202 tests passing across 44 files. TypeScript strict mode, zero errors. ESLint, zero errors.</p>
+<hr />
+<h2>13. Deployment &amp; Operations</h2>
+<h3>Production</h3>
+<ul>
+<li><strong>Live URL</strong> — <code>https://ohcs.pages.dev</code> (target: <code>https://ohcs.gov.gh</code> post-DNS cutover)</li>
+<li><strong>Health check</strong> — <code>GET /api/health</code> returns <code>{ status, checks: { d1, r2, workers_ai } }</code></li>
+<li><strong>D1</strong> — <code>ohcs-recruitment</code> (region WEUR), id <code>f2683715-2426-43d9-bb7c-885d9e64648d</code></li>
+<li><strong>R2</strong> — <code>ohcs-recruitment-uploads</code> (private, 7-year auto-delete lifecycle policy)</li>
+<li><strong>Workers AI</strong> — implicit binding <code>AI</code></li>
+</ul>
+<h3>Deploy Commands</h3>
+<pre><code class="language-bash"># Production deploy
+cd ohcs-website
+npm run pages:deploy
+
+# D1 migrations
+npm run migrate:remote
+
+# Local development
+npm run pages:dev    # Wrangler edge runtime emulation
+npm run dev          # Next.js dev server (no Pages Functions)
+
+# Tests
+npm test -- --run
+
+# Type check
+npx tsc --noEmit
+</code></pre>
+<h3>Secrets (set via <code>wrangler pages secret put</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Secret</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RESEND_API_KEY</code></td>
+<td>Magic link + notification email transport</td>
+</tr>
+<tr>
+<td><code>HUBTEL_SMS_API_KEY</code></td>
+<td>SMS transport (optional in dev)</td>
+</tr>
+<tr>
+<td><code>HUBTEL_SMS_FROM</code></td>
+<td>SMS sender ID</td>
+</tr>
+<tr>
+<td><code>SYSTEM_CRON_SECRET</code></td>
+<td>HMAC signing key for admin signed URLs + Bearer auth for the daily cron</td>
+</tr>
+</tbody>
+</table>
+<h3>CI / CD</h3>
+<ul>
+<li>Cloudflare Pages auto-deploys from every push to <code>master</code></li>
+<li>GitHub Actions cron at <code>.github/workflows/cron-deadlines.yml</code> fires daily at 02:15 UTC</li>
+</ul>
+<hr />
+<h2>14. Roadmap</h2>
+<h3>Phase 1 — Foundation (Completed)</h3>
+<ul>
+<li>Cloudflare infrastructure: D1, R2, Workers AI, Resend, health check</li>
+<li>Public marketing site: 22+ pages, Lexi assistant, publications library</li>
+<li>Admin shell: News, Events, Publications, Leadership, Submissions, Users, Audit Log, Lexi Training Hub</li>
+<li>Recruitment Phases 0–3.5: master document library, exercise configuration, magic-link auth, 5-step wizard, uploads, submission, /track lookup</li>
+<li>Recruitment Sub-project A: reviewer pipeline, vetting, AI document verification, appeals queue, status-transition audit trail, daily cron</li>
+<li>Comprehensive three-batch security audit (token hashing, HMAC hardening, rate limiting, HTML escaping, appeals SQL fix, audit-trail completeness, accessibility polish, mobile responsive)</li>
+</ul>
+<h3>Phase 2 — Operationalisation (Q2 2026)</h3>
+<ul>
+<li>DNS cutover from <code>ohcs.pages.dev</code> to <code>ohcs.gov.gh</code></li>
+<li>Resend or MailChannels with verified <code>ohcs.gov.gh</code> sender (DKIM + SPF)</li>
+<li>Real admin authentication (Cloudflare Access SSO recommended)</li>
+<li>Hubtel SMS production account</li>
+<li>First operational recruitment exercise on the platform</li>
+</ul>
+<h3>Phase 3 — Sub-project B: Online Payment (deferred per leadership)</h3>
+<ul>
+<li>Hubtel MoMo and bank integration with GHS 100 cap</li>
+<li>Webhook-confirmed payment status transition</li>
+<li>Refund API for the conditional refund cases (withdraw after pay, OHCS cancels, system fault)</li>
+<li>Refunds never apply to failed exams — the policy is hard-coded</li>
+</ul>
+<h3>Phase 4 — Sub-project C: Online Examination</h3>
+<ul>
+<li>Admin question bank with multiple choice, short answer, and case study formats</li>
+<li>Server-enforced timer with auto-save</li>
+<li>Auto-grade against per-exercise pass mark</li>
+<li>Anti-fraud: browser focus tracking, paste blocking, randomised question order</li>
+</ul>
+<h3>Phase 5 — Sub-project D: Online Interview</h3>
+<ul>
+<li>Slot picker for the applicant</li>
+<li>Zoom or Microsoft Teams meeting auto-create (final platform decision in spec phase)</li>
+<li>Email + SMS interview-hour reminders</li>
+<li>Interviewer outcome capture: shortlisted, waitlisted, rejected</li>
+<li>Admin-promoted waitlist (no automatic shuffling)</li>
+</ul>
+<h3>Phase 6 — Hardening, Observability, Launch</h3>
+<ul>
+<li>Structured logging in JSON envelopes for Cloudflare Logs</li>
+<li>Production observability dashboards</li>
+<li>Per-directorate knowledge base population for Lexi</li>
+<li>Public launch announcement and the first national-scale recruitment exercise on the platform</li>
+</ul>
+<hr />
+<blockquote>
+<p>&quot;A government website is the most-visited document the institution publishes.
+The OHCS Digital Portal is built to be a benchmark every other agency can be pointed to.&quot;</p>
+</blockquote>
+
+<div class="closing">
+  <div class="crest">Office of the Head of the Civil Service</div>
+  <div class="republic">Republic of Ghana</div>
+  <div class="motto">Loyalty &middot; Excellence &middot; Service</div>
+  <div class="prepared">Prepared by OHCS Product Engineering &middot; April 2026</div>
+  <div class="prepared" style="margin-top:6mm;">
+    <code>https://ohcs.pages.dev</code> (production)
+    &middot; <code>https://ohcs.gov.gh</code> (target)
+  </div>
+</div>
+
+</div>
+</body>
+</html>

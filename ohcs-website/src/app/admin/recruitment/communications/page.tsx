@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, FolderOpen, Kanban, GraduationCap, MessageSquare,
-  BarChart3, ShieldAlert, Trophy, Mail, Edit3, Send, CheckCircle,
-  Clock, Eye, FileText,
+  BarChart3, ShieldAlert, Trophy, Plus, CheckCircle,
 } from 'lucide-react';
-import { DemoBanner } from '@/components/admin/demo-banner';
+import { TemplatesTable } from '@/components/admin/comms/templates-table';
+import { TemplateEditorModal } from '@/components/admin/comms/template-editor-modal';
+import { ComposeForm } from '@/components/admin/comms/compose-form';
+import { CampaignHistory } from '@/components/admin/comms/campaign-history';
+import { listTemplates, type CommTemplate, type SendCampaignResult } from '@/lib/recruitment-comms-api';
 
-/* ------------------------------------------------------------------ */
-/*  Tab Navigation                                                     */
-/* ------------------------------------------------------------------ */
 const TABS = [
   { label: 'Dashboard', href: '/admin/recruitment', icon: LayoutDashboard },
   { label: 'Exercises', href: '/admin/recruitment/exercises', icon: FolderOpen },
@@ -51,326 +51,152 @@ function RecruitmentTabs({ current }: { current: string }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Types & Data                                                       */
-/* ------------------------------------------------------------------ */
-interface Template {
+interface ActiveExercise {
   id: string;
   name: string;
-  subject: string;
-  preview: string;
-  stage: string;
 }
 
-interface SendLog {
-  id: string;
-  template: string;
-  recipients: number;
-  date: string;
-  status: 'sent' | 'pending' | 'failed';
-}
+type Section = 'compose' | 'templates' | 'history';
 
-const TEMPLATES: Template[] = [
-  {
-    id: 'tpl-001',
-    name: 'Application Received',
-    subject: 'Your application has been received',
-    preview: 'Dear [Name], we acknowledge receipt of your application for the position of [Qualification]. Your reference number is [Ref]. We will review your application and get back to you shortly.',
-    stage: 'Received',
-  },
-  {
-    id: 'tpl-002',
-    name: 'Shortlisted Notification',
-    subject: 'Congratulations! You have been shortlisted',
-    preview: 'Dear [Name], we are pleased to inform you that you have been shortlisted for the position of [Qualification]. Please proceed to the next stage as outlined below.',
-    stage: 'Shortlisted',
-  },
-  {
-    id: 'tpl-003',
-    name: 'Exam Scheduled',
-    subject: 'Examination date and venue confirmed',
-    preview: 'Dear [Name], your examination has been scheduled for [Date] at [Venue]. Please arrive 30 minutes early with a valid government-issued ID.',
-    stage: 'Examination',
-  },
-  {
-    id: 'tpl-004',
-    name: 'Appointment Letter',
-    subject: 'Offer of appointment to the Civil Service',
-    preview: 'Dear [Name], on behalf of the Office of the Head of Civil Service, we are delighted to offer you the position of [Qualification]. Please report to [Location] on [Date].',
-    stage: 'Appointed',
-  },
-];
-
-const SEND_LOG: SendLog[] = [
-  { id: 'log-001', template: 'Application Received', recipients: 45, date: '17 Apr 2026', status: 'sent' },
-  { id: 'log-002', template: 'Exam Scheduled', recipients: 64, date: '16 Apr 2026', status: 'sent' },
-  { id: 'log-003', template: 'Shortlisted Notification', recipients: 18, date: '15 Apr 2026', status: 'sent' },
-  { id: 'log-004', template: 'Appointment Letter', recipients: 12, date: '14 Apr 2026', status: 'pending' },
-  { id: 'log-005', template: 'Application Received', recipients: 32, date: '13 Apr 2026', status: 'sent' },
-];
-
-const STAGE_COLORS: Record<string, string> = {
-  Received: 'bg-blue-100 text-blue-800',
-  Screening: 'bg-yellow-100 text-yellow-800',
-  Examination: 'bg-purple-100 text-purple-800',
-  Shortlisted: 'bg-green-100 text-green-800',
-  Appointed: 'bg-teal-100 text-teal-800',
-};
-
-const LOG_STATUS_COLORS: Record<string, string> = {
-  sent: 'bg-green-100 text-green-800',
-  pending: 'bg-yellow-100 text-yellow-800',
-  failed: 'bg-red-100 text-red-800',
-};
-
-/* ------------------------------------------------------------------ */
-/*  Page Component                                                     */
-/* ------------------------------------------------------------------ */
 export default function CommunicationsPage() {
-  const [toast, setToast] = useState('');
-  const [previewId, setPreviewId] = useState<string | null>(null);
-  const [composeSubject, setComposeSubject] = useState('');
-  const [composeBody, setComposeBody] = useState('');
-  const [composeStage, setComposeStage] = useState('');
+  const [section, setSection] = useState<Section>('compose');
+  const [exercise, setExercise] = useState<ActiveExercise | null>(null);
+  const [templates, setTemplates] = useState<CommTemplate[]>([]);
+  const [editingTemplate, setEditingTemplate] = useState<CommTemplate | 'new' | null>(null);
+  const [smsAvailable, setSmsAvailable] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const [historyKey, setHistoryKey] = useState(0);
 
   useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(''), 3000);
-    return () => clearTimeout(t);
-  }, [toast]);
+    void fetch('/api/exercises/active')
+      .then((r) => (r.ok ? (r.json() as Promise<{ data?: ActiveExercise }>) : Promise.resolve(null)))
+      .then((b) => {
+        if (b?.data) setExercise({ id: b.data.id, name: b.data.name });
+      });
+    void fetch('/api/admin/site-config')
+      .then((r) =>
+        r.ok
+          ? (r.json() as Promise<{ data: { key: string; value: string }[] }>)
+          : Promise.resolve({ data: [] as { key: string; value: string }[] }),
+      )
+      .then((b) => {
+        const row = b.data.find((c) => c.key === 'hubtel_sms_available');
+        setSmsAvailable(row?.value === 'true');
+      });
+    void refreshTemplates();
+  }, []);
 
-  const previewTemplate = TEMPLATES.find((t) => t.id === previewId);
+  async function refreshTemplates() {
+    try {
+      const t = await listTemplates();
+      setTemplates(t);
+    } catch {
+      // ignored
+    }
+  }
+
+  function onSent(result: SendCampaignResult) {
+    setToast(
+      `Sent: ${result.sent_count} email${result.sent_count === 1 ? '' : 's'}` +
+        (result.failed_count > 0 ? `, ${result.failed_count} failed` : '') +
+        (result.sms_requested ? `, ${result.sms_sent_count} SMS` : ''),
+    );
+    setHistoryKey((k) => k + 1);
+    setTimeout(() => setToast(null), 5000);
+  }
 
   return (
     <div>
       <RecruitmentTabs current="/admin/recruitment/communications" />
 
-      <DemoBanner message="Communications composer is not yet wired — recipient counts and send buttons are samples." />
-
-      {/* Header */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-primary-dark">Communication Centre</h2>
         <p className="text-sm text-text-muted mt-1">
-          Manage email templates, send bulk notifications, and track delivery.
+          {exercise
+            ? `Active exercise: ${exercise.name}`
+            : 'No active recruitment exercise — campaigns are scoped to active exercises.'}
         </p>
       </div>
 
-      {/* Toast */}
       {toast && (
-        <div className="flex items-center gap-3 bg-green-50 border-2 border-green-200 rounded-xl p-4 mb-6">
-          <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" aria-hidden="true" />
-          <p className="text-sm font-medium text-green-800">{toast}</p>
+        <div className="flex items-center gap-3 bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 mb-6">
+          <CheckCircle className="h-5 w-5 text-emerald-700 flex-shrink-0" aria-hidden="true" />
+          <p className="text-sm font-medium text-emerald-900">{toast}</p>
         </div>
       )}
 
-      {/* Template Library */}
-      <div className="mb-8">
-        <h3 className="font-semibold text-base text-primary-dark mb-4">Template Library</h3>
-        <div className="grid md:grid-cols-2 gap-4">
-          {TEMPLATES.map((tpl) => (
-            <div
-              key={tpl.id}
-              className="bg-white rounded-2xl border-2 border-border/40 p-5 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-primary" aria-hidden="true" />
-                  <h4 className="font-bold text-sm text-primary-dark">{tpl.name}</h4>
-                </div>
-                <span
-                  className={cn(
-                    'text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider',
-                    STAGE_COLORS[tpl.stage] ?? 'bg-gray-100 text-gray-700',
-                  )}
-                >
-                  {tpl.stage}
-                </span>
-              </div>
-              <p className="text-xs text-text-muted mb-1 font-medium">Subject: {tpl.subject}</p>
-              <p className="text-xs text-text-muted/70 line-clamp-2 mb-4">{tpl.preview}</p>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setPreviewId(tpl.id)}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-primary bg-primary/5 rounded-lg hover:bg-primary/10 transition-colors"
-                >
-                  <Eye className="h-3 w-3" aria-hidden="true" />
-                  Preview
-                </button>
-                <button
-                  onClick={() => setToast('Template editor coming soon.')}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-text-muted bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  <Edit3 className="h-3 w-3" aria-hidden="true" />
-                  Edit
-                </button>
-                <button
-                  onClick={() => setToast(`Sending "${tpl.name}" to all ${tpl.stage} applicants...`)}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-primary rounded-lg hover:bg-primary-light transition-colors"
-                >
-                  <Send className="h-3 w-3" aria-hidden="true" />
-                  Send to Stage
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="flex border-b border-border/40 mb-6" role="tablist">
+        {(['compose', 'templates', 'history'] as Section[]).map((s) => (
+          <button
+            key={s}
+            type="button"
+            role="tab"
+            aria-selected={section === s}
+            onClick={() => setSection(s)}
+            className={cn(
+              'px-4 py-2 text-sm font-semibold transition-colors capitalize focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+              section === s
+                ? 'text-primary border-b-2 border-primary -mb-[2px]'
+                : 'text-text-muted hover:text-primary-dark',
+            )}
+          >
+            {s}
+          </button>
+        ))}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Compose New Message */}
+      {section === 'compose' && (
         <div className="bg-white rounded-2xl border-2 border-border/40 p-6">
-          <h3 className="font-semibold text-base text-primary-dark mb-4 flex items-center gap-2">
-            <FileText className="h-5 w-5" aria-hidden="true" />
-            Compose New Message
-          </h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5">
-                Send to Stage
-              </label>
-              <select
-                value={composeStage}
-                onChange={(e) => setComposeStage(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-border/60 bg-white text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none"
-              >
-                <option value="">Select stage...</option>
-                <option value="received">Received</option>
-                <option value="screening">Screening</option>
-                <option value="examination">Examination</option>
-                <option value="interview">Interview</option>
-                <option value="shortlisted">Shortlisted</option>
-                <option value="appointed">Appointed</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5">
-                Subject
-              </label>
-              <input
-                type="text"
-                value={composeSubject}
-                onChange={(e) => setComposeSubject(e.target.value)}
-                placeholder="Email subject..."
-                className="w-full px-4 py-3 rounded-xl border-2 border-border/60 bg-white text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5">
-                Message Body
-              </label>
-              <textarea
-                value={composeBody}
-                onChange={(e) => setComposeBody(e.target.value)}
-                rows={5}
-                placeholder="Type your message..."
-                className="w-full px-4 py-3 rounded-xl border-2 border-border/60 bg-white text-sm focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none resize-none"
-              />
-            </div>
+          {!exercise ? (
+            <p className="text-sm text-text-muted text-center py-12">
+              No active exercise — open Exercises and activate one before composing.
+            </p>
+          ) : (
+            <ComposeForm
+              exerciseId={exercise.id}
+              smsAvailable={smsAvailable}
+              onSent={onSent}
+            />
+          )}
+        </div>
+      )}
+
+      {section === 'templates' && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-text-muted">
+              Reusable email + SMS templates. Use placeholders like {`{{name}}`} for personalisation.
+            </p>
             <button
-              onClick={() => {
-                setToast('Message sent successfully.');
-                setComposeSubject('');
-                setComposeBody('');
-                setComposeStage('');
-              }}
-              disabled={!composeStage || !composeSubject || !composeBody}
-              className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              type="button"
+              onClick={() => setEditingTemplate('new')}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-light"
             >
-              <Send className="h-4 w-4" aria-hidden="true" />
-              Send Message
+              <Plus className="h-4 w-4" /> New Template
             </button>
           </div>
+          <TemplatesTable
+            rows={templates}
+            onEdit={(t) => setEditingTemplate(t)}
+            onChange={refreshTemplates}
+          />
+          <TemplateEditorModal
+            template={editingTemplate}
+            onClose={() => setEditingTemplate(null)}
+            onSaved={refreshTemplates}
+          />
         </div>
+      )}
 
-        {/* Send History */}
-        <div className="bg-white rounded-2xl border-2 border-border/40 overflow-hidden">
-          <div className="p-6 border-b border-border/30">
-            <h3 className="font-semibold text-base text-primary-dark flex items-center gap-2">
-              <Clock className="h-5 w-5" aria-hidden="true" />
-              Send History
-            </h3>
-          </div>
-          <div className="divide-y divide-border/20">
-            {SEND_LOG.map((log) => (
-              <div key={log.id} className="px-6 py-4 flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-primary-dark">{log.template}</p>
-                  <p className="text-xs text-text-muted mt-0.5">
-                    {log.recipients} recipients &bull; {log.date}
-                  </p>
-                </div>
-                <span
-                  className={cn(
-                    'text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
-                    LOG_STATUS_COLORS[log.status],
-                  )}
-                >
-                  {log.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Preview Modal */}
-      {previewTemplate && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Template preview"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setPreviewId(null);
-          }}
-        >
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-primary-dark">Template Preview</h3>
-              <button
-                onClick={() => setPreviewId(null)}
-                aria-label="Close preview"
-                className="p-2 rounded-lg hover:bg-gray-100 text-text-muted transition-colors"
-              >
-                <Mail className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Template</p>
-                <p className="text-sm font-bold text-primary-dark">{previewTemplate.name}</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Subject</p>
-                <p className="text-sm text-primary-dark">{previewTemplate.subject}</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Body</p>
-                <div className="bg-gray-50 rounded-xl p-4 mt-1">
-                  <p className="text-sm text-text-muted leading-relaxed">{previewTemplate.preview}</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Target Stage</p>
-                <span
-                  className={cn(
-                    'inline-block mt-1 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider',
-                    STAGE_COLORS[previewTemplate.stage] ?? 'bg-gray-100 text-gray-700',
-                  )}
-                >
-                  {previewTemplate.stage}
-                </span>
-              </div>
-            </div>
-            <div className="mt-8 flex justify-end">
-              <button
-                onClick={() => setPreviewId(null)}
-                className="px-5 py-2.5 border-2 border-border/60 text-sm font-semibold text-text-muted rounded-xl hover:border-primary hover:text-primary transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
+      {section === 'history' && (
+        <div key={historyKey}>
+          {!exercise ? (
+            <p className="text-sm text-text-muted text-center py-12">
+              No active exercise selected.
+            </p>
+          ) : (
+            <CampaignHistory exerciseId={exercise.id} />
+          )}
         </div>
       )}
     </div>
