@@ -11,6 +11,7 @@ import {
   Loader2,
   LogOut,
   Mail,
+  MessageSquare,
   Send,
   User,
 } from 'lucide-react';
@@ -31,6 +32,7 @@ import { audit } from '@/lib/audit-logger';
 import { DocumentViewer } from '@/components/admin/document-viewer';
 import { PerDocDecision } from '@/components/admin/per-doc-decision';
 import { getStatusBadgeClasses, getStatusLabel } from '@/lib/application-status';
+import { SingleApplicantMessageModal } from '@/components/admin/comms/single-applicant-message-modal';
 
 /* ------------------------------------------------------------------ */
 /*  Page wrapper — Suspense boundary required for useSearchParams      */
@@ -87,6 +89,8 @@ function DetailInner() {
   const [releasing, setReleasing] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
+  const [messageOpen, setMessageOpen] = useState(false);
+  const [smsAvailable, setSmsAvailable] = useState(false);
 
   /* ── Redirect when id missing ────────────────────────────────────── */
   useEffect(() => {
@@ -100,6 +104,16 @@ function DetailInner() {
     const t = setTimeout(() => setToast(null), ms);
     return () => clearTimeout(t);
   }, [toast]);
+
+  /* ── SMS availability ────────────────────────────────────────────── */
+  useEffect(() => {
+    void fetch('/api/admin/site-config')
+      .then((r) => (r.ok ? r.json() : Promise.resolve({ data: [] })))
+      .then((b: unknown) => {
+        const body = b as { data: { key: string; value: string }[] };
+        setSmsAvailable(body.data.find((c) => c.key === 'hubtel_sms_available')?.value === 'true');
+      });
+  }, []);
 
   /* ── Load application detail ─────────────────────────────────────── */
   const load = useCallback(async () => {
@@ -367,6 +381,14 @@ function DetailInner() {
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             type="button"
+            onClick={() => setMessageOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 border-2 border-border/60 text-sm font-semibold text-primary-dark rounded-xl hover:border-primary hover:text-primary transition-colors"
+          >
+            <MessageSquare className="h-4 w-4" aria-hidden="true" />
+            Send message
+          </button>
+          <button
+            type="button"
             onClick={() => void handleRelease()}
             disabled={releasing || submitting}
             className="inline-flex items-center gap-2 px-4 py-2.5 border-2 border-border/60 text-sm font-semibold text-primary-dark rounded-xl hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -531,6 +553,16 @@ function DetailInner() {
           />
         </div>
       </div>
+
+      {messageOpen && detail && (
+        <SingleApplicantMessageModal
+          applicationId={detail.id}
+          applicantEmail={detail.email}
+          smsAvailable={smsAvailable}
+          onClose={() => setMessageOpen(false)}
+          onSent={() => setToast({ type: 'success', message: 'Message sent.' })}
+        />
+      )}
     </div>
   );
 }
