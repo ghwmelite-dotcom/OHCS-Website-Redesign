@@ -23,7 +23,6 @@ export function mockEnv(o: MockEnvOverrides = {}): Env {
           if (!d1Healthy) throw new Error('D1 unavailable');
           // Return null by default so demo-mode check returns false and
           // unauthenticated requests get the expected 401.
-          void sql; void boundArgs;
           return null;
         }),
         all: vi.fn(async () => {

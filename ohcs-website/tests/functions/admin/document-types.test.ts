@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { onRequestGet, onRequestPost } from '../../../functions/api/admin/document-types/index';
 import { mockEnv } from '../_helpers/mock-env';
-import { makeD1 } from '../_helpers/d1-mock';
+import { makeD1, DEMO_MODE_ON } from '../_helpers/d1-mock';
 
 function ctx(req: Request, db?: D1Database) {
   return {
@@ -21,7 +21,7 @@ const ADMIN_HEADERS = {
 describe('GET /api/admin/document-types', () => {
   it('returns the active master library', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'SELECT * FROM document_types ORDER BY label',
         all: {
@@ -59,7 +59,7 @@ describe('GET /api/admin/document-types', () => {
 
   it('allows viewer role (viewer is now a valid admin role)', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       { sql: 'SELECT * FROM document_types ORDER BY label', all: { results: [] } },
     ]);
     const headers = { 'X-Admin-User-Email': 'v@x.gh', 'X-Admin-User-Role': 'viewer' };
@@ -71,7 +71,7 @@ describe('GET /api/admin/document-types', () => {
 describe('POST /api/admin/document-types', () => {
   it('creates a new document type', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         // `binds` omitted → wildcard match (impl uses Date.now() so we cannot predict binds).
         sql:
@@ -100,7 +100,7 @@ describe('POST /api/admin/document-types', () => {
 
   it('rejects invalid payload', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
     ]);
     const req = new Request('https://x/api/admin/document-types', {
       method: 'POST',
@@ -121,7 +121,7 @@ import {
 describe('GET /api/admin/document-types/[id]', () => {
   it('returns one row', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'SELECT * FROM document_types WHERE id = ?',
         binds: ['national_id'],
@@ -147,7 +147,7 @@ describe('GET /api/admin/document-types/[id]', () => {
 
   it('404 when not found', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       { sql: 'SELECT * FROM document_types WHERE id = ?', binds: ['missing'] },
     ]);
     const req = new Request('https://x/api/admin/document-types/missing', { headers: ADMIN_HEADERS });
@@ -159,7 +159,7 @@ describe('GET /api/admin/document-types/[id]', () => {
 describe('PATCH /api/admin/document-types/[id]', () => {
   it('updates label and bumps updated_at', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         // binds omitted = wildcard (impl uses Date.now())
         sql: 'UPDATE document_types SET label = ?, updated_at = ? WHERE id = ?',
@@ -177,7 +177,7 @@ describe('PATCH /api/admin/document-types/[id]', () => {
 
   it('400 on empty body', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
     ]);
     const req = new Request('https://x/api/admin/document-types/national_id', {
       method: 'PATCH',
@@ -192,7 +192,7 @@ describe('PATCH /api/admin/document-types/[id]', () => {
 describe('DELETE /api/admin/document-types/[id]', () => {
   it('soft-deletes by setting is_active = 0', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'UPDATE document_types SET is_active = 0, updated_at = ? WHERE id = ?',
         run: { meta: { changes: 1 } },

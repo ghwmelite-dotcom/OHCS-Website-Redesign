@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { onRequestGet } from '../../../functions/api/admin/applications/[id]';
 import { mockEnv } from '../_helpers/mock-env';
-import { makeD1 } from '../_helpers/d1-mock';
+import { makeD1, DEMO_MODE_ON } from '../_helpers/d1-mock';
 
 const ADMIN_HEADERS = {
   'X-Admin-User-Email': 'admin@ohcs.gov.gh',
@@ -21,7 +21,7 @@ function ctx(req: Request, db?: D1Database) {
 describe('GET /api/admin/applications/[id]', () => {
   it('returns the full application detail', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql:
           'SELECT id, exercise_id, email, status, has_professional_qualification, is_pwd, form_data, appeal_reason FROM applications WHERE id = ?',
@@ -80,7 +80,7 @@ describe('GET /api/admin/applications/[id]', () => {
 
   it('returns 404 when application not found', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql:
           'SELECT id, exercise_id, email, status, has_professional_qualification, is_pwd, form_data, appeal_reason FROM applications WHERE id = ?',

@@ -15,6 +15,10 @@ import { first } from './db';
 import { parseAdminSessionId } from './admin-cookies';
 import { readAdminSession } from './admin-session';
 
+// Roles permitted to call admin APIs. Per-route role checks (e.g.
+// recruitment_admin only for appeals/resolve) are still enforced inline
+// by the route handlers themselves. 'viewer' is read-only — endpoints
+// that mutate data must add their own role gate above 'viewer'.
 const ADMIN_ROLES = new Set(['super_admin', 'recruitment_admin', 'content_manager', 'viewer']);
 
 export interface AdminContext {

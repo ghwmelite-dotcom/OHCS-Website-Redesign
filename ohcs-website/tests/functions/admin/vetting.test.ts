@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { onRequestPost } from '../../../functions/api/admin/applications/[id]/vetting';
 import { mockEnv } from '../_helpers/mock-env';
-import { makeD1 } from '../_helpers/d1-mock';
+import { makeD1, DEMO_MODE_ON } from '../_helpers/d1-mock';
 
 const ADMIN_HEADERS = {
   'X-Admin-User-Email': 'admin@ohcs.gov.gh',
@@ -30,7 +30,7 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
 
   it('rolls up to vetting_passed when all decisions are accepted', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
@@ -76,7 +76,7 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
 
   it('rolls up to requires_action when some decisions are needs_better_scan and none rejected', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
@@ -122,7 +122,7 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
 
   it('rolls up to vetting_failed when any decision is rejected', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
@@ -167,7 +167,7 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
 
   it('rejects 400 when a non-accept decision lacks a reason', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
@@ -188,7 +188,7 @@ describe('POST /api/admin/applications/[id]/vetting', () => {
 
   it('rejects when application is not under_review', async () => {
     const db = makeD1([
-      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      DEMO_MODE_ON,
       {
         sql: 'SELECT status, exercise_id, email, form_data FROM applications WHERE id = ?',
         binds: ['OHCS-2026-00001'],
