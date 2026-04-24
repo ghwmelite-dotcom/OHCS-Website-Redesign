@@ -1,19 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { adminLogin } from '@/lib/admin-auth';
+import { MagicLinkForm } from '@/components/admin/magic-link-form';
 import { Button } from '@/components/ui/button';
 import { Lock, Mail, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+type Tab = 'magic' | 'demo';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const [demoModeOn, setDemoModeOn] = useState<boolean | null>(null);
+  const [tab, setTab] = useState<Tab>('magic');
+
+  // Demo form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [demoError, setDemoError] = useState<string | null>(null);
+  const [demoSubmitting, setDemoSubmitting] = useState(false);
 
   // Hide the public header/footer on mount
   useEffect(() => {
@@ -27,20 +35,31 @@ export default function AdminLoginPage() {
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  // Fetch site config to determine demo mode
+  useEffect(() => {
+    fetch('/api/admin/site-config')
+      .then((r) => (r.ok ? r.json() : { data: [] }))
+      .then((b) => {
+        const body = b as { data: { key: string; value: string }[] };
+        const row = body.data.find((c) => c.key === 'admin_demo_mode_enabled');
+        setDemoModeOn(row?.value === 'true');
+      })
+      .catch(() => setDemoModeOn(false));
+  }, []);
 
+  async function onDemoSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setDemoSubmitting(true);
+    setDemoError(null);
     try {
       await adminLogin(email, password);
       router.push('/admin');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setDemoError(err instanceof Error ? err.message : 'Login failed');
     } finally {
-      setLoading(false);
+      setDemoSubmitting(false);
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex">
@@ -134,71 +153,127 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Welcome text — desktop */}
-          <div className="hidden lg:block mb-10">
+          <div className="hidden lg:block mb-8">
             <h1 className="font-display text-3xl font-bold text-primary-dark mb-2">Welcome back</h1>
             <p className="text-base text-text-muted">Sign in to access the management portal.</p>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-red-700 text-sm mb-6 flex items-start gap-3">
-              <ShieldCheck className="h-5 w-5 shrink-0 mt-0.5 text-red-400" />
-              <span>{error}</span>
-            </div>
+          {/* Loading state while config is being fetched */}
+          {demoModeOn === null && (
+            <p className="text-sm text-text-muted text-center py-8">Loading…</p>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-primary-dark mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-text-muted/30" aria-hidden="true" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@ohcs.gov.gh"
-                  required
-                  autoComplete="email"
-                  className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border/50 bg-white text-base focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all"
-                />
-              </div>
-            </div>
+          {/* Magic link only — demo mode off */}
+          {demoModeOn === false && <MagicLinkForm />}
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-primary-dark mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-text-muted/30" aria-hidden="true" />
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  required
-                  autoComplete="current-password"
-                  className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-border/50 bg-white text-base focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all"
-                />
+          {/* Tabbed interface — demo mode on */}
+          {demoModeOn === true && (
+            <>
+              <div className="flex border-b border-border/40 mb-6" role="tablist">
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted/30 hover:text-text-muted transition-colors"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  role="tab"
+                  aria-selected={tab === 'magic'}
+                  onClick={() => setTab('magic')}
+                  className={cn(
+                    'flex-1 px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+                    tab === 'magic'
+                      ? 'text-primary border-b-2 border-primary -mb-[2px]'
+                      : 'text-text-muted hover:text-primary-dark',
+                  )}
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  Magic Link
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === 'demo'}
+                  onClick={() => setTab('demo')}
+                  className={cn(
+                    'flex-1 px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+                    tab === 'demo'
+                      ? 'text-primary border-b-2 border-primary -mb-[2px]'
+                      : 'text-text-muted hover:text-primary-dark',
+                  )}
+                >
+                  Demo Login
                 </button>
               </div>
-            </div>
 
-            <Button type="submit" variant="primary" size="lg" loading={loading} className="w-full !py-4 text-base">
-              Sign In
-            </Button>
-          </form>
+              {tab === 'magic' && <MagicLinkForm />}
+
+              {tab === 'demo' && (
+                <form onSubmit={onDemoSubmit} className="space-y-5">
+                  <div className="rounded-lg border-2 border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+                    Demo mode is currently enabled. Disable in Settings → Auth Mode before going live.
+                  </div>
+
+                  {demoError && (
+                    <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-red-700 text-sm flex items-start gap-3">
+                      <ShieldCheck className="h-5 w-5 shrink-0 mt-0.5 text-red-400" aria-hidden="true" />
+                      <span>{demoError}</span>
+                    </div>
+                  )}
+
+                  <div>
+                    <label htmlFor="demo-email" className="block text-sm font-semibold text-primary-dark mb-2">
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-text-muted/30" aria-hidden="true" />
+                      <input
+                        id="demo-email"
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@ohcs.gov.gh"
+                        autoComplete="email"
+                        className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-border/50 bg-white text-base focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="demo-password" className="block text-sm font-semibold text-primary-dark mb-2">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-text-muted/30" aria-hidden="true" />
+                      <input
+                        id="demo-password"
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter your password"
+                        autoComplete="current-password"
+                        className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-border/50 bg-white text-base focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted/30 hover:text-text-muted transition-colors"
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    loading={demoSubmitting}
+                    className="w-full !py-4 text-base"
+                  >
+                    Sign in (demo)
+                  </Button>
+                </form>
+              )}
+            </>
+          )}
 
           {/* Footer */}
           <div className="mt-8 text-center">
