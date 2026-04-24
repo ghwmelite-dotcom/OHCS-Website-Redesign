@@ -61,7 +61,7 @@ function extractPhone(formDataJson: string | null): string | null {
 }
 
 export const onRequestPost: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const app = await first<AppRow>(

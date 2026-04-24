@@ -31,7 +31,7 @@ const PutSchema = z.object({
 });
 
 export const onRequestGet: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const rows = await all<ExerciseRequirementRow>(
@@ -43,7 +43,7 @@ export const onRequestGet: PagesFunction<Env, 'id'> = async ({ request, env, par
 };
 
 export const onRequestPut: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const body = await parseBody(request, PutSchema);

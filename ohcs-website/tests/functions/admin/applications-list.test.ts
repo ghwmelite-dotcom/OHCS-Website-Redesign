@@ -15,6 +15,7 @@ function ctx(req: Request, db?: D1Database) {
 describe('GET /api/admin/applications', () => {
   it('returns the queue with default filters (no params)', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql:
           'SELECT a.id, a.exercise_id, a.email, a.status, a.submitted_at, a.review_claimed_by, (SELECT COUNT(*) FROM application_documents WHERE application_id = a.id) AS doc_count, (SELECT COUNT(*) FROM exercise_document_requirements WHERE exercise_id = a.exercise_id AND is_required = 1) AS doc_required_count, (SELECT COUNT(*) FROM application_documents WHERE application_id = a.id AND ai_verdict = ?) AS ai_flag_count FROM applications a WHERE a.status != ? ORDER BY a.submitted_at DESC LIMIT 50',

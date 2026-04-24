@@ -26,7 +26,10 @@ function ctx(req: Request, env: ReturnType<typeof mockEnv> & SecretEnv) {
 
 describe('GET /api/admin/applications/[id]/documents/[docTypeId]/url', () => {
   it('hard-fails 500 when SYSTEM_CRON_SECRET is unset', async () => {
-    const env = mockEnv({});
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+    ]);
+    const env = { ...mockEnv({ db }) };
     const req = new Request(
       'https://x/api/admin/applications/OHCS-2026-00001/documents/national_id/url',
       { headers: ADMIN_HEADERS },
@@ -37,6 +40,7 @@ describe('GET /api/admin/applications/[id]/documents/[docTypeId]/url', () => {
 
   it('returns a signed URL when secret is set and document exists', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql:
           'SELECT r2_key FROM application_documents WHERE application_id = ? AND document_type_id = ?',

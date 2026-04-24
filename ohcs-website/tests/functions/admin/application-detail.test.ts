@@ -21,6 +21,7 @@ function ctx(req: Request, db?: D1Database) {
 describe('GET /api/admin/applications/[id]', () => {
   it('returns the full application detail', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql:
           'SELECT id, exercise_id, email, status, has_professional_qualification, is_pwd, form_data, appeal_reason FROM applications WHERE id = ?',
@@ -79,6 +80,7 @@ describe('GET /api/admin/applications/[id]', () => {
 
   it('returns 404 when application not found', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql:
           'SELECT id, exercise_id, email, status, has_professional_qualification, is_pwd, form_data, appeal_reason FROM applications WHERE id = ?',

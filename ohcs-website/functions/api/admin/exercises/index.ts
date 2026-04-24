@@ -28,7 +28,7 @@ const CreateSchema = z.object({
 });
 
 export const onRequestGet: PagesFunction = async ({ request, env }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const rows = await all<ExerciseRow>(
@@ -39,7 +39,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
 };
 
 export const onRequestPost: PagesFunction = async ({ request, env }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const body = await parseBody(request, CreateSchema);

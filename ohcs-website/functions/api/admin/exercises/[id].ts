@@ -18,7 +18,7 @@ const PatchSchema = z.object({
 }).refine((v) => Object.keys(v).length > 0, { message: 'at least one field is required' });
 
 export const onRequestPatch: PagesFunction<Env, 'id'> = async ({ request, env, params }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const body = await parseBody(request, PatchSchema);

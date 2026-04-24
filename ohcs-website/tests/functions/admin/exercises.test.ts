@@ -19,6 +19,7 @@ function ctx(req: Request, db?: D1Database, params: Record<string, string> = {})
 describe('GET /api/admin/exercises', () => {
   it('returns the list of exercises with application counts', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql:
           'SELECT e.id, e.name, e.description, e.start_date, e.end_date, e.status, e.positions, (SELECT COUNT(*) FROM applications WHERE exercise_id = e.id) AS applications FROM recruitment_exercises e ORDER BY e.created_at DESC',
@@ -55,6 +56,7 @@ describe('GET /api/admin/exercises', () => {
 describe('POST /api/admin/exercises', () => {
   it('creates a new exercise with status=draft', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql:
           'INSERT INTO recruitment_exercises (id, name, description, start_date, end_date, status, positions, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -80,12 +82,15 @@ describe('POST /api/admin/exercises', () => {
   });
 
   it('400 on missing required fields', async () => {
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+    ]);
     const req = new Request('https://x/api/admin/exercises', {
       method: 'POST',
       headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
       body: JSON.stringify({ name: 'Just a name' }),
     });
-    const res = await onRequestPost(ctx(req));
+    const res = await onRequestPost(ctx(req, db));
     expect(res.status).toBe(400);
   });
 });
@@ -93,6 +98,7 @@ describe('POST /api/admin/exercises', () => {
 describe('PATCH /api/admin/exercises/[id]', () => {
   it('transitions status from draft to active and deactivates any other active exercise', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql: "UPDATE recruitment_exercises SET status = 'closed', updated_at = ? WHERE status = 'active' AND id != ?",
         run: {},
@@ -112,12 +118,15 @@ describe('PATCH /api/admin/exercises/[id]', () => {
   });
 
   it('400 on invalid status', async () => {
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+    ]);
     const req = new Request('https://x/api/admin/exercises/ex-003', {
       method: 'PATCH',
       headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
       body: JSON.stringify({ status: 'bogus' }),
     });
-    const res = await onRequestPatch(ctx(req, undefined, { id: 'ex-003' }));
+    const res = await onRequestPatch(ctx(req, db, { id: 'ex-003' }));
     expect(res.status).toBe(400);
   });
 });

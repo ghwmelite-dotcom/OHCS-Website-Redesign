@@ -21,6 +21,7 @@ const ADMIN_HEADERS = {
 describe('GET /api/admin/document-types', () => {
   it('returns the active master library', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql: 'SELECT * FROM document_types ORDER BY label',
         all: {
@@ -56,16 +57,21 @@ describe('GET /api/admin/document-types', () => {
     expect(res.status).toBe(401);
   });
 
-  it('rejects with viewer role', async () => {
+  it('allows viewer role (viewer is now a valid admin role)', async () => {
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+      { sql: 'SELECT * FROM document_types ORDER BY label', all: { results: [] } },
+    ]);
     const headers = { 'X-Admin-User-Email': 'v@x.gh', 'X-Admin-User-Role': 'viewer' };
-    const res = await onRequestGet(ctx(new Request('https://x/api/admin/document-types', { headers })));
-    expect(res.status).toBe(403);
+    const res = await onRequestGet(ctx(new Request('https://x/api/admin/document-types', { headers }), db));
+    expect(res.status).toBe(200);
   });
 });
 
 describe('POST /api/admin/document-types', () => {
   it('creates a new document type', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         // `binds` omitted → wildcard match (impl uses Date.now() so we cannot predict binds).
         sql:
@@ -93,12 +99,15 @@ describe('POST /api/admin/document-types', () => {
   });
 
   it('rejects invalid payload', async () => {
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+    ]);
     const req = new Request('https://x/api/admin/document-types', {
       method: 'POST',
       headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
       body: JSON.stringify({ label: '', default_max_mb: -1 }),
     });
-    const res = await onRequestPost(ctx(req));
+    const res = await onRequestPost(ctx(req, db));
     expect(res.status).toBe(400);
   });
 });
@@ -112,6 +121,7 @@ import {
 describe('GET /api/admin/document-types/[id]', () => {
   it('returns one row', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql: 'SELECT * FROM document_types WHERE id = ?',
         binds: ['national_id'],
@@ -137,6 +147,7 @@ describe('GET /api/admin/document-types/[id]', () => {
 
   it('404 when not found', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       { sql: 'SELECT * FROM document_types WHERE id = ?', binds: ['missing'] },
     ]);
     const req = new Request('https://x/api/admin/document-types/missing', { headers: ADMIN_HEADERS });
@@ -148,6 +159,7 @@ describe('GET /api/admin/document-types/[id]', () => {
 describe('PATCH /api/admin/document-types/[id]', () => {
   it('updates label and bumps updated_at', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         // binds omitted = wildcard (impl uses Date.now())
         sql: 'UPDATE document_types SET label = ?, updated_at = ? WHERE id = ?',
@@ -164,12 +176,15 @@ describe('PATCH /api/admin/document-types/[id]', () => {
   });
 
   it('400 on empty body', async () => {
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+    ]);
     const req = new Request('https://x/api/admin/document-types/national_id', {
       method: 'PATCH',
       headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
       body: JSON.stringify({}),
     });
-    const res = await onRequestPatch({ ...ctx(req), params: { id: 'national_id' } });
+    const res = await onRequestPatch({ ...ctx(req, db), params: { id: 'national_id' } });
     expect(res.status).toBe(400);
   });
 });
@@ -177,6 +192,7 @@ describe('PATCH /api/admin/document-types/[id]', () => {
 describe('DELETE /api/admin/document-types/[id]', () => {
   it('soft-deletes by setting is_active = 0', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql: 'UPDATE document_types SET is_active = 0, updated_at = ? WHERE id = ?',
         run: { meta: { changes: 1 } },

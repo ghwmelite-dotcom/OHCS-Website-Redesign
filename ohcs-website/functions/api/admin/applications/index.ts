@@ -19,7 +19,7 @@ interface Row {
 }
 
 export const onRequestGet: PagesFunction = async ({ request, env }) => {
-  const auth = requireAdmin(request);
+  const auth = await requireAdmin(request, env);
   if (auth.kind === 'reject') return auth.response;
 
   const url = new URL(request.url);

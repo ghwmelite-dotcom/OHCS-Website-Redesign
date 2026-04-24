@@ -24,6 +24,7 @@ function ctx(req: Request, db?: D1Database) {
 describe('GET /api/admin/exercises/[id]/requirements', () => {
   it('returns the ordered requirements list for an exercise', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql:
           'SELECT * FROM exercise_document_requirements WHERE exercise_id = ? ORDER BY display_order ASC',
@@ -64,6 +65,7 @@ describe('GET /api/admin/exercises/[id]/requirements', () => {
 describe('PUT /api/admin/exercises/[id]/requirements', () => {
   it('replaces the full list (validates input shape)', async () => {
     const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
       {
         sql: 'DELETE FROM exercise_document_requirements WHERE exercise_id = ?',
         binds: ['ex-001'],
@@ -106,6 +108,9 @@ describe('PUT /api/admin/exercises/[id]/requirements', () => {
   });
 
   it('400 on invalid conditional_on value', async () => {
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+    ]);
     const req = new Request('https://x/api/admin/exercises/ex-001/requirements', {
       method: 'PUT',
       headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
@@ -121,11 +126,14 @@ describe('PUT /api/admin/exercises/[id]/requirements', () => {
         ],
       }),
     });
-    const res = await onRequestPut(ctx(req));
+    const res = await onRequestPut(ctx(req, db));
     expect(res.status).toBe(400);
   });
 
   it('400 on duplicate document_type_id within the request', async () => {
+    const db = makeD1([
+      { sql: 'SELECT value FROM site_config WHERE key = ?', first: { value: 'true' } },
+    ]);
     const req = new Request('https://x/api/admin/exercises/ex-001/requirements', {
       method: 'PUT',
       headers: { ...ADMIN_HEADERS, 'content-type': 'application/json' },
@@ -136,7 +144,7 @@ describe('PUT /api/admin/exercises/[id]/requirements', () => {
         ],
       }),
     });
-    const res = await onRequestPut(ctx(req));
+    const res = await onRequestPut(ctx(req, db));
     expect(res.status).toBe(400);
   });
 });
