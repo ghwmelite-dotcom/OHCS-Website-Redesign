@@ -7,7 +7,7 @@
 import type { PagesFunction, Env } from '../../../../_shared/types';
 import { json } from '../../../../_shared/json';
 import { parseBody } from '../../../../_shared/validate';
-import { first, run } from '../../../../_shared/db';
+import { all, first, run } from '../../../../_shared/db';
 import { requireAdmin } from '../../../../_shared/admin-auth';
 import { sendEmail } from '../../../../_shared/email';
 import { sendSms } from '../../../../_shared/sms';
@@ -209,4 +209,36 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       sms_failed_count: smsFailedCount,
     },
   });
+};
+
+interface CampaignSummary {
+  id: string;
+  template_id: string | null;
+  exercise_id: string;
+  status_filter: string;
+  recipient_count: number;
+  sent_count: number;
+  failed_count: number;
+  sms_requested: number;
+  sms_sent_count: number;
+  sms_failed_count: number;
+  subject: string;
+  sender_email: string;
+  created_at: number;
+}
+
+export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+  const auth = await requireAdmin(request, env);
+  if (auth.kind === 'reject') return auth.response;
+
+  const url = new URL(request.url);
+  const exerciseId = url.searchParams.get('exercise_id');
+  if (!exerciseId) return json({ error: 'exercise_id required' }, { status: 400 });
+
+  const rows = await all<CampaignSummary>(
+    env,
+    'SELECT id, template_id, exercise_id, status_filter, recipient_count, sent_count, failed_count, sms_requested, sms_sent_count, sms_failed_count, subject, sender_email, created_at FROM comm_campaigns WHERE exercise_id = ? ORDER BY created_at DESC',
+    exerciseId,
+  );
+  return json({ data: rows });
 };
