@@ -287,8 +287,8 @@ Once merged and deployed:
 - The cutover from demo to production is **a single toggle in the UI**, not a code change or deploy
 - Closes the highest-priority pre-launch security item from the 2026-04-23 audit
 
-## 11. Open questions for review
+## 11. Open questions — RESOLVED 2026-04-24
 
-- **Initial seeded super_admin in migration 0010**: should we hard-code your `Ohcsghana.main@gmail.com` as the bootstrap super_admin in the migration (so you can use magic-link the moment you flip demo mode off, even before the Settings UI has been used to add anyone)? Recommended yes — otherwise we have a chicken-and-egg if demo mode ever gets disabled accidentally.
-- **Session ip_address binding**: should sessions be bound to the IP they were created from (reject if subsequent request comes from a different IP)? Stronger but breaks for admins on mobile data + WiFi handovers. Recommended **no** for now.
-- **Magic-link email branding**: reuse the existing `magicLinkEmail()` template, or make a new `adminMagicLinkEmail()` with subject "OHCS Admin Sign-In Link" and copy that's clearly distinct from applicant copy? Recommended yes — distinct template.
+- **Initial seeded super_admin in migration 0010**: ✅ **YES.** Migration 0010 inserts `Ohcsghana.main@gmail.com` with `role='super_admin'`, `is_active=1`, `created_by='system_bootstrap'`. Provides a guaranteed escape hatch the moment demo mode is disabled.
+- **Session ip_address binding**: ❌ **NO** — sessions are not IP-bound. The `ip_address` column in `admin_sessions` is captured for audit only, never used for authorisation. Avoids breaking admins who hop between WiFi and mobile data.
+- **Magic-link email branding**: ✅ **YES.** New helper `_shared/admin-magic-link-email.ts` with subject "OHCS Admin Sign-In Link — action required" and copy that visually distinguishes it from the applicant flow ("OHCS Recruitment — secure magic link").
