@@ -1,6 +1,5 @@
 # Cloudflare Pages project configuration
 name = "ohcs"
-account_id = "f4f236a6cd8fbddf397c6e9de17d8113"  # Ohcsghana.main@gmail.com's Account
 pages_build_output_dir = ".vercel/output/static"
 compatibility_date = "2025-04-01"
 compatibility_flags = ["nodejs_compat"]
