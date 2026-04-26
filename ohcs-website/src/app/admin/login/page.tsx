@@ -105,14 +105,14 @@ export default function AdminLoginPage() {
     };
   }, []);
 
-  // Fetch site config to determine demo mode
+  // Fetch demo mode flag via public endpoint. The login page is reached
+  // unauthenticated, so we can't use /api/admin/site-config (super_admin gated).
   useEffect(() => {
-    fetch('/api/admin/site-config')
-      .then((r) => (r.ok ? r.json() : { data: [] }))
+    fetch('/api/auth-mode')
+      .then((r) => (r.ok ? r.json() : { data: { demo_mode_enabled: false } }))
       .then((b) => {
-        const body = b as { data: { key: string; value: string }[] };
-        const row = body.data.find((c) => c.key === 'admin_demo_mode_enabled');
-        setDemoModeOn(row?.value === 'true');
+        const body = b as { data: { demo_mode_enabled: boolean } };
+        setDemoModeOn(body.data.demo_mode_enabled === true);
       })
       .catch(() => setDemoModeOn(false));
   }, []);

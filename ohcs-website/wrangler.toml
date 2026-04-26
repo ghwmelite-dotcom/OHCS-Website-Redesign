@@ -37,7 +37,10 @@ binding = "AI"
 # ────────────────────────────────────────────────────────────────────
 [vars]
 APP_NAME = "OHCS Recruitment"
-APP_ENV = "production"
+# Pre-launch phase. Demo mode is allowed (gated by site_config toggle).
+# Flip to "production" at launch ceremony to re-lock the defence-in-depth
+# gate in functions/_shared/admin-auth.ts that forces demo mode off.
+APP_ENV = "preview"
 EMAIL_FROM = "onboarding@resend.dev"
 EMAIL_FROM_NAME = "OHCS Recruitment (Test)"
 EMAIL_PROVIDER = "resend"
