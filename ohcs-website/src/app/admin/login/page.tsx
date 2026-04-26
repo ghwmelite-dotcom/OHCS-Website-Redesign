@@ -204,7 +204,8 @@ export default function AdminLoginPage() {
       </div>
 
       {/* ── Right Panel — Login Form ── */}
-      <div className="flex-1 flex items-center justify-center bg-surface px-6 relative">
+      {/* overflow-y-auto + min-h-full inner = centered when content fits, scrolls when it doesn't */}
+      <div className="flex-1 overflow-y-auto bg-surface px-6 relative">
         {/* Subtle floating shapes */}
         <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.06]">
           <div className="absolute top-[10%] right-[15%] w-8 h-8 bg-primary rounded-lg rotate-12" />
@@ -214,6 +215,10 @@ export default function AdminLoginPage() {
           <div className="absolute top-[60%] right-[40%] w-7 h-3 bg-accent rounded-sm -rotate-15" />
         </div>
 
+        {/* min-h-full + flex items-center centers when card fits the viewport;
+             when card is taller than the viewport, it scrolls cleanly with
+             padding above/below so nothing clips against the edges. */}
+        <div className="min-h-full flex items-center justify-center py-10 lg:py-14 relative">
         <div className="w-full max-w-sm relative">
           {/* Mobile logo — only shown on small screens */}
           <div className="lg:hidden text-center mb-10">
@@ -402,6 +407,7 @@ export default function AdminLoginPage() {
 
           {/* Mobile Kente stripe */}
           <div className="lg:hidden mt-8 h-[3px] rounded-full overflow-hidden" aria-hidden="true" style={{ background: 'linear-gradient(90deg, #1B5E20 25%, #D4A017 25%, #D4A017 50%, #B71C1C 50%, #B71C1C 75%, #212121 75%)' }} />
+        </div>
         </div>
       </div>
     </div>
