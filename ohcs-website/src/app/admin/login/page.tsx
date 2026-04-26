@@ -265,19 +265,17 @@ export default function AdminLoginPage() {
                         onClick={() => void quickSignIn(acc.email, acc.password)}
                         disabled={isDisabled}
                         className={cn(
-                          'group inline-flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border-2 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed',
+                          'group flex items-start gap-2 p-2.5 rounded-xl border-2 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed',
                           acc.accent,
                         )}
                       >
-                        <span className="inline-flex items-center gap-2 min-w-0">
-                          {isLoading ? (
-                            <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" aria-hidden="true" />
-                          ) : (
-                            <Icon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-                          )}
-                          <span className="truncate">{acc.label}</span>
-                        </span>
-                        <ChevronRight className="h-4 w-4 flex-shrink-0 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" aria-hidden="true" />
+                        {isLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        ) : (
+                          <Icon className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        )}
+                        <span className="flex-1 leading-tight">{acc.label}</span>
+                        <ChevronRight className="h-4 w-4 flex-shrink-0 mt-0.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" aria-hidden="true" />
                       </button>
                     );
                   })}
