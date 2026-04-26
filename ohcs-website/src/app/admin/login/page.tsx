@@ -6,10 +6,63 @@ import Image from 'next/image';
 import { adminLogin } from '@/lib/admin-auth';
 import { MagicLinkForm } from '@/components/admin/magic-link-form';
 import { Button } from '@/components/ui/button';
-import { Lock, Mail, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import {
+  Lock,
+  Mail,
+  ShieldCheck,
+  Eye,
+  EyeOff,
+  Crown,
+  Briefcase,
+  FileText,
+  Eye as EyeIcon,
+  ChevronRight,
+  Loader2,
+  Zap,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type Tab = 'magic' | 'demo';
+
+// Demo accounts surfaced as one-click sign-in buttons when demo mode is on.
+// These mirror the credentials hardcoded in src/lib/admin-auth.ts (which are
+// already public via client-side JS — exposing them via the UI just makes
+// internal testing one-click instead of copy-paste). The whole panel
+// disappears the moment Settings → Auth Mode toggles demo mode off.
+const DEMO_QUICK_ACCOUNTS = [
+  {
+    email: 'admin@ohcs.gov.gh',
+    password: 'changeme123',
+    label: 'Super Admin',
+    name: 'Kwame Mensah',
+    icon: Crown,
+    accent: 'bg-primary text-white hover:bg-primary-light border-primary',
+  },
+  {
+    email: 'recruitment@ohcs.gov.gh',
+    password: 'recruit123',
+    label: 'Recruitment Admin',
+    name: 'Kofi Adjei',
+    icon: Briefcase,
+    accent: 'bg-amber-100 text-amber-900 hover:bg-amber-200 border-amber-300',
+  },
+  {
+    email: 'content@ohcs.gov.gh',
+    password: 'content123',
+    label: 'Content Manager',
+    name: 'Abena Osei',
+    icon: FileText,
+    accent: 'bg-blue-100 text-blue-900 hover:bg-blue-200 border-blue-300',
+  },
+  {
+    email: 'viewer@ohcs.gov.gh',
+    password: 'viewer123',
+    label: 'Viewer',
+    name: 'Ama Darko',
+    icon: EyeIcon,
+    accent: 'bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300',
+  },
+] as const;
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -22,6 +75,23 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [demoError, setDemoError] = useState<string | null>(null);
   const [demoSubmitting, setDemoSubmitting] = useState(false);
+
+  // Quick sign-in (one-click) state — tracks which role button is mid-flight
+  const [quickSubmittingEmail, setQuickSubmittingEmail] = useState<string | null>(null);
+  const [quickError, setQuickError] = useState<string | null>(null);
+
+  async function quickSignIn(accountEmail: string, accountPassword: string) {
+    if (quickSubmittingEmail) return;
+    setQuickSubmittingEmail(accountEmail);
+    setQuickError(null);
+    try {
+      await adminLogin(accountEmail, accountPassword);
+      router.push('/admin');
+    } catch (err) {
+      setQuickError(err instanceof Error ? err.message : 'Sign-in failed');
+      setQuickSubmittingEmail(null);
+    }
+  }
 
   // Hide the public header/footer on mount
   useEffect(() => {
@@ -169,6 +239,52 @@ export default function AdminLoginPage() {
           {/* Tabbed interface — demo mode on */}
           {demoModeOn === true && (
             <>
+              {/* ── Quick Sign-In panel (demo mode only — auto-disappears at production) ── */}
+              <div className="mb-6 rounded-2xl border-2 border-amber-300 bg-amber-50/60 p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Zap className="h-4 w-4 text-amber-700" aria-hidden="true" />
+                  <h3 className="text-sm font-bold text-amber-900">Quick demo sign-in</h3>
+                </div>
+                <p className="text-xs text-amber-900/80 mb-4">
+                  Pick a role to sign in instantly. <strong>Demo mode is on</strong> — anyone with this URL can sign in. Disable in <em>Settings → Auth Mode</em> before launch.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {DEMO_QUICK_ACCOUNTS.map((acc) => {
+                    const Icon = acc.icon;
+                    const isLoading = quickSubmittingEmail === acc.email;
+                    const isDisabled = quickSubmittingEmail !== null && !isLoading;
+                    return (
+                      <button
+                        key={acc.email}
+                        type="button"
+                        onClick={() => void quickSignIn(acc.email, acc.password)}
+                        disabled={isDisabled}
+                        className={cn(
+                          'group inline-flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border-2 text-left text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed',
+                          acc.accent,
+                        )}
+                      >
+                        <span className="inline-flex items-center gap-2 min-w-0">
+                          {isLoading ? (
+                            <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" aria-hidden="true" />
+                          ) : (
+                            <Icon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                          )}
+                          <span className="truncate">{acc.label}</span>
+                        </span>
+                        <ChevronRight className="h-4 w-4 flex-shrink-0 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" aria-hidden="true" />
+                      </button>
+                    );
+                  })}
+                </div>
+                {quickError && (
+                  <p className="text-xs text-red-700 mt-3">{quickError}</p>
+                )}
+                <p className="text-[11px] text-amber-900/60 mt-3 text-center">
+                  Or sign in manually below ↓
+                </p>
+              </div>
+
               <div className="flex border-b border-border/40 mb-6" role="tablist">
                 <button
                   type="button"
